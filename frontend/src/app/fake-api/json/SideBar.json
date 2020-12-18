@@ -1,0 +1,49 @@
+{
+	"data": [
+    {
+      "title": "Home",
+      "isHeading": false,
+      "isActive": false,
+      "link": "/admin/dashboard",
+      "className": "",
+      "isIconClass": true,
+      "icon": "ri-home-4-line"
+    },
+    {
+      "title": "Users",
+      "isHeading": false,
+      "isActive": false,
+      "link": "/admin/users/users_list",
+      "className": "",
+      "isIconClass": true,
+      "icon": "ri-group-line "
+    },
+    {
+      "title": "Sites Management",
+      "isHeading": false,
+      "isActive": false,
+      "link": "/admin/mimics/mimic_list",
+      "className": "",
+      "isIconClass": true,
+      "icon": "ri-group-line "
+    },
+    {
+      "title": "Manage Mimic Images",
+      "isHeading": false,
+      "isActive": false,
+      "link": "/admin/mimics/manage_images",
+      "className": "",
+      "isIconClass": true,
+      "icon": "ri-group-line "
+    },
+    {
+      "title": "Reports",
+      "isHeading": false,
+      "isActive": false,
+      "link": "/admin/reports",
+      "className": "",
+      "isIconClass": true,
+      "icon": "ri-group-line "
+    }
+  ]
+}

@@ -1,0 +1,222 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="iq-card" style="height: 100%;">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group ml-3 mt-3">
+                        <label>
+                            <h3>Manage Mimic</h3>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="form-group float-right pt-3 mr-3">
+                        <button type="button" class="btn btn-primary rounded-pill mr-2" (click)="saveMimic()"><i
+                                class="fa fa-plus" aria-hidden="true"></i>
+                            Save Mimic</button>
+                        <button type="button" class="btn btn-primary rounded-pill mr-2" (click)="previewMimic()">
+                            <i class="fa fa-search" aria-hidden="true"></i>Preview Mimic
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="wrapper" class='mn-studio'>
+                <div class="col" id="col1">
+                    <div id="drag-list" class="drag-list">
+                        <ul>
+                            <li>
+                                <div id="drag1" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/motor-running-green.gif" width="100%" height="100%">
+                                </div>
+                                <p>Motor Running Green</p>
+                            </li>
+                            <li>
+                                <div id="drag2" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/motor-running-green-mirror.gif" width="100%"
+                                        height="100%">
+                                </div>
+                                <p>Motor Running Green Mirror</p>
+                            </li>
+
+                            <li>
+                                <div id="drag5" class="drag small ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/off 2.svg" width="100%" height="100%">
+                                </div>
+                                <p>Off 2</p>
+                            </li>
+                            <li>
+                                <div id="drag6" class="drag small ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/Pipe empty.svg" width="100%" height="100%">
+                                </div>
+                                <p>Pipe Empty</p>
+                            </li>
+                            <li>
+                                <div id="drag9" class="drag small ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/off.svg" width="100%" height="100%">
+                                </div>
+                                <p>Off</p>
+                            </li>
+                            <li>
+                                <div id="drag13" class="drag small ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/on.svg" width="100%" height="100%">
+                                </div>
+                                <p>On</p>
+                            </li>
+                            <li>
+                                <div id="drag16" class="drag small ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/on 2.svg" width="100%" height="100%">
+                                </div>
+                                <p>On 2</p>
+                            </li>
+                            <li>
+                                <div id="drag7" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/meter-01.svg" width="100%" height="100%">
+                                </div>
+                                <p>Meter 01</p>
+                            </li>
+                            <li>
+                                <div id="drag10" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/meter-02.svg" width="100%" height="100%">
+                                </div>
+                                <p>Meter 02</p>
+                            </li>
+                            <li>
+                                <div id="drag11" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/connector-4.svg" width="100%" height="100%">
+                                </div>
+                                <p>Connector 4</p>
+                            </li>
+                            <li>
+                                <div id="drag12" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/connector-3-way.svg" width="100%" height="100%">
+                                </div>
+                                <p>Connector 3 Way</p>
+                            </li>
+
+                            <li>
+                                <div id="drag14" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/connector-1.svg" width="100%" height="100%">
+                                </div>
+                                <p>Connector 1</p>
+                            </li>
+                            <li>
+                                <div id="drag15" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/connector-3.svg" width="100%" height="100%">
+                                </div>
+                                <p>Connector 3</p>
+                            </li>
+
+                            <li>
+                                <div id="drag17" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/connector-2.svg" width="100%" height="100%">
+                                </div>
+                                <p>Connector 2</p>
+                            </li>
+                            <li>
+                                <div id="drag18" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/motor-stop-mirror.svg" width="100%" height="100%">
+                                </div>
+                                <p>Motor Stop Mirror</p>
+                            </li>
+                            <li>
+                                <div id="drag19" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/motor-stop-09.svg" width="100%" height="100%">
+                                </div>
+                                <p>Motor Stop 09</p>
+                            </li>
+
+                            <li>
+                                <div id="drag21" class="drag small ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/pipe-water-running-4.gif" width="100%" height="100%">
+                                </div>
+                                <p>Pipe Water Running 4</p>
+                            </li>
+                            <li>
+                                <div id="drag22" class="drag small ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/pipe-water-running.gif" width="100%" height="100%">
+                                </div>
+                                <p>Pipe Water Running</p>
+                            </li>
+                            <li>
+                                <div id="drag23" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/Pipe empty-2.svg" width="100%" height="100%">
+                                </div>
+                                <p>Pipe Empty 2</p>
+                            </li>
+                            <li>
+                                <div id="drag24" class="drag small ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/pipe-water-running-2.gif" width="100%" height="100%">
+                                </div>
+                                <p>Pipe Water Running 2</p>
+                            </li>
+                            <li>
+                                <div id="drag25" class="drag small ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/pipe-water-running-3.gif" width="100%" height="100%">
+                                </div>
+                                <p>Pipe Water Running 3</p>
+                            </li>
+                            <li>
+                                <div id="drag28" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/underwater-pipe.svg" width="100%" height="100%">
+                                </div>
+                                <p>Underwater Pipe</p>
+                            </li>
+                            <li>
+                                <div id="drag8" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/underwater-pipe-2.svg" width="100%" height="100%">
+                                </div>
+                                <p>Underwater Pipe 2</p>
+                            </li>
+                            <li>
+                                <div id="drag3" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/hole 2.svg" width="100%" height="100%">
+                                </div>
+                                <p>Hole 2</p>
+                            </li>
+                            <li>
+                                <div id="drag4" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/hole.svg" width="100%" height="100%">
+                                </div>
+                                <p>Hole</p>
+                            </li>
+                            <li>
+                                <div id="drag26" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/tank-cap.svg" width="100%" height="100%">
+                                </div>
+                                <p>Tank Cap</p>
+                            </li>
+                            <li>
+                                <div id="drag27" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/sump.svg" width="100%" height="100%">
+                                </div>
+                                <p>Sump</p>
+                            </li>
+                            <li>
+                                <div id="drag20" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/OTH.svg" width="100%" height="100%">
+                                </div>
+                                <p>OTH</p>
+                            </li>
+                            <li>
+                                <div id="drag30" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/3dmotor.png" width="100%" height="100%">
+                                </div>
+                                <p>3D Motor</p>
+                            </li>
+                            <li>
+                                <div id="drag31" class="drag ui-draggable ui-draggable-handle">
+                                    <img src="/assets/images/mimic/1.jpg" width="100%" height="100%">
+                                </div>
+                                <p>3D Room</p>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="col" id="droppable">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

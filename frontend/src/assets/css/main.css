@@ -1,0 +1,137 @@
+
+.container1 {
+  border: 1px solid #000000;
+}
+.cloneBoard {
+  height: 580px;
+  overflow-y: scroll;
+}
+.container1 .cloneBoard ul {
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+  width: 100%;
+}
+.cloneBoard ul li {
+  height: 100px;
+  /* margin-bottom: 5px; */
+  margin:25px 0 0 20px;
+  list-style:none;
+  position: relative;
+}
+.removeBoard {
+  height: 150px;
+}
+.container2 {
+  height: 580px;
+  width: 100%;
+  border: 1px solid #000000;
+}
+.removeBoard {
+  background-color: pink;
+}
+.mozgat {
+  cursor: move;
+  /* margin-bottom: 7px; vipin*/ 
+  position: absolute;
+  z-index: 1;
+  /* border: 1px solid #333; */
+  /* background-color:transparent !important; */
+}
+.pipeImg {
+  /* width: 200px; */
+  height: 30px;
+  line-height: 30px;
+  border-radius: 2px;
+}
+.pipeImg p {
+  font-family: sans-serif;
+  font-size: 18px;
+  color: Gainsboro;
+  text-align: center;
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, .4);
+}
+
+.pumpImg {
+  /* width: 100px; */
+  height: 100px;
+  line-height: 90px;
+  /* border-radius: 50%; */
+}
+.pumpImg p {
+  font-family: sans-serif;
+  font-size: 18px;
+  color: Gainsboro;
+  text-align: center;
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, .4);
+}
+
+.connectorImg {
+  /* width: 150px; */
+  height: 90px;
+  line-height: 90px;
+  border-radius: 2px;
+}
+.connectorImg p {
+  font-family: sans-serif;
+  font-size: 18px;
+  color: Gainsboro;
+  text-align: center;
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, .4);
+}
+
+.jobb {
+  float: right;
+}
+.bal {
+  float: left;
+}
+/*.f-szurke {
+  background-color: #999999;
+}*/
+.item {
+  cursor: move;
+  border: 1px solid #333;
+  border-collapse: collapse;
+}
+#ch_dndBoard1 {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  border: 1px solid #4A5157;
+  border-collapse: collapse;
+}
+.snaptarget-hover {
+  background-color: #616A72;
+}
+
+
+/*  MN 04122020*/
+
+.mn-studio .col{float:left;margin:5px;padding:5px;}
+.mn-studio #col1{width:16%;height:600px;overflow-y: scroll;border:1px solid black;}
+.mn-studio #droppable{width:80%;height:600px;border:1px solid black;overflow-y: scroll;position:relative;}
+.mn-studio #droppable button{float: right;background: #006666;color:#fff;border-radius: 7px;border: none;padding: 5px 12px;}
+.mn-studio #droppable button:hover,#droppable button:active{border: none;}
+.mn-studio ul li{list-style:none;}
+.mn-studio .drag-list img{max-width:150px;cursor:move;display: block;margin: 0 auto;}
+.mn-studio .drag-list .small img{max-width:50px;}
+.mn-studio .drag-list p{text-align: center;margin: 4px}
+.mn-studio .drag-list .drag {width:auto}
+/* .drag{width: 150px} */
+.mn-studio .drag-list ul{margin:0;padding:0;}
+.mn-studio .drag-list li{margin-bottom:5px;border: 1px solid;padding: 12px;}
+.mn-studio .remove-drag-hover{background-color:#ED4949!important;}
+.mn-studio .drop-area{background-color:#afd1b2;}
+.mn-studio .xicon{margin-top:-17px;position:absolute;margin-left:1px;color:#FFF;font:message-box;text-decoration:none;}
+.mn-studio .tip{font-size:12px;clear:both;}
+.mn-studio .ui-resizable-n {cursor: n-resize;width: 7px;height: 7px;left: 50%;top: -5px;margin-left: -5px;border: 1px solid black;background-color: white;}
+.mn-studio .ui-resizable-s {cursor: s-resize;width: 7px;height: 7px;left: 50%;bottom: -5px;margin-left: -5px;border: 1px solid black;background-color: white;}
+.mn-studio .ui-resizable-e {cursor: e-resize;width: 7px;height: 7px;right: -5px;top: 50%;margin-top: -5px;border: 1px solid black;background-color: white;}
+.mn-studio .ui-resizable-w {cursor: w-resize;width: 7px;height: 7px;left: -5px;top: 50%;margin-top: -5px;border: 1px solid black;background-color: white;}
+.mn-studio .ui-resizable-se {cursor: se-resize;width: 7px;height: 7px;right: -5px;bottom: -5px;border: 1px solid black;background-color: white;}
+.mn-studio .ui-resizable-sw {cursor: sw-resize;width: 7px;height: 7px;left: -5px;bottom: -5px;border: 1px solid black;background-color: white;}
+.mn-studio .ui-resizable-nw {cursor: nw-resize;width: 7px;height: 7px;left: -5px;top: -5px;border: 1px solid black;background-color: white;}
+.mn-studio .ui-resizable-ne {cursor: ne-resize;width: 7px;height: 7px;right: -5px;top: -5px;border: 1px solid black;background-color: white;}
+.mn-studio .ui-icon-close {background-position: -95px -128px;}
+.mn-studio.preview #droppable{height:100vh;width:auto;border:none;}

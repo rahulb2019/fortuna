@@ -1,0 +1,160 @@
+<!-- <app-breadcrumb1 [items]="breadCrumbItems"></app-breadcrumb1> -->
+<div class="row">
+  <div class="col-sm-12 col-lg-12">
+    <div class="iq-card">
+      <!-- <div class="iq-card-header d-flex justify-content-between">
+        <div class="iq-header-title">
+          <h4 class="card-title">Customize your emails to attendees</h4>
+        </div>
+      </div> -->
+      <div class="iq-card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="iq-card">
+              <div class="iq-card-header d-flex justify-content-between">
+                <div class="iq-header-title">
+                  <h4 class="card-title">Add New User</h4>
+                </div>
+              </div>
+              <div class="iq-card-body">
+                <form id="form-wizard3" class="text-center" [formGroup]="userForm" (submit)="addNewUser()">
+                  <div class="form-card text-left">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="first_name">First Name: *</label>
+                          <input formControlName="first_name" type="text" class="form-control" name="first_name" />
+                          <p *ngIf="userForm.controls['first_name'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> First name is required.
+                          </p>
+                          <p *ngIf="userForm.controls['first_name'].hasError('minlength') && isSubmitted"
+                            class="error-msg">
+                            <i class="fa fa-exclamation"></i> First name should be atleast 6 characters long
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="last_name">Last Name: *</label>
+                          <input formControlName="last_name" type="text" class="form-control" name="last_name" />
+                          <p *ngIf="userForm.controls['last_name'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Last name is required.
+                          </p>
+                          <p *ngIf="userForm.controls['last_name'].hasError('minlength') && isSubmitted"
+                            class="error-msg">
+                            <i class="fa fa-exclamation"></i> Last name should be atleast 6 characters long
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="phone">Phone: *</label>
+                          <input formControlName="phone" type="text" class="form-control" name="phone" />
+                          <p *ngIf="userForm.controls['phone'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Phone is required.
+                          </p>
+                          <p *ngIf="userForm.controls['phone'].hasError('minlength') && isSubmitted"
+                            class="error-msg">
+                            <i class="fa fa-exclamation"></i> Last name should be atleast 10 digits long
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="email">Email: *</label>
+                          <input formControlName="email" type="email" class="form-control" name="email" />
+                          <p *ngIf="userForm.controls['email'].hasError('required') && isSubmitted"
+                            class="error-msg">
+                            <i class="fa fa-exclamation"></i> Email is required.
+                          </p>
+                          <p *ngIf="userForm.controls['email'].hasError('email') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Email is not valid.
+                          </p>
+                        </div>
+                        <div class="form-group">
+                          <span><i>Emails and urls are not allowed to avoid SPAM filters from servers</i></span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="address">Address: *</label>
+                          <input formControlName="address" type="text" class="form-control" name="address" />
+                          <p *ngIf="userForm.controls['address'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Address is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="city">City: *</label>
+                          <input formControlName="city" type="text" class="form-control" name="city" />
+                          <p *ngIf="userForm.controls['city'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> City is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="zipcode">Zipcode: *</label>
+                          <input formControlName="zipcode" type="text" class="form-control" name="zipcode" />
+                          <p *ngIf="userForm.controls['zipcode'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Zipcode is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="state">State/Province: *</label>
+                          <input formControlName="state" type="text" class="form-control" name="state" />
+                          <p *ngIf="userForm.controls['state'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> State/Province is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="country">Country: *</label>
+                          <input formControlName="country" type="text" class="form-control" name="country" />
+                          <p *ngIf="userForm.controls['country'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Country is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="pic-2">Image:</label>
+                          <div class="user-img" style="width:200px;">
+                            <!-- src="assets/images/user/logo.png"  -->
+                            <img src="{{ userLogoImg }}" alt="userimg" class="avatar-35 img-fluid">
+                          </div>
+                          <div class="custom-file mt-2">
+                            <input formControlName="image" type="file" class="form-control-file"
+                              id="exampleFormControlFile1" (change)="onSelectUserLogo($event)">
+                            <br />
+                            <!--span><i>Logo size: xxxxx</i></span-->
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group {{ errorField }}">
+                        <label class="d-block">Access Type: *</label> 
+                        <div class="custom-control custom-radio custom-control-inline">
+                          <input class="custom-control-input" type="radio" formControlName="access_type" value="0" (change)="changeAccess('read')" id="customRadio6">
+                          <label class="custom-control-label" for="customRadio6"> Read </label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                          <input class="custom-control-input" type="radio" formControlName="access_type" value="1" (change)="changeAccess('write')" id="customRadio7"> 
+                          <label class="custom-control-label" for="customRadio7"> Write </label>
+                        </div>
+                      </div>
+                    </div>
+                    <button id="submit" type="submit" class="btn btn-success rounded-pill float-right  mb-3"
+                      value="Submit">Save Information</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

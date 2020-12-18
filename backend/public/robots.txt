@@ -1,0 +1,23 @@
+User-agent: *
+# Private Pages
+Disallow: /dashboard/
+Disallow: /thankyou/
+Noindex: /thankyou/
+Disallow: /thank-you/
+Noindex: /thank-you/
+Disallow: /checkout/
+Disallow: /my-account/
+Disallow: /login/
+Disallow: /profile/
+Disallow: /bookings/
+Disallow: /messages/
+Disallow: /wishlist/
+Disallow: /listings/
+Disallow: /calendar/
+Disallow: /hosts/
+Disallow: /social/
+Disallow: /module/
+Disallow: /scdspack/
+Noindex: /api/
+# Sitemap
+Sitemap: https://virtualandgo.com/sitemap.xml

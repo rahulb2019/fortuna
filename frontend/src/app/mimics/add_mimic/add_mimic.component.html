@@ -1,0 +1,87 @@
+<div class="row">
+  <div class="col-sm-12 col-lg-12">
+    <div class="iq-card">
+      <div class="iq-card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="iq-card">
+              <div class="iq-card-header d-flex justify-content-between">
+                <div class="iq-header-title">
+                  <h4 class="card-title">Add New Site</h4>
+                </div>
+              </div>
+              <div class="iq-card-body">
+                <form id="form-wizard3" class="text-center" [formGroup]="mimicForm" (submit)="addNewMimic()">
+                  <div class="form-card text-left">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="name">Site Name: *</label>
+                          <input formControlName="name" type="text" class="form-control" name="name" />
+                          <p *ngIf="mimicForm.controls['name'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Site name is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="address">Address: *</label>
+                          <input formControlName="address" type="text" class="form-control" name="address" />
+                          <p *ngIf="mimicForm.controls['address'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Address is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="city">City: *</label>
+                          <input formControlName="city" type="text" class="form-control" name="city" />
+                          <p *ngIf="mimicForm.controls['city'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> City is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="zipcode">Zipcode: *</label>
+                          <input formControlName="zipcode" type="text" class="form-control" name="zipcode" />
+                          <p *ngIf="mimicForm.controls['zipcode'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Zipcode is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="state">State/Province: *</label>
+                          <input formControlName="state" type="text" class="form-control" name="state" />
+                          <p *ngIf="mimicForm.controls['state'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> State/Province is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label class="d-block">Site Type: *</label> 
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" formControlName="mimic_type" value="0" (change)="changeMimicType('zps')" id="customRadio6">
+                            <label class="custom-control-label" for="customRadio6"> ZPS </label>
+                          </div>
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" formControlName="mimic_type" value="1" (change)="changeMimicType('tubewell')" id="customRadio7"> 
+                            <label class="custom-control-label" for="customRadio7"> TubeWell </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button id="submit" type="submit" class="btn btn-primary rounded-pill float-right  mb-3"
+                      value="Submit">Save Information</button>
+                    <button type="button" class="btn btn-secondary rounded-pill float-right mb-3 mr-1" (click)="goBack()">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

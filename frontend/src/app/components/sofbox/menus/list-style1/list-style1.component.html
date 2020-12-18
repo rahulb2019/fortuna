@@ -1,0 +1,27 @@
+<ul [class]="listClass" style.display="{{ display ? 'block' : '' }}">
+  <li *ngFor="let listItem of listItems" [class]="(listItem.isHeading ? 'iq-menu-title' : activeLink(listItem) ? 'active menu-open' : '')">
+
+    <!-- Heading Menu Items -->
+    <i *ngIf=listItem.isHeading [class]="listItem.icon"></i>
+    <span *ngIf=listItem.isHeading>{{ listItem.title }}</span>
+
+    <!-- Menu Items -->
+    <a  *ngIf=!listItem.isHeading&&listItem.children  class="iq-waves-effect">
+      <i *ngIf=listItem.isIconClass [class]="listItem.icon"></i><span>{{ listItem.title }}</span>
+      <i *ngIf="listItem.children" class="ri-arrow-right-s-line iq-arrow-right"></i>
+    </a>
+
+    <a  *ngIf=!listItem.isHeading&&!listItem.children
+        class="iq-waves-effect" [routerLink]="listItem.link != '' ? [listItem.link] : []"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: true}">
+      <i *ngIf=listItem.isIconClass [class]="listItem.icon"></i><span>{{ listItem.title }}</span>
+      <small *ngIf="listItem.append" class="badge badge-pill badge-primary float-right font-weight-normal ml-auto">{{ listItem.append }}</small>
+      <i *ngIf="listItem.children" class="ri-arrow-right-s-line iq-arrow-right"></i>
+    </a>
+
+    <!-- Child Menu Items -->
+    <app-list-style1 *ngIf="listItem.children" listClass="iq-submenu" [listItems]="listItem.children" [display]="activeLink(listItem)"></app-list-style1>
+
+  </li>
+</ul>

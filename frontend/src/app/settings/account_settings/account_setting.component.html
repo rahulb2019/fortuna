@@ -1,0 +1,128 @@
+<app-breadcrumb1 [items]="breadCrumbItems"></app-breadcrumb1>
+<div class="row">
+  <div class="col-sm-12 col-lg-12">
+    <div class="iq-card">
+      <!-- <div class="iq-card-header d-flex justify-content-between">
+        <div class="iq-header-title">
+          <h4 class="card-title">Customize your emails to attendees</h4>
+        </div>
+      </div> -->
+      <div class="iq-card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="iq-card">
+              <div class="iq-card-header d-flex justify-content-between">
+                <div class="iq-header-title">
+                  <h4 class="card-title">Account Settings</h4>
+                </div>
+              </div>
+              <div class="iq-card-body">
+                <form id="form-wizard3" class="text-center" [formGroup]="accountSettingForm" (submit)="accountSetting()" autocomplete="off">
+                  <div class="form-card text-left">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="first_name">First Name:</label>
+                                  <input formControlName="first_name" type="text" class="form-control" name="first_name" />
+                                </div>
+                              </div>
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="last_name">Last Name:</label>
+                                  <input formControlName="last_name" type="text" class="form-control" name="last_name" />
+                                </div>
+                              </div>
+                              <!-- <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="tax_category">Tax Category:</label>
+                                  <input formControlName="tax_category" type="text" class="form-control" name="tax_category" />
+                                </div>
+                              </div>
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="tax_percent">Tax Percentage(%) :</label>
+                                  <input formControlName="tax_percent" type="text" class="form-control" name="tax_percent" />
+                                </div>
+                              </div>
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="max_site_commission">Maximum Site Commission(USD) :</label>
+                                  <input formControlName="max_site_commission" type="text" class="form-control" name="max_site_commission" />
+                                </div>
+                              </div> -->
+                            </div>
+                          </div>
+                          
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group {{ errorField }}">
+                                  <label for="email">Email: *</label>
+                                  <input formControlName="email" type="email" class="form-control" name="email" />
+                                  <p *ngIf="accountSettingForm.controls['email'].hasError('required') && isSubmitted" class="error-msg">
+                                    <i class="fa fa-exclamation"></i> Email is required.
+                                  </p>
+                                  <p *ngIf="accountSettingForm.controls['email'].hasError('email') && isSubmitted" class="error-msg">
+                                    <i class="fa fa-exclamation"></i> Email is not valid.
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group {{ errorField }}">
+                                  <label for="phone">Phone:</label>
+                                  <input formControlName="phone" type="text" class="form-control"
+                                    name="phone" />
+                                    <p *ngIf="accountSettingForm.controls['phone'].hasError('maxLength') && isSubmitted" class="error-msg">
+                                      <i class="fa fa-exclamation"></i> Only 10 digits are allowed in Phone number.
+                                    </p>
+                                </div>
+                              </div>
+                              <div class="col-md-12">
+                                <hr>
+                                <div class="iq-header-title">
+                                  <h4 class="card-title">Change Password</h4>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group {{ errorField }}">
+                                  <label for="new_password">New Password:</label>
+                                  <input type="password" formControlName="new_password" class="form-control mb-0" autocomplete="new-password">
+                                  <p *ngIf="accountSettingForm.controls['new_password'].hasError('minLength') && isSubmitted" class="error-msg">
+                                    <i class="fa fa-exclamation"></i> Password should contain atleast 6 characters.
+                                  </p>
+                                  <span><i>Password should contain atleast 6 characters.</i></span>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group {{ errorField }}">
+                                  <label for="confirm_password">Confirm Password:</label>
+                                  <input type="password" name="confirm_password" formControlName="confirm_password" class="form-control mb-0">
+                                  <p *ngIf="accountSettingForm.get['confirm_password'].confirmedValidator && isSubmitted" class="error-msg">
+                                    <i class="fa fa-exclamation"></i> New Password and Confirm Password must be match.
+                                  </p>
+                                  <p *ngIf="accountSettingForm.get['confirm_password'].hasError('minLength') && isSubmitted" class="error-msg">
+                                    <i class="fa fa-exclamation"></i> Password should contain atleast 6 characters.
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <button id="submit" type="submit" class="btn btn-success rounded-pill float-right  mb-3"
+                        value="Submit">Save Information</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

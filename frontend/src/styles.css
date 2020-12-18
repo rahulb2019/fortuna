@@ -1,0 +1,7 @@
+/* You can add global styles to this file, and also import other style files */
+.owl-carousel .owl-dot {
+  display: inline-block;
+}
+.iq-email-list .iq-email-ui li a{
+  padding: .5rem 1rem !important;
+}
