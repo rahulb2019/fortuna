@@ -53,13 +53,41 @@ export class StudioComponent implements OnInit {
   displayExistingMimic(mimic_data) {
     let html='';
     mimic_data.forEach(element => {
-      console.log(element);
-      html+='<div class="drag small ui-draggable ui-draggable-handle ui-resizable remove" style="'+element.style+'">';
+      html+='<div class="drag small remove" style="'+element.style+'">';
       html+='<img src="'+element.name+'" width="100%" height="100%">';
-      html+='<span class="xicon delete ui-icon ui-icon-close" title="Remove"></span><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-e" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-s" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-sw" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-ne" style="z-index: 90;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90;"></div>'
+      html+='<span class="xicon delete ui-icon ui-icon-close" title="Remove"></span>'
       html+='</div>';      
     });
     $('#droppable').html(html);
+    $("#droppable .drag").each(function(){
+      $(this).draggable({
+        helper: 'original',
+        cursor: 'move',
+        tolerance: 'fit',
+        scroll: false
+      });
+      $(this).resizable({
+        handles: 'all',
+        maxHeight: $('#droppable').height(),
+        maxWidth: $('#droppable').width()
+      }); 
+      $('.delete').dblclick(function () {
+        $(this).parent('div').remove();
+      });
+      $(this).click(function(){
+        if($(this).hasClass("ui-resizable")){
+          $(this).resizable('destroy');
+        }
+        else
+        {
+          $(this).resizable({
+            handles: 'all',
+            maxHeight: $('#droppable').height(),
+            maxWidth: $('#droppable').width()
+          }); 
+        }
+      })
+    })
   }
 
   manageEditor() {
@@ -89,6 +117,7 @@ export class StudioComponent implements OnInit {
         if ($(ui.draggable)[0].id != "") {
           this.selectedEle = ui.helper.clone();
           ui.helper.remove();
+          console.log(this.selectedEle);
           this.selectedEle.draggable({
             helper: 'original',
             cursor: 'move',
@@ -108,8 +137,8 @@ export class StudioComponent implements OnInit {
           let el = $('<span class="xicon delete ui-icon ui-icon-close" title="Remove"></span>');
           $(el).insertAfter($(this.selectedEle.find('img')));
           this.selectedEle.appendTo('#droppable');
-          $('.delete').parent('div').dblclick(function () {
-            $(this).remove();
+          $('.delete').dblclick(function () {
+            $(this).parent('div').remove();
           });
           //set position according body to droppable
           let currentPos=this.selectedEle.offset();
