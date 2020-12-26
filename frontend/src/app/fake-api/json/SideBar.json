@@ -31,10 +31,28 @@
       "title": "Manage Mimic Images",
       "isHeading": false,
       "isActive": false,
-      "link": "/admin/mimics/manage_images",
+      "link": "",
       "className": "",
       "isIconClass": true,
-      "icon": "ri-group-line "
+      "icon": "ri-file-list-3-line",
+      "children": [
+        {
+          "title": "View Image Gallery",
+          "isActive": false,
+          "link": "/admin/mimic_images/view_gallery",
+          "className": "",
+          "isIconClass": false,
+          "icon": ""
+        },
+        {
+          "title": "Upload Images",
+          "isActive": false,
+          "link": "/admin/mimic_images/upload_image",
+          "className": "",
+          "isIconClass": false,
+          "icon": ""
+        }
+      ]
     },
     {
       "title": "Reports",

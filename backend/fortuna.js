@@ -57,6 +57,7 @@ app.use(logger("dev"));
 
 const indexRouter = require("./routes/index")(app, router);
 
+app.use("/public", express.static(path.join(__dirname, "public")));
 app.use("/", express.static(path.join(__dirname, "/dist/admin/sofbox-dashboard-angular")));
 
 /*admin routes for staging*/

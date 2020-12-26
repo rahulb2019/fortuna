@@ -36,6 +36,11 @@ const routes: Routes = [
         path: 'mimics',
         loadChildren: () => import('../../mimics/mimics.module').then(m => m.MimicsModule),
         // canActivate: [ AuthGuardService ]
+      },
+      {
+        path: 'mimic_images',
+        loadChildren: () => import('../../mimic_images/mimic_images.module').then(m => m.MimicImagesModule),
+        // canActivate: [ AuthGuardService ]
       }
      ]
   }

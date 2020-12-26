@@ -50,10 +50,9 @@ export class EditMimicComponent implements OnInit {
     this.mimicForm = this.fb.group({
       name: ['', [Validators.required]],
       mimic_type: ['0', [Validators.required]],
-      address: ['', [Validators.required]],
-      city: ['', [Validators.required]],
-      state: ['', [Validators.required]],
-      zipcode: ['', [Validators.required]],
+      lattitude: ['', [Validators.required]],
+      longitude: ['', [Validators.required]],
+      no_of_pumps: ['', [Validators.required]]
     });
   }
 

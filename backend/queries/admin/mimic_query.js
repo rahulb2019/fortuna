@@ -1,6 +1,9 @@
 var mongoose = require("mongoose");
 var Mimic = mongoose.model("sites");
+var SIC = mongoose.model("site_image_categories");
+var siteImage = mongoose.model("site_images");
 var crypto = require("crypto");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 let obj = {}
 
@@ -140,6 +143,71 @@ obj.changeActivationMimicData = (data) => {
             .catch(function (error) {
                 reject(301);
             });
+    })
+}
+
+obj.getAllCategories = (data) => {
+    return new Promise((resolve, reject) => {
+        let aggregateQuery = [];
+        let query = { is_deleted: false };
+        if (data.options && data.options.search) {
+            let sortQuery = { $sort: { created_at: -1 } }
+            query = { $and: [query, sortQuery] };
+        }
+        aggregateQuery.push({ $match: query });
+        
+        SIC.aggregate(aggregateQuery).then(async result => {
+            resolve(result);
+        }).catch(err => {
+            resolve({
+                status: "Failure",
+                code: 301
+            });
+        });
+
+    })
+}
+
+obj.addMimicImages = (data) => {
+    return new Promise(function (resolve, reject) {
+        let respArr = [];
+        function forEachLoop(i) {
+            if (i < data.mimic_images.length) {
+                let dataToSave = {
+                    site_image_category_id: data.site_image_category_id,
+                    state: data.image_state,
+                    name: data.mimic_images[i]
+                }
+                if (dataToSave) {
+                    siteImage.create(dataToSave)
+                    .then(result => {
+                        respArr.push(result);
+                        forEachLoop(i + 1);
+                    })
+                }
+            } else {
+                return resolve(respArr);
+            }
+        }
+        forEachLoop(0);
+    });
+}
+
+obj.getAllImages = (data) => {
+    return new Promise((resolve, reject) => {
+        let aggregateQuery = [];
+        let query = { is_deleted: false, site_image_category_id: ObjectId(data.site_image_category_id), state: data.state };
+        aggregateQuery.push({ $match: query });
+        
+        siteImage.aggregate(aggregateQuery).then(async result => {
+            resolve(result);
+        }).catch(err => {
+            resolve({
+                status: "Failure",
+                code: 301
+            });
+        });
+
     })
 }
 

@@ -4,6 +4,8 @@ import { ApiService } from '../../services/api.service';
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { MimicService } from "../../services/mimic/mimic.service";
+import { Folder } from "../../config/constants";
+import { environment } from "../../../environments/environment";
 import * as $ from 'jquery';
 import 'jquery-ui-dist/jquery-ui';
 
@@ -17,6 +19,12 @@ export class StudioComponent implements OnInit {
 
   mimicId: any;
   selectedEle = null;
+  
+  categoriesArr: any = [];
+  selectedImages: any = [];
+  selectedCat: any;
+  imageState: any = 0;
+  imageUrl = environment.apiEndpoint + Folder._mimicImageOriginal;
 
   constructor(public apiService: ApiService,
     private router: Router,
@@ -34,6 +42,41 @@ export class StudioComponent implements OnInit {
       this.getMimicDataById();
     });
     this.manageEditor();
+    this.getAllCategories();
+  }
+
+  getAllCategories() {
+    let data = {}
+    this.mimicService.getAllCategories(data).subscribe(res => {
+      if (res.code === 200) {
+        this.categoriesArr = res.result[0]
+        this.selectedCat = this.categoriesArr[0]._id;
+        this.getAllImages();
+      }
+      else {
+        this.toastr.error(res.message); //alert error message
+      }
+    });
+  }
+
+  changeSelectedCategory(event){
+    this.selectedCat = event.target.value ? event.target.value : this.selectedCat;
+    this.getAllImages();
+  }
+
+  getAllImages(){
+    let data = {
+      site_image_category_id: this.selectedCat,
+      state: 0
+    }
+    this.mimicService.getAllImages(data).subscribe(res => {
+      if (res.code === 200) {
+        this.selectedImages = res.result[0];
+      }
+      else {
+        this.toastr.error(res.message); //alert error message
+      }
+    });
   }
   
   getMimicDataById(){
@@ -77,6 +120,7 @@ export class StudioComponent implements OnInit {
       $(this).click(function(){
         if($(this).hasClass("ui-resizable")){
           $(this).resizable('destroy');
+          $(this).find('.delete').hide();
         }
         else
         {
@@ -85,6 +129,7 @@ export class StudioComponent implements OnInit {
             maxHeight: $('#droppable').height(),
             maxWidth: $('#droppable').width()
           }); 
+          $(this).find('.delete').show();
         }
       })
     })
@@ -114,10 +159,10 @@ export class StudioComponent implements OnInit {
       cursor: "move",
       activeClass: "drop-area",
       drop: function (e, ui) {
+        console.log("$(ui.draggable)[0].id----", $(ui.draggable)[0].id);
         if ($(ui.draggable)[0].id != "") {
           this.selectedEle = ui.helper.clone();
           ui.helper.remove();
-          console.log(this.selectedEle);
           this.selectedEle.draggable({
             helper: 'original',
             cursor: 'move',
@@ -138,6 +183,7 @@ export class StudioComponent implements OnInit {
           $(el).insertAfter($(this.selectedEle.find('img')));
           this.selectedEle.appendTo('#droppable');
           $('.delete').dblclick(function () {
+            console.log($(this).parent('div'));
             $(this).parent('div').remove();
           });
           //set position according body to droppable
@@ -147,6 +193,21 @@ export class StudioComponent implements OnInit {
             top: currentPos.top-(droppablePos.top*2+2),
             left: currentPos.left-(droppablePos.left*2+2)
           });
+          this.selectedEle.click(function(){
+            if($(this).hasClass("ui-resizable")){
+              $(this).resizable('destroy');
+              $(this).find('.delete').hide();
+            }
+            else
+            {
+              $(this).resizable({
+                handles: 'all',
+                maxHeight: $('#droppable').height(),
+                maxWidth: $('#droppable').width()
+              }); 
+              $(this).find('.delete').show();
+            }
+          })
         }
       }
     });

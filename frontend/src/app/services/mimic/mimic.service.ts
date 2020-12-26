@@ -42,6 +42,14 @@ export class MimicService {
     );
   }
 
+  addImages(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/addImages/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
   updateMimic(data): Observable<any> {
     return this.http.post(
       `${this.BASE_PATH + '/updateMimic/'}`,
@@ -86,6 +94,31 @@ export class MimicService {
   changeMimicActivation(data): Observable<any> {
     return this.http.post(
       `${this.BASE_PATH + '/changeMimicActivation/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
+  getAllCategories(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/getAllCategories/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
+  
+  uploadMimicImages(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/uploadMimicImages/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
+  getAllImages(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/getAllImages/'}`,
       data,
       this.httpOptions
     );

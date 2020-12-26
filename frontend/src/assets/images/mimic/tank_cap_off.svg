@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1276" height="89.865" viewBox="0 0 1276 89.865">
+  <defs>
+    <linearGradient id="linear-gradient" y1="0.658" x2="1" y2="0.657" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#393939"/>
+      <stop offset="1" stop-color="#696a6d"/>
+    </linearGradient>
+  </defs>
+  <g id="tank_cap" data-name="tank cap" transform="translate(-2437 -922.135)">
+    <path id="Path_45" data-name="Path 45" d="M70,1180.2,0,1275.662V0L70,95.385Z" transform="translate(2437.224 992.135) rotate(-90)" fill="url(#linear-gradient)"/>
+    <rect id="Rectangle_130" data-name="Rectangle 130" width="1276" height="20" transform="translate(2437 992)" fill="#1a1a1a"/>
+  </g>
+</svg>

@@ -14,7 +14,7 @@
                 <form id="form-wizard3" class="text-center" [formGroup]="mimicForm" (submit)="updateMimic()">
                   <div class="form-card text-left">
                     <div class="row">
-                      <div class="col-md-6">
+                      <div class="col-md-12">
                         <div class="form-group {{ errorField }}">
                           <label for="name">Site Name: *</label>
                           <input formControlName="name" type="text" class="form-control" name="name" />
@@ -25,37 +25,28 @@
                       </div>
                       <div class="col-md-6">
                         <div class="form-group {{ errorField }}">
-                          <label for="address">Address: *</label>
-                          <input formControlName="address" type="text" class="form-control" name="address" />
-                          <p *ngIf="mimicForm.controls['address'].hasError('required') && isSubmitted" class="error-msg">
-                            <i class="fa fa-exclamation"></i> Address is required.
+                          <label for="lattitude">Lattitude: *</label>
+                          <input formControlName="lattitude" type="text" class="form-control" name="lattitude" />
+                          <p *ngIf="mimicForm.controls['lattitude'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Lattitude is required.
                           </p>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group {{ errorField }}">
-                          <label for="city">City: *</label>
-                          <input formControlName="city" type="text" class="form-control" name="city" />
-                          <p *ngIf="mimicForm.controls['city'].hasError('required') && isSubmitted" class="error-msg">
-                            <i class="fa fa-exclamation"></i> City is required.
+                          <label for="longitude">Longitude: *</label>
+                          <input formControlName="longitude" type="text" class="form-control" name="longitude" />
+                          <p *ngIf="mimicForm.controls['longitude'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Longitude is required.
                           </p>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group {{ errorField }}">
-                          <label for="zipcode">Zipcode: *</label>
-                          <input formControlName="zipcode" type="text" class="form-control" name="zipcode" />
-                          <p *ngIf="mimicForm.controls['zipcode'].hasError('required') && isSubmitted" class="error-msg">
-                            <i class="fa fa-exclamation"></i> Zipcode is required.
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group {{ errorField }}">
-                          <label for="state">State/Province: *</label>
-                          <input formControlName="state" type="text" class="form-control" name="state" />
-                          <p *ngIf="mimicForm.controls['state'].hasError('required') && isSubmitted" class="error-msg">
-                            <i class="fa fa-exclamation"></i> State/Province is required.
+                          <label for="no_of_pumps">No Of Pumps: *</label>
+                          <input formControlName="no_of_pumps" type="number" class="form-control" name="no_of_pumps" />
+                          <p *ngIf="mimicForm.controls['no_of_pumps'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Number Of Pumps is required.
                           </p>
                         </div>
                       </div>

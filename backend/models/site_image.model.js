@@ -9,6 +9,11 @@ var SiteImageSchema = new Schema(
       type: String,
       default: null
     },
+    state: {
+      type: Number,
+      enum: [0, 1],
+      default: 0
+    },
     is_deleted: {
       type: Boolean,
       default: false

@@ -21,6 +21,6 @@ var SiteImageCategorySchema = new Schema(
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
 
-SiteImageSchema.plugin(mongoosePaginate);
+SiteImageCategorySchema.plugin(mongoosePaginate);
 var site_image_categories = mongoose.model("site_image_categories", SiteImageCategorySchema);
 module.exports = site_image_categories;

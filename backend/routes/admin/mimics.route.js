@@ -11,6 +11,10 @@ module.exports = function(app, route) {
   route.post("/deleteMimic", mimicsCtrl.deleteMimic);
   route.post("/changeMimicActivation", mimicsCtrl.changeActivation);
   route.post("/updateMimicArch", mimicsCtrl.updateMimicArch);
+  route.post("/getAllCategories", mimicsCtrl.getAllCategories);
+  route.post("/uploadMimicImages", mimicsCtrl.uploadMimicImages);
+  route.post("/addImages", mimicsCtrl.addImages);
+  route.post("/getAllImages", mimicsCtrl.getAllImages);
  
   app.use("/mimics", route);
 };

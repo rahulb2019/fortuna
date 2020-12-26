@@ -8,6 +8,8 @@ module.exports = {
     imageUrl: {
         userImageOriginal: "./public/uploadMedia/images/users/original/",
         userImageThumb: "./public/uploadMedia/images/users/thumb/",
+        mimicImageOriginal: "./public/uploadMedia/images/mimics/original/",
+        mimicImageThumb: "./public/uploadMedia/images/mimics/thumb/"
     },
     csvUrl: {
         csvFileInsert: "./public/uploadMedia/CSV/",

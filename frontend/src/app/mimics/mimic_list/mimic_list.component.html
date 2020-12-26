@@ -43,9 +43,9 @@
                                             </div>
                                         </th>
                                         <th width="20%">Name</th>
-                                        <th width="20%">Address</th>
-                                        <th width="15%">City</th>
-                                        <th width="10%">State</th>
+                                        <th width="20%">Lattitude</th>
+                                        <th width="15%">Longitude</th>
+                                        <th width="10%">No. Of Pumps</th>
                                         <th width="10%">Mimic Type</th>
                                         <th width="10%">Status</th>
                                         <th width="10%">Created At</th>
@@ -61,9 +61,9 @@
                                             </div>
                                         </td>
                                         <td>{{mimic.name}}</td>
-                                        <td>{{mimic.address}}</td>
-                                        <td>{{mimic.city}}</td>
-                                        <td>{{mimic.state}}</td>
+                                        <td>{{mimic.lattitude}}</td>
+                                        <td>{{mimic.longitude}}</td>
+                                        <td>{{mimic.no_of_pumps}}</td>
                                         <td *ngIf="mimic.mimic_type == 0">ZPS</td>
                                         <td *ngIf="mimic.mimic_type == 1">TubeWell</td>
                                         <td *ngIf="mimic.is_blocked == 0">Un-Block</td>

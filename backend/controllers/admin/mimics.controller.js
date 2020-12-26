@@ -133,6 +133,89 @@ const changeActivation = async function (req, res) {
     }
 };
 
+const getAllCategories = async function (req, res) {
+    let data = req.body ? req.body : {};
+    let token = "";
+    try {
+        const respData = await mimicQueries.getAllCategories(data);
+        if (respData.length == 0)
+            res.status(400).json({ code: 301, message: "Unable to update data", result: respData });
+        else {
+            let resp=[];
+            resp.push(respData)
+            res.status(200).json({ code: 200, message: "Record updated successfully", result: resp });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to update data", result: error.sqlMessage })
+    }
+};
+
+const uploadMimicImages = async function (req, res) {
+    let response = {};
+    let filePath, filePathThumb;
+    if (req.body) {
+        let inputIteration = req.body.inputIteration;
+        let imageName = req.body.imageName;
+        let image = req.body.inputImage.image;
+        let type = req.body.inputImage.imageType.split("/")[1];
+        let matches = image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+        if (matches.length !== 3) {
+            let error = new Error("Invalid image");
+            error.code = config.statusCode.invalid;
+            throw error;
+        }
+        response.contentType = matches[1];
+        response.data = new Buffer(matches[2], "base64");
+        if (req.body.status == "mimic_image") {
+            response.key = inputIteration +"_"+ Math.round(+new Date().getTime() / 1000) +"_"+ imageName + "." + type;
+            filePath = constant.imageUrl.mimicImageOriginal + response.key;
+            filePathThumb = constant.imageUrl.mimicImageThumb + response.key;
+        }
+        if (filePath) {
+            fs.writeFile(filePath, response.data, function (err) {
+                if (err) throw err;
+                res.json({
+                    status: "Success",
+                    code: 200,
+                    data: response.key
+                });
+            });
+        }
+    }
+};
+
+
+const addImages = async function (req, res) {    
+    let data = req.body ? req.body : {};
+    try {
+        let respData = await mimicQueries.addMimicImages(data);
+        if (data.mimic_images.length == respData.length){
+            res.status(200).json({ code: 200, message: "Images added successfully" });
+        } else {
+            res.status(400).json({ code: 301, message: "Unable to add images", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to add images", result: error.sqlMessage })
+    }
+};
+
+
+const getAllImages = async function (req, res) {
+    let data = req.body ? req.body : {};
+    let token = "";
+    try {
+        const respData = await mimicQueries.getAllImages(data);
+        if (respData.length == 0)
+            res.status(400).json({ code: 301, message: "Unable to fetch data", result: respData });
+        else {
+            let resp=[];
+            resp.push(respData)
+            res.status(200).json({ code: 200, message: "Record fetched successfully", result: resp });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to fetch data", result: error.sqlMessage })
+    }
+};
 
 exports.fetchMimicsData = fetchMimicsData;
 exports.addMimic = addMimic;
@@ -141,3 +224,7 @@ exports.getMimicDetail = getMimicDetail;
 exports.deleteMimic = deleteMimic;
 exports.changeActivation = changeActivation;
 exports.updateMimicArch = updateMimicArch;
+exports.getAllCategories = getAllCategories;
+exports.uploadMimicImages = uploadMimicImages;
+exports.addImages = addImages;
+exports.getAllImages = getAllImages;

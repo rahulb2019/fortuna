@@ -1,0 +1,64 @@
+<div class="row">
+  <div class="col-sm-12 col-lg-12">
+    <div class="iq-card">
+      <div class="iq-card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="iq-card">
+              <div class="iq-card-header d-flex justify-content-between">
+                <div class="iq-header-title">
+                  <h4 class="card-title">Add Images</h4>
+                </div>
+              </div>
+              <div class="iq-card-body">
+                <form id="form-wizard3" class="text-center" [formGroup]="imageForm" (submit)="uploadImages()">
+                  <div class="form-card text-left">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="name">Select Category: *</label>
+                          <select formControlName="site_image_category_id" class="form-control" name="site_image_category_id">
+                            <option [ngValue]="col._id" *ngFor="let col of categoriesArr">{{col.name}}</option>
+                          </select>
+                          <p *ngIf="imageForm.controls['site_image_category_id'].hasError('required') && isSubmitted"
+                            class="error-msg">
+                            <i class="fa fa-exclamation"></i> Category is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label class="d-block">Image Type: *</label> 
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" formControlName="image_state" value="0" (change)="changeImageState('off')" id="customRadio6">
+                            <label class="custom-control-label" for="customRadio6"> OFF </label>
+                          </div>
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" formControlName="image_state" value="1" (change)="changeImageState('on')" id="customRadio7"> 
+                            <label class="custom-control-label" for="customRadio7"> ON </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="pic-2">Upload Images: <span><i> (You can upload multiple images)</i></span></label>
+                          <div class="custom-file mt-2">
+                            <input type="file" class="form-control-file" (change)="onSelectImages($event)" multiple>
+                            <br />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button id="submit" type="submit" class="btn btn-primary rounded-pill float-right  mb-3"
+                      value="Submit">Save Information</button>
+                    <button type="button" class="btn btn-secondary rounded-pill float-right mb-3 mr-1"
+                      (click)="goBack()">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

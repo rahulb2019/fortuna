@@ -14,23 +14,19 @@ var MimicSchema = new Schema(
       enum: ["0", "1"],
       default: "0"
     },
-    address: {
+    lattitude: {
       type: String,
       default: null
     },
-    city: {
+    longitude: {
       type: String,
       default: null
     },
-    zipcode: {
-      type: String,
+    no_of_pumps: {
+      type: Number,
       default: null
     },
     mimic_data: [],
-    state: {
-      type: String,
-      default: null
-    },
     is_deleted: {
       type: Boolean,
       default: false
