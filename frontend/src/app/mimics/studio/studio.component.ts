@@ -41,8 +41,11 @@ export class StudioComponent implements OnInit {
       this.mimicId = params.id;
       this.getMimicDataById();
     });
-    this.manageEditor();
+    // this.manageEditor();
     this.getAllCategories();
+  }
+  anyfunction(){
+    this.manageEditor();
   }
 
   getAllCategories() {
@@ -114,10 +117,13 @@ export class StudioComponent implements OnInit {
         maxHeight: $('#droppable').height(),
         maxWidth: $('#droppable').width()
       }); 
-      $('.delete').dblclick(function () {
-        $(this).parent('div').remove();
+      $(this).find('.delete').click(function () {
+        var r = confirm("Are you sure to delete?");
+        if (r == true) {
+          $(this).parent('div').remove();
+        }
       });
-      $(this).click(function(){
+      $(this).dblclick(function(){
         if($(this).hasClass("ui-resizable")){
           $(this).resizable('destroy');
           $(this).find('.delete').hide();
@@ -139,11 +145,10 @@ export class StudioComponent implements OnInit {
     //Make element draggable
     this.manageDraggable();
     this.manageDroppable();
-
   }
 
   manageDraggable(){
-    $(".drag").draggable({
+   $(".drag-list .drag").draggable({
       helper: "clone",
       // appendTo: "#droppable",
       appendTo: "body",
@@ -182,9 +187,11 @@ export class StudioComponent implements OnInit {
           let el = $('<span class="xicon delete ui-icon ui-icon-close" title="Remove"></span>');
           $(el).insertAfter($(this.selectedEle.find('img')));
           this.selectedEle.appendTo('#droppable');
-          $('.delete').dblclick(function () {
-            console.log($(this).parent('div'));
-            $(this).parent('div').remove();
+          this.selectedEle.find('.delete').click(function () {
+            var r = confirm("Are you sure to delete?");
+            if (r == true) {
+              $(this).parent('div').remove();
+            }
           });
           //set position according body to droppable
           let currentPos=this.selectedEle.offset();
@@ -193,7 +200,7 @@ export class StudioComponent implements OnInit {
             top: currentPos.top-(droppablePos.top*2+2),
             left: currentPos.left-(droppablePos.left*2+2)
           });
-          this.selectedEle.click(function(){
+          this.selectedEle.dblclick(function(){
             if($(this).hasClass("ui-resizable")){
               $(this).resizable('destroy');
               $(this).find('.delete').hide();

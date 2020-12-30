@@ -30,17 +30,11 @@
                     </div>
                     <div id="drag-list" class="drag-list">
                         <ul>
-                            <li>
-                                <div id="drag34" class="drag ui-draggable ui-draggable-handle">
-                                    <img src="http://localhost:3001/public/uploadMedia/images/mimics/original/1_1608544926_motor_left_off.svg" width="100%"
-                                        height="100%">
-                                </div>
-                                <p>Motor Running Green Mirror</p>
-                            </li>
-                            <li *ngFor="let selImg of selectedImages; let i=index">
-                                <div id="{{'drag'+i}}" class="drag ui-draggable ui-draggable-handle">
+                           <li *ngFor="let selImg of selectedImages; let i=index; let lastcall = last">
+                                <div id="{{'drag'+i}}" class="drag">
                                     <img src="{{imageUrl+selImg.name}}" width="100%" height="100%">
                                 </div>
+                                <span *ngIf="lastcall">{{anyfunction()}}</span>
                                 <p>Motor Running Green</p>
                             </li>
 
