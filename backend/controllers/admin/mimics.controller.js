@@ -217,6 +217,39 @@ const getAllImages = async function (req, res) {
     }
 };
 
+const saveBlocksData = async function (req, res) { 
+    let data = req.body ? req.body.blocksData : {};
+    let siteId = req.body ? req.body.site_id : {};
+    try {
+        let respData = await mimicQueries.addMimicBlockData(data, siteId);
+        if (respData){
+            res.status(200).json({ code: 200, message: "Data added successfully" });
+        } else {
+            res.status(400).json({ code: 301, message: "Unable to add data", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to add data", result: error.sqlMessage })
+    }
+};
+
+const getBlocksData = async function (req, res) {
+    let data = req.body ? req.body : {};
+    let token = "";
+    try {
+        const respData = await mimicQueries.getSiteBlocksData(data);
+        if (respData.length == 0)
+            res.status(400).json({ code: 301, message: "Unable to fetch data", result: respData });
+        else {
+            let resp=[];
+            resp.push(respData)
+            res.status(200).json({ code: 200, message: "Record fetched successfully", result: resp });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to fetch data", result: error.sqlMessage })
+    }
+};
+
+
 exports.fetchMimicsData = fetchMimicsData;
 exports.addMimic = addMimic;
 exports.updateMimic = updateMimic;
@@ -228,3 +261,5 @@ exports.getAllCategories = getAllCategories;
 exports.uploadMimicImages = uploadMimicImages;
 exports.addImages = addImages;
 exports.getAllImages = getAllImages;
+exports.saveBlocksData = saveBlocksData;
+exports.getBlocksData = getBlocksData;

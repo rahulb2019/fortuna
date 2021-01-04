@@ -124,5 +124,21 @@ export class MimicService {
     );
   }
 
+  saveBlocksData(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/saveBlocksData/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
+  getBlocksData(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/getBlocksData/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
 }
 

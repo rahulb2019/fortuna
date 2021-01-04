@@ -660,7 +660,7 @@ Mail Inbox
 .email-app-details { position: absolute; display: block; z-index: 6; visibility: hidden; opacity: 0; top: 0; width: calc(100% - 15px); -webkit-transform: translateX(100%); -ms-transform: translateX(100%); transform: translateX(100%); -webkit-transition: all .3s ease; transition: all .3s ease; height: 100%; left: auto; right: 0; background-color: #fff; }
 .attegement ul { padding: 0; list-style: none; }
 .send-panel a { height: 30px;width: 30px;text-align: center;font-size: 18px;line-height: 30px;display: inline-block;-webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;}
-#compose-email-popup{position: fixed; max-width: 700px;left: auto;right: 0; top: auto;bottom: 0; padding: 0 !important; height: auto;width: 100%;}
+#compose-email-popup{max-width: 700px;left: auto;right: 0; top: auto;bottom: 0; padding: 0 !important; height: auto;width: 100%;}
 #compose-email-popup .iq-card {border-radius: 5px 5px 0 0;}
 button.close-popup {background: transparent; color: #000; border: none; font-size: 20px; line-height: 20px;}
 .compose-bottom {border-top: 1px solid #777D74;}
@@ -969,4 +969,34 @@ body a {
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
+}
+
+
+.stat-box-container {
+  width: 100%;
+}
+.stat-box{
+  border: 5px solid #cecece;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  padding: 10px;
+  box-shadow: 3px 5px #cecece;
+  border-radius: 3px;
+}
+.stat-box h3{
+  text-align: center;
+}
+.clone-btns {
+  font-size: 20px;
+  display: flex;
+  position: relative;
+  top: 12px;
+  cursor: pointer;
+}
+
+.clone-btns .add-btn:hover {
+  color: green;
+}
+.clone-btns .remove-btn:hover {
+  color: red;
 }

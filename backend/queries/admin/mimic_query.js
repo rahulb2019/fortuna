@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 var Mimic = mongoose.model("sites");
 var SIC = mongoose.model("site_image_categories");
 var siteImage = mongoose.model("site_images");
+var siteBlock = mongoose.model("site_blocks");
 var crypto = require("crypto");
 const ObjectId = require("mongoose").Types.ObjectId;
 
@@ -210,5 +211,48 @@ obj.getAllImages = (data) => {
 
     })
 }
+
+obj.addMimicBlockData = (data, siteId) => {
+    return new Promise(function (resolve, reject) {
+        let respArr = [];
+        function forEachLoop(i) {
+            if (i < data.length) {  
+                let dataToSave = {
+                    blocks: data[i].details,
+                    site_id: siteId,
+                }
+                if (dataToSave) {
+                    siteBlock.create(dataToSave)
+                    .then(result => {
+                        respArr.push(result);
+                        forEachLoop(i + 1);
+                    })
+                }
+            } else {
+                return resolve(respArr);
+            }
+        }
+        forEachLoop(0);
+    });
+}
+
+obj.getSiteBlocksData = (data) => {
+    return new Promise((resolve, reject) => {
+        let aggregateQuery = [];
+        let query = { is_deleted: false, site_id: ObjectId(data.mimicId) };
+        aggregateQuery.push({ $match: query });
+        
+        siteBlock.aggregate(aggregateQuery).then(async result => {
+            resolve(result);
+        }).catch(err => {
+            resolve({
+                status: "Failure",
+                code: 301
+            });
+        });
+
+    })
+}
+
 
 module.exports = obj;
