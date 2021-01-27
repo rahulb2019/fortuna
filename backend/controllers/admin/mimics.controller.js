@@ -87,6 +87,7 @@ const updateMimicArch = async function (req, res) {
 const getMimicDetail = async function (req, res) {
     let data = req.body ? req.body : {};
     let token = "";
+    console.log("data----", data);
     try {
         const respData = await mimicQueries.getMimicData(data);
         if (respData.length == 0)

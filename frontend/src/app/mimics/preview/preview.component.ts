@@ -29,6 +29,7 @@ export class PreviewComponent implements OnInit {
   blocks: FormArray;
   details: FormArray;
   closeResult = '';
+  mimicDataArray: any;
 
   modalForm: FormGroup;
   modalRef: BsModalRef;
@@ -45,7 +46,6 @@ export class PreviewComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       this.mimicId = params.id;
       this.getMimicDataById();
-      this.getMimicBlocksData();
     });
     this.createStatsFormFnc();
     this.createModalFormFnc();
@@ -91,15 +91,6 @@ export class PreviewComponent implements OnInit {
     });
   }
 
-  patchBlocks(blocksCount) {
-    let blocks = this.statsForm.get('blocks') as FormArray;
-    for(let i=1; i < blocksCount; i++) {
-      blocks.push(
-        this.createStatBlock()
-      );
-    }
-  }
-
   /**Create Line Item Block */
   addRow(item) {
     this.details = item.get('details') as FormArray;
@@ -118,21 +109,63 @@ export class PreviewComponent implements OnInit {
     this.mimicService.getMimicDetail(dataObj).subscribe(res => {  
       if (res.code === 200) {
         if (res.result[0] && res.result[0].mimic_data.length > 0) {
-          let mimic_data = res.result[0].mimic_data;
+          this.mimicDataArray = res.result[0].mimic_data;
           this.pumpsCount = res.result[0].no_of_pumps
-          this.displayExistingMimic(mimic_data);
-          this.patchBlocks(this.pumpsCount);
+          this.getMimicBlocksData();
+          this.displayExistingMimic(this.mimicDataArray);
+          //this.patchBlocks(this.pumpsCount);
         }
       }
     });
   }
 
-  displayExistingMimic(mimic_data) {
+  getMimicBlocksData(){
+    let dataObj = {
+      mimicId: this.mimicId
+    }
+    this.mimicService.getBlocksData(dataObj).subscribe(res => {  
+      if (res.code === 200) {
+        let blocksData = [];
+        res.result[0].forEach(element => {
+          blocksData.push(element.blocks);
+        });
+        this.patchBlocks(blocksData, res.result[0].length);
+      }
+    });
+  }
+
+  patchBlocks(mimicData, blocksCount) {
+    console.log("blocksData---", blocksCount, mimicData);
+    let blocks = this.statsForm.get('blocks') as FormArray;
+    console.log("blocks---", blocks);
+    // while (blocks.length > 0) {
+    //   blocks.removeAt(0);
+    // }
+    // mimicData.forEach((element, index) => {
+    //   if (index >= 0) {
+    //     blocks.push(
+    //       this.createStatItemBlock()
+    //     );
+    //   }
+    // });
+    // if (mimicData.length == blocks.value.length) {
+    //   this.statsForm.patchValue({
+    //     blocks: mimicData
+    //   })
+    // }
+    // for(let i=1; i < blocksCount; i++) {
+    //   blocks.push(
+    //     this.createStatBlock()
+    //   );
+    // }
+  }
+
+  displayExistingMimic(mimicData) {
     $('.iq-sidebar').remove();
     $('.iq-top-navbar').remove();
     $('.content-page').css({'padding':0,'margin':0});
     let html='';
-    mimic_data.forEach(element => {
+    mimicData.forEach(element => {
       html+='<div class="drag" style="'+element.style+'">';
       html+='<img src="'+element.name+'" width="100%" height="100%">';
       html+='</div>';      
@@ -198,17 +231,6 @@ export class PreviewComponent implements OnInit {
             this.router.navigate(["/admin/mimics/preview/", this.mimicId]);
       } else {
         this.toastr.error(res.message);
-      }
-    });
-  }
-  
-  getMimicBlocksData(){
-    let dataObj = {
-      mimicId: this.mimicId
-    }
-    this.mimicService.getBlocksData(dataObj).subscribe(res => {  
-      if (res.code === 200) {
-        console.log("res-----", res);
       }
     });
   }
