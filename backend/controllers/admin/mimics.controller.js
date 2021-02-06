@@ -222,6 +222,7 @@ const saveBlocksData = async function (req, res) {
     let data = req.body ? req.body.blocksData : {};
     let siteId = req.body ? req.body.site_id : {};
     try {
+        let delData = await mimicQueries.deleteBlocksData(siteId);
         let respData = await mimicQueries.addMimicBlockData(data, siteId);
         if (respData){
             res.status(200).json({ code: 200, message: "Data added successfully" });
