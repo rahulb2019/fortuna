@@ -230,7 +230,7 @@ export class StudioComponent implements OnInit {
             images.push(imageAttr);
         });
         localStorage.setItem("currentMimic", JSON.stringify(images));
-        window.open('/admin/mimics/preview/2', '_blank');
+        this.router.navigate(["/admin/mimics/preview", mimicId]);
     }
   }
 

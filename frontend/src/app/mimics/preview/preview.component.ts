@@ -75,6 +75,7 @@ export class PreviewComponent implements OnInit {
   /**Create Pump Block*/
   createStatBlock() {
     return this.fb.group({
+      is_deleted: [false],
       details: this.fb.array([this.createStatItemBlock()])
     });
   }
@@ -127,37 +128,32 @@ export class PreviewComponent implements OnInit {
       if (res.code === 200) {
         let blocksData = [];
         res.result[0].forEach(element => {
-          blocksData.push(element.blocks);
+          blocksData.push(element);
         });
-        this.patchBlocks(blocksData, res.result[0].length);
+        this.statsForm.patchValue(res.result[0]);
+        this.patchBlocks(blocksData);
       }
     });
   }
 
-  patchBlocks(mimicData, blocksCount) {
-    console.log("blocksData---", blocksCount, mimicData);
+  patchBlocks(mimicData) {
     let blocks = this.statsForm.get('blocks') as FormArray;
-    console.log("blocks---", blocks);
-    // while (blocks.length > 0) {
-    //   blocks.removeAt(0);
-    // }
-    // mimicData.forEach((element, index) => {
-    //   if (index >= 0) {
-    //     blocks.push(
-    //       this.createStatItemBlock()
-    //     );
-    //   }
-    // });
-    // if (mimicData.length == blocks.value.length) {
-    //   this.statsForm.patchValue({
-    //     blocks: mimicData
-    //   })
-    // }
-    // for(let i=1; i < blocksCount; i++) {
-    //   blocks.push(
-    //     this.createStatBlock()
-    //   );
-    // }
+    while (blocks.length > 0) {
+      blocks.removeAt(0);
+    }
+    mimicData.forEach((element, index) => {
+      if (index >= 0) {
+        console.log("element------",index, element);
+        blocks.push(
+          this.createStatBlock()
+        );
+      }
+    });
+    if (mimicData.length == blocks.value.length) {
+      this.statsForm.patchValue({
+        blocks: mimicData
+      })
+    }
   }
 
   displayExistingMimic(mimicData) {
@@ -173,8 +169,18 @@ export class PreviewComponent implements OnInit {
     $('#droppable').html(html);
   }
 
-  openValueDialog(item, field, b, ind, content){  
-    this.modalForm.reset();
+  openValueDialog(item, field, b, ind, content){ 
+    console.log(item, field, b, ind);
+    if(item && item.value && item.value.details[ind] && item.value.details[ind].slave_id) {
+      this.modalForm.patchValue({
+        slave_id: item.value.details[ind].slave_id,
+        register_address: item.value.details[ind].register_address,
+        data_type: item.value.details[ind].data_type,
+        unit: item.value.details[ind].unit
+      })
+    } else {
+      this.modalForm.reset();
+    }
     this.modalRef = this.modalService.show(
       content,
       Object.assign({}, { class: 'compose-popup modal-sticky-bottom-right modal-sticky-lg', id: 'compose-email-popup', data: {
