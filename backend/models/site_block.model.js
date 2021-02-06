@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var SiteBlockSchema = new Schema(
   {
     site_id: { type: Schema.Types.ObjectId, ref: "sites" },
-    blocks: [],
+    details: [],
     is_deleted: {
       type: Boolean,
       default: false

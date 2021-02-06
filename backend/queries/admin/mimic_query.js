@@ -218,7 +218,7 @@ obj.addMimicBlockData = (data, siteId) => {
         function forEachLoop(i) {
             if (i < data.length) {  
                 let dataToSave = {
-                    blocks: data[i].details,
+                    details: data[i].details,
                     site_id: siteId,
                 }
                 if (dataToSave) {
@@ -243,6 +243,23 @@ obj.getSiteBlocksData = (data) => {
         aggregateQuery.push({ $match: query });
         
         siteBlock.aggregate(aggregateQuery).then(async result => {
+            resolve(result);
+        }).catch(err => {
+            resolve({
+                status: "Failure",
+                code: 301
+            });
+        });
+
+    })
+}
+
+
+
+obj.deleteBlocksData = (siteId) => {
+    return new Promise((resolve, reject) => {
+        let query = { site_id: ObjectId(siteId) };        
+        siteBlock.deleteMany(query).then(async result => {
             resolve(result);
         }).catch(err => {
             resolve({
