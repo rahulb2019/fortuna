@@ -75,7 +75,6 @@ export class PreviewComponent implements OnInit {
   /**Create Pump Block*/
   createStatBlock() {
     return this.fb.group({
-      is_deleted: [false],
       details: this.fb.array([this.createStatItemBlock()])
     });
   }
@@ -138,22 +137,28 @@ export class PreviewComponent implements OnInit {
 
   patchBlocks(mimicData) {
     let blocks = this.statsForm.get('blocks') as FormArray;
-    while (blocks.length > 0) {
-      blocks.removeAt(0);
+    for (let i = 0; i < blocks.length; i++) {
+      blocks.removeAt(i);
     }
-    mimicData.forEach((element, index) => {
-      if (index >= 0) {
-        console.log("element------",index, element);
-        blocks.push(
-          this.createStatBlock()
-        );
-      }
-    });
-    if (mimicData.length == blocks.value.length) {
-      this.statsForm.patchValue({
-        blocks: mimicData
-      })
-    }
+    mimicData.forEach(x => {
+      blocks.push(this.fb.group({ 
+        details: this.setDetails(x) }))
+    })
+  }
+
+  setDetails(x) {
+    let arr = new FormArray([])
+    x.details.forEach(y => {
+      arr.push(this.fb.group({
+        data_type: y.data_type,
+        name: y.name,
+        register_address: y.register_address,
+        slave_id: y.slave_id,
+        unit: y.unit,
+        value: y.value,
+      }))
+    })
+    return arr;
   }
 
   displayExistingMimic(mimicData) {
@@ -161,7 +166,7 @@ export class PreviewComponent implements OnInit {
     $('.iq-top-navbar').remove();
     $('.content-page').css({'padding':0,'margin':0});
     let html='';
-    mimicData.forEach(element => {
+    mimicData && mimicData.forEach(element => {
       html+='<div class="drag" style="'+element.style+'">';
       html+='<img src="'+element.name+'" width="100%" height="100%">';
       html+='</div>';      

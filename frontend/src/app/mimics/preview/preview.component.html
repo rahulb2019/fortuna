@@ -18,22 +18,26 @@
                             <hr />
                             <div formArrayName="details">
                                 <div class="form-row"
-                                    *ngFor="let field of item.get('details')['controls']; let ind = index; let first = first; let last = last"
-                                    [formGroupName]="ind">
-                                    <div class="form-group col-md-5">
-                                        <input type="text" class="form-control" formControlName="name"
-                                            placeholder="name">
-                                    </div>
-                                    <div class="form-group col-md-5"
-                                        (click)="openValueDialog(item, field, b, ind, composeEmail)">
-                                        <input type="text" class="form-control" formControlName="value"
-                                            placeholder="Value">
-                                    </div>
-                                    <div class="form-group col-md-2 clone-btns">
-                                        <i *ngIf="last" class="fa fa-plus add-btn" aria-hidden="true"
-                                            (click)="addRow(item)"></i> &nbsp;&nbsp;
-                                        <i *ngIf="ind > first" class="fa fa-trash remove-btn" aria-hidden="true"
-                                            (click)="removeRow(item, field, ind)"></i>
+                                    *ngFor="let field of item.get('details')['controls']; let j = index;">
+                                    <!-- let first = first; let last = last -->
+                                    <div [formGroupName]="j" style="display: flex;width: 100%;">
+                                        <div class="form-group col-md-5">
+                                            <input type="text" class="form-control" formControlName="name"
+                                                placeholder="name">
+                                        </div>
+                                        <div class="form-group col-md-5"
+                                            (click)="openValueDialog(item, field, b, j, composeEmail)">
+                                            <input type="text" class="form-control" formControlName="value"
+                                                placeholder="Value">
+                                        </div>
+                                        <div class="form-group col-md-2 clone-btns">
+                                            <!-- *ngIf="last"  -->
+                                            <i class="fa fa-plus add-btn" aria-hidden="true"
+                                                (click)="addRow(item)"></i> &nbsp;&nbsp;
+                                            <!-- *ngIf="j > first" -->
+                                            <i class="fa fa-trash remove-btn" aria-hidden="true"
+                                                (click)="removeRow(item, field, j)"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
