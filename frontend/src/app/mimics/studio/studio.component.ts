@@ -57,7 +57,7 @@ export class StudioComponent implements OnInit {
         this.getAllImages();
       }
       else {
-        this.toastr.error(res.message); //alert error message
+        this.toastr.error(res.message);
       }
     });
   }
@@ -77,7 +77,7 @@ export class StudioComponent implements OnInit {
         this.selectedImages = res.result[0];
       }
       else {
-        this.toastr.error(res.message); //alert error message
+        this.toastr.error(res.message);
       }
     });
   }
@@ -142,7 +142,6 @@ export class StudioComponent implements OnInit {
   }
 
   manageEditor() {
-    //Make element draggable
     this.manageDraggable();
     this.manageDroppable();
   }
@@ -164,7 +163,6 @@ export class StudioComponent implements OnInit {
       cursor: "move",
       activeClass: "drop-area",
       drop: function (e, ui) {
-        console.log("$(ui.draggable)[0].id----", $(ui.draggable)[0].id);
         if ($(ui.draggable)[0].id != "") {
           this.selectedEle = ui.helper.clone();
           ui.helper.remove();

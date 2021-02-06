@@ -221,6 +221,8 @@ const getAllImages = async function (req, res) {
 const saveBlocksData = async function (req, res) { 
     let data = req.body ? req.body.blocksData : {};
     let siteId = req.body ? req.body.site_id : {};
+    console.log(data);
+    console.log(siteId);
     try {
         let respData = await mimicQueries.addMimicBlockData(data, siteId);
         if (respData){
