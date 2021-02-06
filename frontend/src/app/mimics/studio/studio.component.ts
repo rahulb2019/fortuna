@@ -230,7 +230,7 @@ export class StudioComponent implements OnInit {
             images.push(imageAttr);
         });
         localStorage.setItem("currentMimic", JSON.stringify(images));
-        this.router.navigate(["/admin/mimics/preview", mimicId]);
+        this.router.navigate(["/admin/mimics/preview", this.mimicId]);
     }
   }
 
