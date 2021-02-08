@@ -75,6 +75,7 @@ export class PreviewComponent implements OnInit {
   /**Create Pump Block*/
   createStatBlock() {
     return this.fb.group({
+      pumpValue: [''],
       details: this.fb.array([this.createStatItemBlock()])
     });
   }
@@ -142,8 +143,10 @@ export class PreviewComponent implements OnInit {
       blocks.removeAt(i);
     }
     mimicData.forEach(x => {
-      blocks.push(this.fb.group({ 
-        details: this.setDetails(x) }))
+      blocks.push(this.fb.group({
+        pumpValue: x.pumpValue,
+        details: this.setDetails(x) 
+      }))
     })
   }
 
@@ -169,14 +172,14 @@ export class PreviewComponent implements OnInit {
     let html='';
     mimicData && mimicData.forEach(element => {
       html+='<div class="drag" style="'+element.style+'">';
-      html+='<img src="'+element.image+'" width="100%" height="100%">';
+      html+='<img src="'+element.image+'" title="'+element.name+'" width="100%" height="100%">';
       html+='</div>';      
     });
     $('#droppable').html(html);
   }
 
   openValueDialog(item, field, b, ind, content){ 
-    console.log(item, field, b, ind);
+    console.log("------",item, field, b, ind);
     if(item && item.value && item.value.details[ind] && item.value.details[ind].slave_id) {
       this.modalForm.patchValue({
         slave_id: item.value.details[ind].slave_id,

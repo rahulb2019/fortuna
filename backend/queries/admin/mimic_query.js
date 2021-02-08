@@ -41,7 +41,7 @@ obj.getAllMimics = (data) => {
             let skip = (Number(offSet) - 1) * data.options.limit;
             aggregateQuery.push({ $skip: skip }, { $limit: data.options.limit });
         }
-        
+
         Mimic.aggregate(aggregateQuery).then(async result => {
             resolve(result);
         }).catch(err => {
@@ -89,29 +89,54 @@ obj.updateMimicData = (data) => {
 
 obj.updateMimicArchData = (data) => {
     return new Promise((resolve, reject) => {
-        Mimic.findOneAndUpdate({ _id: data.id }, { $set: { mimic_data: data.mimic_data } }, function(
+        Mimic.findOneAndUpdate({ _id: data.id }, { $set: { mimic_data: data.mimic_data } }, async function (
             err,
             response
-          ) {
+        ) {
             if (err) {
                 reject(301);
-              } else {
-                resolve(200);
-              }
-          });
+            } else {
+                // Add site blocks code to be written here
+                let pumpsAddedOnSite = 0, noOfSiteBlocksToBeAdded = [];
+                data.mimic_data.forEach(element => {
+                    if (element.category === "Pumps") {
+                        pumpsAddedOnSite++;
+                    }
+                });
+                let checkForBlocks = await checkIfBlockExists(data.id);
+                if (checkForBlocks.length < pumpsAddedOnSite) {
+                    for (i = checkForBlocks.length; i < pumpsAddedOnSite; i++) {
+                        noOfSiteBlocksToBeAdded.push({
+                            details: [{
+                                name: "",
+                                value: "",
+                                slave_id: "",
+                                register_address: "",
+                                data_type: "",
+                                unit: ""
+                            }], siteId: data.id, pumpValue: i + 1
+                        });
+                    }
+                    let updateSiteBlocks = await addBlockDataAtMimicSave(noOfSiteBlocksToBeAdded);
+                    resolve(200);
+                } else {
+                    resolve(200);
+                }
+            }
+        });
     })
 }
 
 
 obj.getMimicData = (data) => {
     return new Promise((resolve, reject) => {
-        Mimic.findById(data.mimicId, function (err, data) { 
-            if (err){ 
-                reject(err); 
-            } 
-            else{ 
+        Mimic.findById(data.mimicId, function (err, data) {
+            if (err) {
+                reject(err);
+            }
+            else {
                 resolve(data)
-            } 
+            }
         });
     })
 }
@@ -125,8 +150,8 @@ obj.deleteMimicData = (data) => {
             { $set: deletedData },
             { "multi": true }
         ).then(function (response) {
-                resolve(200);
-            })
+            resolve(200);
+        })
             .catch(function (error) {
                 reject(301);
             });
@@ -156,7 +181,7 @@ obj.getAllCategories = (data) => {
             query = { $and: [query, sortQuery] };
         }
         aggregateQuery.push({ $match: query });
-        
+
         SIC.aggregate(aggregateQuery).then(async result => {
             resolve(result);
         }).catch(err => {
@@ -181,10 +206,10 @@ obj.addMimicImages = (data) => {
                 }
                 if (dataToSave) {
                     siteImage.create(dataToSave)
-                    .then(result => {
-                        respArr.push(result);
-                        forEachLoop(i + 1);
-                    })
+                        .then(result => {
+                            respArr.push(result);
+                            forEachLoop(i + 1);
+                        })
                 }
             } else {
                 return resolve(respArr);
@@ -199,7 +224,7 @@ obj.getAllImages = (data) => {
         let aggregateQuery = [];
         let query = { is_deleted: false, site_image_category_id: ObjectId(data.site_image_category_id), state: data.state };
         aggregateQuery.push({ $match: query });
-        
+
         siteImage.aggregate(aggregateQuery).then(async result => {
             resolve(result);
         }).catch(err => {
@@ -216,17 +241,59 @@ obj.addMimicBlockData = (data, siteId) => {
     return new Promise(function (resolve, reject) {
         let respArr = [];
         function forEachLoop(i) {
-            if (i < data.length) {  
+            if (i < data.length) {
                 let dataToSave = {
                     details: data[i].details,
                     site_id: siteId,
                 }
                 if (dataToSave) {
                     siteBlock.create(dataToSave)
-                    .then(result => {
-                        respArr.push(result);
-                        forEachLoop(i + 1);
-                    })
+                        .then(result => {
+                            respArr.push(result);
+                            forEachLoop(i + 1);
+                        })
+                }
+            } else {
+                return resolve(respArr);
+            }
+        }
+        forEachLoop(0);
+    });
+}
+
+function checkIfBlockExists(siteId) {
+    return new Promise((resolve, reject) => {
+        let aggregateQuery = [];
+        let query = { site_id: ObjectId(siteId) };
+        aggregateQuery.push({ $match: query });
+
+        siteBlock.aggregate(aggregateQuery).then(async result => {
+            resolve(result);
+        }).catch(err => {
+            resolve({
+                status: "Failure",
+                code: 301
+            });
+        });
+
+    })
+}
+function addBlockDataAtMimicSave(data) {
+    return new Promise(function (resolve, reject) {
+        let respArr = [];
+        function forEachLoop(i) {
+            if (i < data.length) {
+                let dataToSave = {
+                    details: data[i].details,
+                    site_id: data[i].siteId,
+                    pumpValue: data[i].pumpValue
+                }
+                if (dataToSave) {
+                    siteBlock.create(dataToSave)
+                        .then(result => {
+                            respArr.push(result);
+                            forEachLoop(i + 1);
+                        })
                 }
             } else {
                 return resolve(respArr);
@@ -241,7 +308,7 @@ obj.getSiteBlocksData = (data) => {
         let aggregateQuery = [];
         let query = { is_deleted: false, site_id: ObjectId(data.mimicId) };
         aggregateQuery.push({ $match: query });
-        
+
         siteBlock.aggregate(aggregateQuery).then(async result => {
             resolve(result);
         }).catch(err => {
@@ -258,7 +325,7 @@ obj.getSiteBlocksData = (data) => {
 
 obj.deleteBlocksData = (siteId) => {
     return new Promise((resolve, reject) => {
-        let query = { site_id: ObjectId(siteId) };        
+        let query = { site_id: ObjectId(siteId) };
         siteBlock.deleteMany(query).then(async result => {
             resolve(result);
         }).catch(err => {
@@ -269,6 +336,41 @@ obj.deleteBlocksData = (siteId) => {
         });
 
     })
+}
+
+obj.updateBlocksArchData = (data) => {
+    return new Promise((resolve, reject) => {
+        siteBlock.deleteOne({ site_id: ObjectId(data.siteId), pumpValue: data.pumpNumberDel}, async function (err, result) {
+            if(err){
+                resolve({
+                    status: "Failure",
+                    code: 301
+                });
+            } else {
+                let updateCountForPumps = await updateExtraPumpFnc(data)
+                resolve(result);
+            }
+        })
+    })
+}
+
+function updateExtraPumpFnc(data) {
+    return new Promise(function (resolve, reject) {
+        let updatedArr = [];
+        siteBlock.updateMany(
+            { site_id: ObjectId(data.siteId), pumpValue: { $gt: data.pumpNumberDel } },
+            { $inc: { pumpValue : -1 } }, async function (err, result) {
+                if(err){
+                    resolve({
+                        status: "Failure",
+                        code: 301
+                    });
+                } else {
+                    resolve(result);
+                }
+            }
+        )
+    });
 }
 
 

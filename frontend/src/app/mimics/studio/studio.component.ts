@@ -110,7 +110,7 @@ export class StudioComponent implements OnInit {
     var that = this;
     mimic_data.forEach(element => {
       html+='<div class="drag small remove" style="'+element.style+'">';
-      html+='<img src="'+element.image+'" name="'+element.name+'" category="'+element.category+'" width="100%" height="100%">';
+      html+='<img src="'+element.image+'" name="'+element.name+'" category="'+element.category+'" title="'+element.name+'" width="100%" height="100%">';
       html+='<span class="xicon delete ui-icon ui-icon-close" title="Remove"></span>'
       html+='</div>';      
     });
@@ -132,8 +132,12 @@ export class StudioComponent implements OnInit {
         if (r == true) {
           if($(this).parent('div').children("img").attr('category') === "Pumps") {
             that.selectedPumpsCount--;
+            let pumpNumberDeleted = $(this).parent('div').children("img").attr('name');
+            $(this).parent('div').remove();
+            that.updateNamesOfPumps(pumpNumberDeleted);
+          } else {            
+            $(this).parent('div').remove();
           }
-          $(this).parent('div').remove();
         }
       });
       $(this).dblclick(function(){
@@ -204,7 +208,13 @@ export class StudioComponent implements OnInit {
               maxWidth: $('#droppable').width()
             });
             this.selectedEle.addClass('remove');
-            this.selectedEle.children('img').attr('name', that.selectedCategory.name + 1);
+            if(that.selectedCategory.name === "Pumps") {
+              this.selectedEle.children('img').attr('name', that.selectedCategory.name +" "+ that.selectedPumpsCount);
+              this.selectedEle.children('img').attr('title', that.selectedCategory.name +" "+ that.selectedPumpsCount);
+            } else {
+              this.selectedEle.children('img').attr('name', that.selectedCategory.name);
+              this.selectedEle.children('img').attr('title', that.selectedCategory.name);
+            }
             this.selectedEle.children('img').attr('category', that.selectedCategory.name);
             let el = $('<span class="xicon delete ui-icon ui-icon-close" title="Remove"></span>');
             $(el).insertAfter($(this.selectedEle.find('img')));
@@ -214,8 +224,12 @@ export class StudioComponent implements OnInit {
               if (r == true) {
                 if($(this).parent('div').children("img").attr('category') === "Pumps") {
                   that.selectedPumpsCount--;
+                  let pumpNumberDeleted = $(this).parent('div').children("img").attr('name');
+                  $(this).parent('div').remove();
+                  that.updateNamesOfPumps(pumpNumberDeleted);
+                } else {                  
+                  $(this).parent('div').remove();
                 }
-                $(this).parent('div').remove();
               }
             });
             //set position according body to droppable
@@ -242,6 +256,31 @@ export class StudioComponent implements OnInit {
             })
           }
         }
+      }
+    });
+  }
+
+  updateNamesOfPumps(pumpNumberDeleted){
+    let pumpNumberDel = pumpNumberDeleted.split(" ")[1];
+    $('#droppable').find('.drag').each(function(){
+      let el=$(this);
+      if(el.find('img').attr('category') === "Pumps"){
+        let iteratedPump = el.find('img').attr('name');
+        let iteratePumpNo = iteratedPump.split(" ")[1];
+        if(iteratePumpNo > pumpNumberDel){
+          let valuecount = (iteratePumpNo-1);
+          el.find('img').attr('name', "Pumps "+ valuecount)
+          el.find('img').attr('title', "Pumps "+ valuecount)
+        }
+      }
+    });
+    let dataObj = {
+      pumpNumberDel: pumpNumberDel,
+      siteId: this.mimicId
+    }
+    this.mimicService.updateBlocksArch(dataObj).subscribe(res => {
+      if (res.code == 200) {
+        this.saveMimic();
       }
     });
   }

@@ -15,6 +15,7 @@
                         *ngFor="let item of statsForm.get('blocks')['controls']; let b = index;">
                         <div [formGroupName]="b">
                             <h3>Pump {{b+1}}</h3>
+                            <input formControlName="pumpValue" type="hidden" class="form-control" />
                             <hr />
                             <div formArrayName="details">
                                 <div class="form-row"

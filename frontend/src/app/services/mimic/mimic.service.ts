@@ -140,5 +140,13 @@ export class MimicService {
     );
   }
 
+  updateBlocksArch(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/updateBlocksArch/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
 }
 
