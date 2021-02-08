@@ -123,13 +123,14 @@ export class PreviewComponent implements OnInit {
     let dataObj = {
       mimicId: this.mimicId
     }
-    this.mimicService.getBlocksData(dataObj).subscribe(res => {  
+    this.mimicService.getBlocksData(dataObj).subscribe(res => {
       if (res.code === 200) {
         let blocksData = [];
-        res.result[0].forEach(element => {
+        let blockDataResponse = res.result.length > 0 ? res.result[0] : [];
+        blockDataResponse && blockDataResponse.forEach(element => {
           blocksData.push(element);
         });
-        this.statsForm.patchValue(res.result[0]);
+        this.statsForm.patchValue(blockDataResponse);
         this.patchBlocks(blocksData);
       }
     });
@@ -168,7 +169,7 @@ export class PreviewComponent implements OnInit {
     let html='';
     mimicData && mimicData.forEach(element => {
       html+='<div class="drag" style="'+element.style+'">';
-      html+='<img src="'+element.name+'" width="100%" height="100%">';
+      html+='<img src="'+element.image+'" width="100%" height="100%">';
       html+='</div>';      
     });
     $('#droppable').html(html);

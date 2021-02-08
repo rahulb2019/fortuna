@@ -240,7 +240,7 @@ const getBlocksData = async function (req, res) {
     try {
         const respData = await mimicQueries.getSiteBlocksData(data);
         if (respData.length == 0)
-            res.status(400).json({ code: 301, message: "Unable to fetch data", result: respData });
+            res.status(200).json({ code: 200, message: "No data saved yet", result: respData });
         else {
             let resp=[];
             resp.push(respData)
