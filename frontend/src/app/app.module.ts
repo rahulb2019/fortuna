@@ -31,6 +31,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { HttpIntercepterService } from './services/http-intercepter/http-intercepter.service';
 import { HttpResponseIntercepterService } from './services/http-response-intercepter/http-response-intercepter.service';
+import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,10 @@ import { HttpResponseIntercepterService } from './services/http-response-interce
     NgwWowModule,
     FormsModule,
     ReactiveFormsModule,
-    ToastrModule.forRoot({progressBar: true})
+    ToastrModule.forRoot({progressBar: true}),
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyD4nGs5ParwXfOv_IH1JEEuDMX-mkmdh0Q'
+    })
   ],
   exports: [
     SofboxModule

@@ -76,6 +76,7 @@
                                                 </span>
                                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                                    <a class="dropdown-item text-primary" href="javascript:void(0)" (click)="editMimicDetails(mimic._id)"><i class="fa fa-pencil mr-2"></i>Edit</a>
+                                                   <a class="dropdown-item text-primary" href="javascript:void(0)" (click)="mimicSettings(mimic._id)"><i class="fa fa-gear mr-2"></i>Settings</a>
                                                    <a class="dropdown-item text-primary" href="javascript:void(0)" (click)="delIndRecord(mimic._id)"><i class="fa fa-trash mr-2"></i>Delete</a>
                                                    <a *ngIf="mimic.is_blocked == 0" class="dropdown-item text-primary" href="javascript:void(0)" (click)="changeActivation(mimic._id, 'block')"><i class="fa fa-lock mr-2"></i>Block</a>
                                                    <a *ngIf="mimic.is_blocked == 1" class="dropdown-item text-primary" href="javascript:void(0)" (click)="changeActivation(mimic._id, 'unblock')"><i class="fa fa-unlock mr-2"></i>Un-Block</a>

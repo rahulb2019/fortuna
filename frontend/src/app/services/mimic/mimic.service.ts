@@ -147,6 +147,14 @@ export class MimicService {
       this.httpOptions
     );
   }
+  
+  saveMimicSettings(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/saveMimicSettings/'}`,
+      data,
+      this.httpOptions
+    );
+  }
 
 }
 

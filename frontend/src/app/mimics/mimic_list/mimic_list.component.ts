@@ -135,6 +135,10 @@ export class MimicListComponent implements OnInit {
 
   editMimicDetails(mimicId) {    
     this.router.navigate(["/admin/mimics/edit_mimic", mimicId]);
+  }
+
+  mimicSettings(mimicId) {    
+    this.router.navigate(["/admin/mimics/settings", mimicId]);
   }  
 
   manageMimicDetails(mimicId) {    

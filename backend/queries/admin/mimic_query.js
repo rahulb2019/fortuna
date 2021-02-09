@@ -374,4 +374,27 @@ function updateExtraPumpFnc(data) {
 }
 
 
+obj.saveMimicSettingsData = (data) => {
+    return new Promise((resolve, reject) => {
+        data._id = ObjectId(data._id);
+        let requestPostObj = { mimic_settings: data.mimic_settings };
+        Mimic.update(
+            {
+              _id: ObjectId(data._id)
+            },
+            { $set: requestPostObj },
+            function (err, result) {
+                if(err){
+                    resolve({
+                        status: "Failure",
+                        code: 301
+                    });
+                } else {
+                    resolve(result);
+                }
+            }
+        );
+    })
+}
+
 module.exports = obj;

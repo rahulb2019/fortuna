@@ -15,6 +15,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { NgwWowModule } from 'ngx-wow';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AgmCoreModule } from '@agm/core';
 
 export function playerFactory() {
   return player;
@@ -36,7 +37,8 @@ export function playerFactory() {
     TabsModule,
     NgScrollbarModule,
     NgwWowModule,
-    SlickCarouselModule
+    SlickCarouselModule,
+    AgmCoreModule
   ],
   exports: [
   ]

@@ -265,6 +265,21 @@ const updateBlocksArch = async function (req, res) {
     }
 };
 
+const saveMimicSettings = async function (req, res) {
+    let data = req.body ? req.body : {};
+    let token = "";
+    try {
+        const respData = await mimicQueries.saveMimicSettingsData(data);
+        if (respData.length == 0)
+            res.status(400).json({ code: 301, message: "Unable to update data", result: respData });
+        else {
+            res.status(200).json({ code: 200, message: "Record updated successfully", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to update data", result: error.sqlMessage })
+    }
+};
+
 
 exports.fetchMimicsData = fetchMimicsData;
 exports.addMimic = addMimic;
@@ -280,3 +295,4 @@ exports.getAllImages = getAllImages;
 exports.saveBlocksData = saveBlocksData;
 exports.getBlocksData = getBlocksData;
 exports.updateBlocksArch = updateBlocksArch;
+exports.saveMimicSettings = saveMimicSettings;

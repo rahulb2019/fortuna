@@ -3,6 +3,7 @@ import {ApiService} from '../../services/api.service';
 
 import { AnimationItem } from 'lottie-web';
 import { AnimationOptions } from 'ngx-lottie';
+import { MimicService } from "../../services/mimic/mimic.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -12,8 +13,29 @@ import { AnimationOptions } from 'ngx-lottie';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(public apiService: ApiService) {
+  options: any = {};
+  mimicsArr: any = [];
+  title = 'My first AGM project';
+  lat = 51.678418;
+  lng = 7.809007;
+
+  constructor(public apiService: ApiService, private mimicService: MimicService) {
     this.usersData = [];
+    this.fetchMimics();
+  }
+
+  ngOnInit() {}
+
+  fetchMimics() {
+    let dataObj = {
+      options: this.options
+    }
+    this.mimicService.fetchMimicsData(dataObj).subscribe(res => {
+      if (res.code === 200) {
+        this.mimicsArr = res.result;
+        console.log("this.mimicsArr----", this.mimicsArr);
+      }
+    });
   }
 
   
@@ -478,6 +500,4 @@ export class DashboardComponent implements OnInit {
     return  this.statusClass;
   }
   animationCreated(animationItem: AnimationItem): void {}
-
-  ngOnInit() {}
 }

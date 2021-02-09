@@ -8,6 +8,7 @@ import { EditMimicComponent } from './edit_mimic/edit_mimic.component';
 import { MimicListComponent } from './mimic_list/mimic_list.component';
 import { StudioComponent } from './studio/studio.component';
 import { PreviewComponent } from './preview/preview.component';
+import { SettingsComponent } from './settings/settings.component';
 
 
 const routes: Routes = [
@@ -34,7 +35,11 @@ const routes: Routes = [
   {
     path: 'edit_mimic/:id',
     component: EditMimicComponent
-  },  
+  }, 
+  {
+    path: 'settings/:id',
+    component: SettingsComponent
+  }, 
   
 ];
 

@@ -27,6 +27,16 @@ var MimicSchema = new Schema(
       default: null
     },
     mimic_data: [],
+    mimic_settings: {
+      schedule: { type: Boolean, default: false },
+      unbalancing: { type: Boolean, default: false },
+      high_voltage: { type: Boolean, default: false },
+      low_voltage: { type: Boolean, default: false },
+      high_current: { type: Boolean, default: false },
+      low_current: { type: Boolean, default: false },
+      high_level: { type: Boolean, default: false },
+      low_level: { type: Boolean, default: false }
+    },
     is_deleted: {
       type: Boolean,
       default: false
