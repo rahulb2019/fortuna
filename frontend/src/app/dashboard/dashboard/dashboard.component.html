@@ -2,54 +2,46 @@
 <div class="row">
   <div class="col-md-6 col-lg-3">
     <app-iq-card cardClass="iq-card overflow-hidden" [isCardHeader]=false cardBodyClass="iq-card-body pb-0">
-      <div class="rounded-circle iq-card-icon iq-bg-primary"><i class="ri-exchange-dollar-fill"></i></div>
-      <span class="float-right line-height-6">Net Worth</span>
+      <div class="rounded-circle iq-card-icon iq-bg-success"><i class="ri-bar-chart-grouped-line"></i></div>
+      <span class="float-right line-height-6">Total Active Mimics</span>
       <div class="clearfix"></div>
       <div class="text-center">
-        <h2 class="mb-0"><span class="counter">65</span><span>M</span></h2>
-        <p class="mb-0 text-secondary line-height"><i class="ri-arrow-up-line text-success mr-1"></i><span
-          class="text-success">10%</span> Increased</p>
+        <h2 class="mb-0"><span class="counter">{{activeMimics}}</span></h2>
       </div>
-      <app-apex-chart card-bottom ids="chart1" [options]="chart1"></app-apex-chart>
+      <br>
     </app-iq-card>
   </div>
   <div class="col-md-6 col-lg-3">
     <app-iq-card cardClass="iq-card overflow-hidden" [isCardHeader]=false cardBodyClass="iq-card-body pb-0">
-      <div class="rounded-circle iq-card-icon iq-bg-warning"><i class="ri-bar-chart-grouped-line"></i></div>
-      <span class="float-right line-height-6">Todays Gains</span>
+      <div class="rounded-circle iq-card-icon iq-bg-danger"><i class="ri-bar-chart-grouped-line"></i></div>
+      <span class="float-right line-height-6">Total De-Active Mimics</span>
       <div class="clearfix"></div>
       <div class="text-center">
-        <h2 class="mb-0"><span>$</span><span class="counter">4500</span></h2>
-        <p class="mb-0 text-secondary line-height"><i class="ri-arrow-up-line text-success mr-1"></i><span
-          class="text-success">20%</span> Increased</p>
+        <h2 class="mb-0"><span class="counter">{{deactiveMimics}}</span></h2>
       </div>
-      <app-apex-chart card-bottom ids="chart2" [options]="chart2"></app-apex-chart>
+      <br>
     </app-iq-card>
   </div>
   <div class="col-md-6 col-lg-3">
     <app-iq-card cardClass="iq-card overflow-hidden" [isCardHeader]=false cardBodyClass="iq-card-body pb-0">
       <div class="rounded-circle iq-card-icon iq-bg-success"><i class="ri-group-line"></i></div>
-      <span class="float-right line-height-6">Total Users</span>
+      <span class="float-right line-height-6">Write Access Users</span>
       <div class="clearfix"></div>
       <div class="text-center">
-        <h2 class="mb-0"><span class="counter">96.6</span><span>K</span></h2>
-        <p class="mb-0 text-secondary line-height"><i class="ri-arrow-up-line text-success mr-1"></i><span
-          class="text-success">30%</span> Increased</p>
+        <h2 class="mb-0"><span class="counter">{{writeUsers}}</span></h2>
       </div>
-      <app-apex-chart card-bottom ids="chart3" [options]="chart3"></app-apex-chart>
+      <br>
     </app-iq-card>
   </div>
   <div class="col-md-6 col-lg-3">
     <app-iq-card cardClass="iq-card overflow-hidden" [isCardHeader]=false cardBodyClass="iq-card-body pb-0">
-      <div class="rounded-circle iq-card-icon iq-bg-danger"><i class="ri-shopping-cart-line"></i></div>
-      <span class="float-right line-height-6">Orders Received</span>
+      <div class="rounded-circle iq-card-icon iq-bg-danger"><i class="ri-group-line"></i></div>
+      <span class="float-right line-height-6">Read Access Users</span>
       <div class="clearfix"></div>
       <div class="text-center">
-        <h2 class="mb-0"><span class="counter">15.5</span><span>K</span></h2>
-        <p class="mb-0 text-secondary line-height"><i class="ri-arrow-down-line text-danger mr-1"></i><span
-          class="text-danger">10%</span> Increased</p>
+        <h2 class="mb-0"><span class="counter">{{readUsers}}</span></h2>
       </div>
-      <app-apex-chart card-bottom ids="chart4" [options]="chart4"></app-apex-chart>
+      <br>
     </app-iq-card>
   </div>
 </div>
@@ -62,7 +54,7 @@
       <!---Google Map to be rendered-->
       <div>
         <agm-map [latitude]="lat" [longitude]="lng">
-          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+          <agm-marker *ngFor="let mimic of mimicsArr; let i = index" [latitude]="mimic.lattitude" [longitude]="mimic.longitude"></agm-marker>
         </agm-map>
       </div>
     </app-iq-card>

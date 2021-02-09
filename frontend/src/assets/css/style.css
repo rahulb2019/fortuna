@@ -1000,3 +1000,7 @@ body a {
 .clone-btns .remove-btn:hover {
   color: red;
 }
+
+agm-map {
+  height: 500px;
+}

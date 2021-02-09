@@ -58,7 +58,6 @@ export class SideBar1Component implements OnInit {
   }
 
   routeToDestination(setlink, setTitle){
-    console.log(".setlink....", setTitle);
     // if(setTitle == "Users" || setTitle == "Subscriptions" || setTitle == "Home") {
       this.router.navigate([setlink]);
     // } else {
