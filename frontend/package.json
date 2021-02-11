@@ -53,6 +53,7 @@
     "ngx-owl-carousel-o": "^2.0.3",
     "ngx-scrollbar": "^7.1.0",
     "ngx-slick-carousel": "^0.4.7",
+    "ngx-socket-io": "^3.2.0",
     "ngx-toastr": "^10.1.0",
     "ngx-wow": "^2.0.1",
     "rxjs": "~6.4.0",

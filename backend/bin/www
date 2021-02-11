@@ -7,6 +7,29 @@
 var app = require('../fortuna');
 var debug = require('debug')('fortuna:server');
 var http = require('http');
+var io = require('socket.io')(http.Server(app));
+
+
+const documents = {};
+
+io.on('connection', socket => {
+  console.log('hererer');
+    let previousId;
+    const safeJoin = currentId => {
+        socket.leave(previousId);
+        socket.join(currentId, () => console.log(`Socket ${socket.id} joined room ${currentId}`));
+        previousId = currentId;
+    }
+
+    socket.on('getDoc', docId => {
+        safeJoin(docId);
+        socket.emit('document', documents[docId]);
+    });
+
+    io.emit('documents', Object.keys(documents));
+
+    console.log(`Socket ${socket.id} has connected`);
+});
 
 /**
  * Get port from environment and store in Express.
@@ -39,6 +62,8 @@ server.listen(port, function (err) {
 })
 server.on('error', onError);
 server.on('listening', onListening);
+
+var io = require('socket.io').listen(server);
 
 /**
  * Normalize a port into a number, string, or false.

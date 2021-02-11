@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { Socket } from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,10 @@ import { Router } from '@angular/router';
 
 export class MimicService {
   private BASE_PATH = environment.apiEndpoint + '/mimics';
+  currentDocument = this.socket.fromEvent<Document>('document');
+  documents = this.socket.fromEvent<any[]>('documents');
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router,private socket: Socket) { }
 
   // Add options on Http Request
   httpOptions = {
@@ -138,6 +141,12 @@ export class MimicService {
       data,
       this.httpOptions
     );
+  }
+
+
+  getDocument(id: string) {
+    console.log(2);
+    this.socket.emit('getDoc', id);
   }
 
 }

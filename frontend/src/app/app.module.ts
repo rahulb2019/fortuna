@@ -32,6 +32,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { HttpIntercepterService } from './services/http-intercepter/http-intercepter.service';
 import { HttpResponseIntercepterService } from './services/http-response-intercepter/http-response-intercepter.service';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+const config: SocketIoConfig = { url: environment.apiEndpoint, options: {} };
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,7 +70,8 @@ import { HttpResponseIntercepterService } from './services/http-response-interce
     NgwWowModule,
     FormsModule,
     ReactiveFormsModule,
-    ToastrModule.forRoot({progressBar: true})
+    ToastrModule.forRoot({progressBar: true}),
+    SocketIoModule.forRoot(config)
   ],
   exports: [
     SofboxModule

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { MimicService } from "../../services/mimic/mimic.service";
 import * as $ from 'jquery';
 import 'jquery-ui-dist/jquery-ui';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-mimic',
@@ -21,7 +22,7 @@ import 'jquery-ui-dist/jquery-ui';
   styleUrls: []
 
 })
-export class PreviewComponent implements OnInit {
+export class PreviewComponent implements OnInit, OnDestroy {
 
   mimicId: any;
   pumpsCount: any;
@@ -36,6 +37,10 @@ export class PreviewComponent implements OnInit {
   isSubmitted: boolean;
   isValid: boolean = true;
   errorField: string;
+
+  documents: Observable<any[]>;
+  currentDoc: any;
+  private _docSub: Subscription;
 
   constructor(public apiService: ApiService,
     private fb: FormBuilder,
@@ -54,8 +59,15 @@ export class PreviewComponent implements OnInit {
   ngOnInit() {
     var images =  JSON.parse(localStorage.getItem('currentMimic'));
     this.displayExistingMimic(images);
-  }
 
+    this.documents = this.mimicService.documents;
+    this._docSub = this.mimicService.currentDocument.subscribe(doc => this.currentDoc = doc);
+    this.mimicService.getDocument("1");
+    console.log(1);
+  }
+  ngOnDestroy() {
+    this._docSub.unsubscribe();
+  }
   
   createModalFormFnc(){
     this.modalForm = this.fb.group({
