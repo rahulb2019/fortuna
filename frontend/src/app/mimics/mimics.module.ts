@@ -21,6 +21,8 @@ import { EditMimicComponent } from './edit_mimic/edit_mimic.component';
 import { MimicListComponent } from './mimic_list/mimic_list.component';
 import { StudioComponent } from './studio/studio.component';
 import { PreviewComponent } from './preview/preview.component';
+import { SettingsComponent } from './settings/settings.component';
+import { RunComponent } from './run/run.component';
 
 export function playerFactory() {
   return player;
@@ -33,7 +35,9 @@ export function playerFactory() {
     PreviewComponent,
     AddMimicComponent,
     EditMimicComponent,
-    MimicListComponent
+    MimicListComponent,
+    SettingsComponent,
+    RunComponent,
   ],
   imports: [
     CommonModule,

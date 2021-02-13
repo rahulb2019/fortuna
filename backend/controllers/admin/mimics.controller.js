@@ -87,7 +87,6 @@ const updateMimicArch = async function (req, res) {
 const getMimicDetail = async function (req, res) {
     let data = req.body ? req.body : {};
     let token = "";
-    console.log("data----", data);
     try {
         const respData = await mimicQueries.getMimicData(data);
         if (respData.length == 0)
@@ -168,8 +167,14 @@ const uploadMimicImages = async function (req, res) {
         response.contentType = matches[1];
         response.data = new Buffer(matches[2], "base64");
         if (req.body.status == "mimic_image") {
-            response.key = inputIteration +"_"+ Math.round(+new Date().getTime() / 1000) +"_"+ imageName + "." + type;
+            // response.key = inputIteration +"_"+ Math.round(+new Date().getTime() / 1000) +"_"+ imageName + "." + type;
+            response.key = inputIteration +"_"+ imageName + "." + type;
             filePath = constant.imageUrl.mimicImageOriginal + response.key;
+            if (fs.existsSync(filePath)) {
+                inputIteration++;
+                response.key = inputIteration +"_"+ imageName + "." + type;
+                filePath = constant.imageUrl.mimicImageOriginal + response.key;
+            }
             filePathThumb = constant.imageUrl.mimicImageThumb + response.key;
         }
         if (filePath) {
@@ -221,11 +226,12 @@ const getAllImages = async function (req, res) {
 const saveBlocksData = async function (req, res) { 
     let data = req.body ? req.body.blocksData : {};
     let siteId = req.body ? req.body.site_id : {};
+    let pumpData = req.body ? req.body.pumpData : [];
     console.log(data);
     console.log(siteId);
     try {
         let delData = await mimicQueries.deleteBlocksData(siteId);
-        let respData = await mimicQueries.addMimicBlockData(data, siteId);
+        let respData = await mimicQueries.addMimicBlockData(data, siteId, pumpData);
         if (respData){
             res.status(200).json({ code: 200, message: "Data added successfully" });
         } else {
@@ -242,7 +248,7 @@ const getBlocksData = async function (req, res) {
     try {
         const respData = await mimicQueries.getSiteBlocksData(data);
         if (respData.length == 0)
-            res.status(400).json({ code: 301, message: "Unable to fetch data", result: respData });
+            res.status(200).json({ code: 200, message: "No data saved yet", result: respData });
         else {
             let resp=[];
             resp.push(respData)
@@ -250,6 +256,36 @@ const getBlocksData = async function (req, res) {
         }
     } catch (error) {
         res.status(404).json({ code: 404, message: "Unable to fetch data", result: error.sqlMessage })
+    }
+};
+
+const updateBlocksArch = async function (req, res) {
+    let data = req.body ? req.body : {};
+    let token = "";
+    try {
+        const respData = await mimicQueries.updateBlocksArchData(data);
+        if (respData.length == 0)
+            res.status(400).json({ code: 301, message: "Unable to update data", result: respData });
+        else {
+            res.status(200).json({ code: 200, message: "Record updated successfully", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to update data", result: error.sqlMessage })
+    }
+};
+
+const saveMimicSettings = async function (req, res) {
+    let data = req.body ? req.body : {};
+    let token = "";
+    try {
+        const respData = await mimicQueries.saveMimicSettingsData(data);
+        if (respData.length == 0)
+            res.status(400).json({ code: 301, message: "Unable to update data", result: respData });
+        else {
+            res.status(200).json({ code: 200, message: "Record updated successfully", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to update data", result: error.sqlMessage })
     }
 };
 
@@ -267,3 +303,5 @@ exports.addImages = addImages;
 exports.getAllImages = getAllImages;
 exports.saveBlocksData = saveBlocksData;
 exports.getBlocksData = getBlocksData;
+exports.updateBlocksArch = updateBlocksArch;
+exports.saveMimicSettings = saveMimicSettings;

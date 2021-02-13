@@ -15,6 +15,7 @@ import { MimicService } from "../../services/mimic/mimic.service";
 import * as $ from 'jquery';
 import 'jquery-ui-dist/jquery-ui';
 import { Observable, Subscription } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-mimic',
@@ -22,7 +23,7 @@ import { Observable, Subscription } from 'rxjs';
   styleUrls: []
 
 })
-export class PreviewComponent implements OnInit, OnDestroy {
+export class PreviewComponent implements OnInit {
 
   mimicId: any;
   pumpsCount: any;
@@ -31,16 +32,19 @@ export class PreviewComponent implements OnInit, OnDestroy {
   details: FormArray;
   closeResult = '';
   mimicDataArray: any;
+  pumpData: any;
 
   modalForm: FormGroup;
+  modalFormPump: FormGroup;
   modalRef: BsModalRef;
+  modalPumpRef: BsModalRef;
   isSubmitted: boolean;
   isValid: boolean = true;
   errorField: string;
 
-  documents: Observable<any[]>;
-  currentDoc: any;
+  document: any;
   private _docSub: Subscription;
+
 
   constructor(public apiService: ApiService,
     private fb: FormBuilder,
@@ -54,19 +58,13 @@ export class PreviewComponent implements OnInit, OnDestroy {
     });
     this.createStatsFormFnc();
     this.createModalFormFnc();
+    this.pumpData=[];
   }
 
   ngOnInit() {
     var images =  JSON.parse(localStorage.getItem('currentMimic'));
     this.displayExistingMimic(images);
-
-    this.documents = this.mimicService.documents;
-    this._docSub = this.mimicService.currentDocument.subscribe(doc => this.currentDoc = doc);
-    this.mimicService.getDocument("1");
-    console.log(1);
-  }
-  ngOnDestroy() {
-    this._docSub.unsubscribe();
+    this.mimicDataArray=images;
   }
   
   createModalFormFnc(){
@@ -75,6 +73,10 @@ export class PreviewComponent implements OnInit, OnDestroy {
       register_address: ['', [Validators.required]],
       data_type: ['', [Validators.required]],
       unit: ['', [Validators.required]]
+    });
+    this.modalFormPump = this.fb.group({
+      pumps: ['', [Validators.required]],
+      element:['']
     });
   }
 
@@ -87,7 +89,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
   /**Create Pump Block*/
   createStatBlock() {
     return this.fb.group({
-      is_deleted: [false],
+      pumpValue: [''],
       details: this.fb.array([this.createStatItemBlock()])
     });
   }
@@ -136,13 +138,15 @@ export class PreviewComponent implements OnInit, OnDestroy {
     let dataObj = {
       mimicId: this.mimicId
     }
-    this.mimicService.getBlocksData(dataObj).subscribe(res => {  
+    this.mimicService.getBlocksData(dataObj).subscribe(res => {
       if (res.code === 200) {
         let blocksData = [];
-        res.result[0].forEach(element => {
+        let blockDataResponse = res.result.length > 0 ? res.result[0] : [];
+        blockDataResponse && blockDataResponse.forEach(element => {
           blocksData.push(element);
+          this.pumpData=element.pumpData
         });
-        this.statsForm.patchValue(res.result[0]);
+        this.statsForm.patchValue(blockDataResponse);
         this.patchBlocks(blocksData);
       }
     });
@@ -150,39 +154,104 @@ export class PreviewComponent implements OnInit, OnDestroy {
 
   patchBlocks(mimicData) {
     let blocks = this.statsForm.get('blocks') as FormArray;
-    while (blocks.length > 0) {
-      blocks.removeAt(0);
+    for (let i = 0; i < blocks.length; i++) {
+      blocks.removeAt(i);
     }
-    mimicData.forEach((element, index) => {
-      if (index >= 0) {
-        console.log("element------",index, element);
-        blocks.push(
-          this.createStatBlock()
-        );
-      }
-    });
-    if (mimicData.length == blocks.value.length) {
-      this.statsForm.patchValue({
-        blocks: mimicData
-      })
-    }
+    mimicData.forEach(x => {
+      blocks.push(this.fb.group({
+        pumpValue: x.pumpValue,
+        details: this.setDetails(x) 
+      }))
+    })
+  }
+
+  setDetails(x) {
+    let arr = new FormArray([])
+    x.details.forEach(y => {
+      arr.push(this.fb.group({
+        data_type: y.data_type,
+        name: y.name,
+        register_address: y.register_address,
+        slave_id: y.slave_id,
+        unit: y.unit,
+        value: y.value,
+      }))
+    })
+    return arr;
   }
 
   displayExistingMimic(mimicData) {
     $('.iq-sidebar').remove();
     $('.iq-top-navbar').remove();
     $('.content-page').css({'padding':0,'margin':0});
+    $('.mn-studio #droppable').css({'background-image':'none','margin-top':'25px'});
+    $('#droppable').hide();
     let html='';
-    mimicData.forEach(element => {
+    var pipe=0;
+    mimicData && mimicData.forEach(element => {
       html+='<div class="drag" style="'+element.style+'">';
-      html+='<img src="'+element.name+'" width="100%" height="100%">';
+      let title=element.name;
+      if(title=='Pipes'){
+        pipe++;
+        title='Pipe '+pipe;
+        html+='<img src="'+element.image+'" title="'+title+'" width="100%" height="100%" class="pipes" (mouseDown)="openModal(template)" >';
+      }
+      else
+        html+='<img src="'+element.image+'" title="'+title+'" width="100%" height="100%">';
       html+='</div>';      
     });
-    $('#droppable').html(html);
+    setTimeout(() => {
+      $('.drag').each(function(){
+        $(this).attr('style',$(this).attr('stylea'));
+        $(this).removeAttr('stylea');
+      })
+      $('#droppable').show();
+    }, 300);
+    
+    // $('#droppable').html(html);
+    // var ang=this;
+    // $('.pipes').click(function(){
+    //   ang.modalRef = ang.modalService.show(
+    //     Object.assign({}, { class: 'compose-popup modal-sticky-bottom-right modal-sticky-lg', id: 'compose-email-popup1', data: {
+          
+    //     }})
+    //   ); 
+    // })
+    
   }
+  openModal(content,i){
+    var index = this.pumpData.findIndex((el, index) => {
+      if (el.element === i) {
+        return true
+      }
+    })
+   if (index!==-1){
+    this.modalFormPump.patchValue({pumps: this.pumpData[index].pumps});
+   }
+   else
+    this.modalFormPump.patchValue({pumps: 0});
+   this.modalFormPump.patchValue({element: i});
+   this.modalPumpRef = this.modalService.show(
+      content,
+      Object.assign({}, { class: 'compose-popup modal-sticky-bottom-right modal-sticky-lg', id: 'template-popup'})
+    ); 
+  }
+  savePipeAssociation(){
+    var index = this.pumpData.findIndex((el, index) => {
+      if (el.element === this.modalFormPump.value.element) {
+        return true
+      }
+    })
+    if (index===-1)
+      this.pumpData.push(this.modalFormPump.value);
+    else
+      this.pumpData[index]=this.modalFormPump.value;
+    this.modalPumpRef.hide();
+  }
+  
 
-  openValueDialog(item, field, b, ind, content){ 
-    console.log(item, field, b, ind);
+  openValueDialog(item, field, b, ind, content){
+    console.log("------",item, field, b, ind);
     if(item && item.value && item.value.details[ind] && item.value.details[ind].slave_id) {
       this.modalForm.patchValue({
         slave_id: item.value.details[ind].slave_id,
@@ -241,7 +310,8 @@ export class PreviewComponent implements OnInit, OnDestroy {
     })
     let dataObj = {
       blocksData: filteredItems,
-      site_id: this.mimicId
+      site_id: this.mimicId,
+      pumpData: this.pumpData
     }
     this.mimicService.saveBlocksData(dataObj).subscribe(res => {
       if (res.code == 200) {

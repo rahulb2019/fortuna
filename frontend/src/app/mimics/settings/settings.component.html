@@ -1,0 +1,77 @@
+<div class="row">
+  <div class="col-sm-12 col-lg-12">
+    <div class="iq-card">
+      <div class="iq-card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="iq-card">
+              <div class="iq-card-header d-flex justify-content-between">
+                <div class="iq-header-title">
+                  <h4 class="card-title">Add New Site</h4>
+                </div>
+              </div>
+              <div class="iq-card-body">
+                <form id="form-wizard3" class="text-center" [formGroup]="settingForm" (submit)="saveMimicSettings()">
+                  <div class="form-card text-left">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group custom-control custom-checkbox d-inline-block mt-2 pt-1">
+                          <input type="checkbox" class="custom-control-input check_box_all" id="schedule" name="schedule" formControlName="schedule">
+                          <label class="custom-control-label" for="schedule">Schedule</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group custom-control custom-checkbox d-inline-block mt-2 pt-1">
+                          <input type="checkbox" class="custom-control-input check_box_all" id="unbalancing" name="unbalancing" formControlName="unbalancing">
+                          <label class="custom-control-label" for="unbalancing">Unbalancing</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group custom-control custom-checkbox d-inline-block mt-2 pt-1">
+                          <input type="checkbox" class="custom-control-input check_box_all" id="high_voltage" name="high_voltage" formControlName="high_voltage">
+                          <label class="custom-control-label" for="high_voltage">High Voltage</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group custom-control custom-checkbox d-inline-block mt-2 pt-1">
+                          <input type="checkbox" class="custom-control-input check_box_all" id="low_voltage" name="low_voltage" formControlName="low_voltage">
+                          <label class="custom-control-label" for="low_voltage">Low Voltage</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group custom-control custom-checkbox d-inline-block mt-2 pt-1">
+                          <input type="checkbox" class="custom-control-input check_box_all" id="high_current" name="high_current" formControlName="high_current">
+                          <label class="custom-control-label" for="high_current">High Curent</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group custom-control custom-checkbox d-inline-block mt-2 pt-1">
+                          <input type="checkbox" class="custom-control-input check_box_all" id="low_current" name="low_current" formControlName="low_current">
+                          <label class="custom-control-label" for="low_current">Low Current</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group custom-control custom-checkbox d-inline-block mt-2 pt-1">
+                          <input type="checkbox" class="custom-control-input check_box_all" id="high_level" name="high_level" formControlName="high_level">
+                          <label class="custom-control-label" for="high_level">High Level</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group custom-control custom-checkbox d-inline-block mt-2 pt-1">
+                          <input type="checkbox" class="custom-control-input check_box_all" id="low_level" name="low_level" formControlName="low_level">
+                          <label class="custom-control-label" for="low_level">Low Level</label>
+                        </div>
+                      </div>
+                    </div>
+                    <button id="submit" type="submit" class="btn btn-primary rounded-pill float-right  mb-3"
+                      value="Submit">Save Information</button>
+                    <button type="button" class="btn btn-secondary rounded-pill float-right mb-3 mr-1" (click)="goBack()">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

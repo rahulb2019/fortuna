@@ -3,6 +3,8 @@ import {ApiService} from '../../services/api.service';
 
 import { AnimationItem } from 'lottie-web';
 import { AnimationOptions } from 'ngx-lottie';
+import { MimicService } from "../../services/mimic/mimic.service";
+import { UserService } from "../../services/user/user.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -12,8 +14,56 @@ import { AnimationOptions } from 'ngx-lottie';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(public apiService: ApiService) {
+  options: any = {};
+  mimicsArr: any = [];
+  usersArr: any = [];
+  lat = 30.3253;
+  lng = 78.0413;
+  activeMimics: Number = 0;
+  deactiveMimics: Number = 0;
+  readUsers: Number = 0;
+  writeUsers: Number = 0;
+
+  constructor(public apiService: ApiService, private mimicService: MimicService, private userService: UserService) {
     this.usersData = [];
+    this.fetchMimicsAndUsers();
+  }
+
+  ngOnInit() {}
+
+  fetchMimicsAndUsers() {
+    let dataObj = {
+      options: this.options
+    }
+    // Fetching Mimics
+    this.mimicService.fetchMimicsData(dataObj).subscribe(res => {
+      if (res.code === 200) {
+        this.mimicsArr = res.result;
+        let activeMimicsData = this.mimicsArr.filter(function(obj) {
+          return obj.is_blocked === 0;
+        });
+        let deactiveMimicsData = this.mimicsArr.filter(function(obj) {
+          return obj.is_blocked === 1;
+        });
+        console.log("this.mimicsArr-----", this.mimicsArr);
+        this.activeMimics = activeMimicsData && activeMimicsData.length;
+        this.deactiveMimics = deactiveMimicsData && deactiveMimicsData.length;
+      }
+    });
+    // Fetching Users
+    this.userService.fetchUsersData(dataObj).subscribe(res => {
+      if (res.code === 200) {
+        this.usersArr = res.result;
+        let readUsersData = this.usersArr.filter(function(obj) {
+          return obj.access_type === "0";
+        });
+        let writeUsersData = this.usersArr.filter(function(obj) {
+          return obj.access_type === "1";
+        });
+        this.readUsers = readUsersData && readUsersData.length;
+        this.writeUsers = writeUsersData && writeUsersData.length;
+      }
+    });
   }
 
   
@@ -478,6 +528,4 @@ export class DashboardComponent implements OnInit {
     return  this.statusClass;
   }
   animationCreated(animationItem: AnimationItem): void {}
-
-  ngOnInit() {}
 }

@@ -980,7 +980,7 @@ body a {
   margin-left: 5px;
   margin-bottom: 10px;
   padding: 10px;
-  box-shadow: 3px 5px #cecece;
+  /* box-shadow: 3px 5px #cecece; */
   border-radius: 3px;
 }
 .stat-box h3{
@@ -999,4 +999,8 @@ body a {
 }
 .clone-btns .remove-btn:hover {
   color: red;
+}
+
+agm-map {
+  height: 500px;
 }

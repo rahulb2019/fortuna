@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 64 13" style="enable-background:new 0 0 64 13;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#SVGID_1_);}
+	.st1{fill:none;stroke:#000000;}
+</style>
+<g id="hole" transform="translate(1 1)">
+	
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-76.2581" y1="106.6364" x2="-76.2581" y2="105.6364" gradientTransform="matrix(1.501659e-05 62 11 -5.994524e-06 -1136.4989 4733.5005)">
+		<stop  offset="0" style="stop-color:#6E6E6E"/>
+		<stop  offset="1" style="stop-color:#020202"/>
+	</linearGradient>
+	<ellipse class="st0" cx="31" cy="5.5" rx="5.5" ry="31"/>
+	<ellipse class="st1" cx="31" cy="5.5" rx="6" ry="31.5"/>
+</g>
+</svg>

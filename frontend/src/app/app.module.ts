@@ -31,10 +31,10 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { HttpIntercepterService } from './services/http-intercepter/http-intercepter.service';
 import { HttpResponseIntercepterService } from './services/http-response-intercepter/http-response-intercepter.service';
+import { AgmCoreModule } from '@agm/core';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 const config: SocketIoConfig = { url: environment.apiEndpoint, options: {} };
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -71,7 +71,10 @@ const config: SocketIoConfig = { url: environment.apiEndpoint, options: {} };
     FormsModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({progressBar: true}),
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyD4nGs5ParwXfOv_IH1JEEuDMX-mkmdh0Q'
+    })
   ],
   exports: [
     SofboxModule
@@ -82,7 +85,7 @@ const config: SocketIoConfig = { url: environment.apiEndpoint, options: {} };
       useClass: HttpIntercepterService,
       multi: true
     },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpResponseIntercepterService, multi: true },],
+    { provide: HTTP_INTERCEPTORS, useClass: HttpResponseIntercepterService, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

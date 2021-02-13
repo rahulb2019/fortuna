@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-md-7" style="border: 5px solid #cecece;">
+        <div id="wrapper" class='mn-studio preview'>
+            <div id="droppable"></div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="row">
+            <div class="stat-box-container">
+                <div class="col-md-6 stat-box" *ngFor="let item of document; let b = index;">
+                        <h3>Pump {{b+1}}</h3>
+                        <div class="form-row ">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" value="Status" disabled>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="text" name="Pumps {{b+1}}" class="form-control" value="{{item.details[0].value ? 'ON' : 'OFF'}}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-row" *ngFor="let field of item.details;">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" value={{field.name}} disabled>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" value="{{field.value ? field.value+field.unit : ''}}" disabled>
+                            </div>
+                        </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>

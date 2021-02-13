@@ -13,7 +13,6 @@ import { Socket } from 'ngx-socket-io';
 export class MimicService {
   private BASE_PATH = environment.apiEndpoint + '/mimics';
   currentDocument = this.socket.fromEvent<Document>('document');
-  documents = this.socket.fromEvent<any[]>('documents');
 
   constructor(private http: HttpClient, private router: Router,private socket: Socket) { }
 
@@ -142,11 +141,23 @@ export class MimicService {
       this.httpOptions
     );
   }
-
-
-  getDocument(id: string) {
-    console.log(2);
-    this.socket.emit('getDoc', id);
+  updateBlocksArch(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/updateBlocksArch/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+  
+  saveMimicSettings(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/saveMimicSettings/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+  getDocument(mimicId) {
+    this.socket.emit('getDoc', mimicId);
   }
 
 }

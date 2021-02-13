@@ -5,7 +5,9 @@ var Schema = mongoose.Schema;
 var SiteBlockSchema = new Schema(
   {
     site_id: { type: Schema.Types.ObjectId, ref: "sites" },
+    pumpValue: {type: Number, default: 0},
     details: [],
+    pumpData: [],
     is_deleted: {
       type: Boolean,
       default: false

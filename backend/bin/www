@@ -6,28 +6,37 @@
 
 var app = require('../fortuna');
 var debug = require('debug')('fortuna:server');
-var http = require('http');
-var io = require('socket.io')(http.Server(app));
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+var mongoose = require("mongoose");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 
-const documents = {};
+// test db function
 
 io.on('connection', socket => {
-  console.log('hererer');
-    let previousId;
-    const safeJoin = currentId => {
-        socket.leave(previousId);
-        socket.join(currentId, () => console.log(`Socket ${socket.id} joined room ${currentId}`));
-        previousId = currentId;
-    }
-
-    socket.on('getDoc', docId => {
-        safeJoin(docId);
-        socket.emit('document', documents[docId]);
+    socket.on('getDoc', input => {
+      console.log(input);
+      var siteBlock = mongoose.model("site_blocks");
+      let aggregateQuery = [];
+      let query = { site_id: ObjectId(input) };
+      aggregateQuery.push({ $match: query });
+      function emitResponse(){
+        siteBlock.aggregate(aggregateQuery).then(async result => {
+          // console.log(result);
+          io.emit('document', result);
+        }).catch(err => {
+          console.log(err);
+        });
+      }
+      emitResponse();
+      setTimeout(function(){ 
+        emitResponse();
+      }, 3000);
+      setInterval(function(){ 
+        emitResponse();
+      }, 15000);
     });
-
-    io.emit('documents', Object.keys(documents));
-
     console.log(`Socket ${socket.id} has connected`);
 });
 
@@ -42,7 +51,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+// var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -51,8 +60,8 @@ var server = http.createServer(app);
 //server.listen(port);
 
 //var io = require('../controllers/socket').listen(server);  // required when using socket with controller of PB
-server.timeout = 240000000;
-server.listen(port, function (err) {
+http.timeout = 240000000;
+http.listen(port, function (err) {
   if (err) {
       console.log(err);
   }
@@ -60,10 +69,10 @@ server.listen(port, function (err) {
       console.log('Server api runing on port ', port);
   }
 })
-server.on('error', onError);
-server.on('listening', onListening);
+http.on('error', onError);
+http.on('listening', onListening);
 
-var io = require('socket.io').listen(server);
+// var io = require('socket.io').listen(server);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -118,7 +127,7 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
+  var addr = http.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;

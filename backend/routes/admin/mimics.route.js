@@ -17,6 +17,8 @@ module.exports = function(app, route) {
   route.post("/getAllImages", mimicsCtrl.getAllImages);
   route.post("/saveBlocksData", mimicsCtrl.saveBlocksData);
   route.post("/getBlocksData", mimicsCtrl.getBlocksData);
+  route.post("/updateBlocksArch", mimicsCtrl.updateBlocksArch);
+  route.post("/saveMimicSettings", mimicsCtrl.saveMimicSettings);
  
   app.use("/mimics", route);
 };

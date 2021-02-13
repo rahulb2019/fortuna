@@ -25,6 +25,9 @@ export class StudioComponent implements OnInit {
   selectedCat: any;
   imageState: any = 0;
   imageUrl = environment.apiEndpoint + Folder._mimicImageOriginal;
+  totalPumpsCount: number = 0
+  selectedPumpsCount: number = 0
+  selectedCategory: any = "";
 
   constructor(public apiService: ApiService,
     private router: Router,
@@ -88,8 +91,14 @@ export class StudioComponent implements OnInit {
     }
     this.mimicService.getMimicDetail(dataObj).subscribe(res => {  
       if (res.code === 200) {
-        if (res.result[0] && res.result[0].mimic_data.length > 0) {
+        if (res.result[0]) {
           let mimic_data = res.result[0].mimic_data;
+          mimic_data && mimic_data.length > 0 && mimic_data.forEach(element => {
+            if (element.category === "Pumps") {
+              this.selectedPumpsCount++;
+            }
+          });
+          this.totalPumpsCount = res.result[0].no_of_pumps;
           this.displayExistingMimic(mimic_data);
         }
       }
@@ -98,9 +107,10 @@ export class StudioComponent implements OnInit {
 
   displayExistingMimic(mimic_data) {
     let html='';
+    var that = this;
     mimic_data.forEach(element => {
       html+='<div class="drag small remove" style="'+element.style+'">';
-      html+='<img src="'+element.name+'" width="100%" height="100%">';
+      html+='<img src="'+element.image+'" name="'+element.name+'" category="'+element.category+'" title="'+element.name+'" width="100%" height="100%">';
       html+='<span class="xicon delete ui-icon ui-icon-close" title="Remove"></span>'
       html+='</div>';      
     });
@@ -120,7 +130,14 @@ export class StudioComponent implements OnInit {
       $(this).find('.delete').click(function () {
         var r = confirm("Are you sure to delete?");
         if (r == true) {
-          $(this).parent('div').remove();
+          if($(this).parent('div').children("img").attr('category') === "Pumps") {
+            that.selectedPumpsCount--;
+            let pumpNumberDeleted = $(this).parent('div').children("img").attr('name');
+            $(this).parent('div').remove();
+            that.updateNamesOfPumps(pumpNumberDeleted);
+          } else {            
+            $(this).parent('div').remove();
+          }
         }
       });
       $(this).dblclick(function(){
@@ -158,62 +175,111 @@ export class StudioComponent implements OnInit {
   }
 
   manageDroppable() {
+    var that = this;
+    this.selectedCategory = this.categoriesArr.find(obj => obj._id === this.selectedCat);
     $("#droppable").droppable({
       accept: '.drag',
       cursor: "move",
       activeClass: "drop-area",
       drop: function (e, ui) {
-        if ($(ui.draggable)[0].id != "") {
-          this.selectedEle = ui.helper.clone();
-          ui.helper.remove();
-          this.selectedEle.draggable({
-            helper: 'original',
-            cursor: 'move',
-            //containment: '#droppable',
-            tolerance: 'fit',
-            scroll: false,
-            drop: function (event, ui) {
-              $(ui.draggable).remove();
+        //condition to be set for no of pumps selection
+        // if (that.selectedPumpsCount === that.totalPumpsCount && that.selectedCategory && that.selectedCategory.name === "Pumps") {
+        //   alert("You cannot add more pumps/motors to this mimic");
+        //   return;
+        // } else {
+          that.selectedPumpsCount++;
+          if ($(ui.draggable)[0].id != "") {
+            this.selectedEle = ui.helper.clone();
+            ui.helper.remove();
+            this.selectedEle.draggable({
+              helper: 'original',
+              cursor: 'move',
+              //containment: '#droppable',
+              tolerance: 'fit',
+              scroll: false,
+              drop: function (event, ui) {
+                $(ui.draggable).remove();
+              }
+            });
+            this.selectedEle.resizable({
+              handles: 'all',
+              maxHeight: $('#droppable').height(),
+              maxWidth: $('#droppable').width()
+            });
+            this.selectedEle.addClass('remove');
+            if(that.selectedCategory.name === "Pumps") {
+              this.selectedEle.children('img').attr('name', that.selectedCategory.name +" "+ that.selectedPumpsCount);
+              this.selectedEle.children('img').attr('title', that.selectedCategory.name +" "+ that.selectedPumpsCount);
+            } else {
+              this.selectedEle.children('img').attr('name', that.selectedCategory.name);
+              this.selectedEle.children('img').attr('title', that.selectedCategory.name);
             }
-          });
-          this.selectedEle.resizable({
-            handles: 'all',
-            maxHeight: $('#droppable').height(),
-            maxWidth: $('#droppable').width()
-          });
-          this.selectedEle.addClass('remove');
-          let el = $('<span class="xicon delete ui-icon ui-icon-close" title="Remove"></span>');
-          $(el).insertAfter($(this.selectedEle.find('img')));
-          this.selectedEle.appendTo('#droppable');
-          this.selectedEle.find('.delete').click(function () {
-            var r = confirm("Are you sure to delete?");
-            if (r == true) {
-              $(this).parent('div').remove();
-            }
-          });
-          //set position according body to droppable
-          let currentPos=this.selectedEle.offset();
-          let droppablePos=$('#droppable').offset();
-          this.selectedEle.css({
-            top: currentPos.top-(droppablePos.top*2+2),
-            left: currentPos.left-(droppablePos.left*2+2)
-          });
-          this.selectedEle.dblclick(function(){
-            if($(this).hasClass("ui-resizable")){
-              $(this).resizable('destroy');
-              $(this).find('.delete').hide();
-            }
-            else
-            {
-              $(this).resizable({
-                handles: 'all',
-                maxHeight: $('#droppable').height(),
-                maxWidth: $('#droppable').width()
-              }); 
-              $(this).find('.delete').show();
-            }
-          })
+            this.selectedEle.children('img').attr('category', that.selectedCategory.name);
+            let el = $('<span class="xicon delete ui-icon ui-icon-close" title="Remove"></span>');
+            $(el).insertAfter($(this.selectedEle.find('img')));
+            this.selectedEle.appendTo('#droppable');
+            this.selectedEle.find('.delete').click(function () {
+              var r = confirm("Are you sure to delete?");
+              if (r == true) {
+                if($(this).parent('div').children("img").attr('category') === "Pumps") {
+                  that.selectedPumpsCount--;
+                  let pumpNumberDeleted = $(this).parent('div').children("img").attr('name');
+                  $(this).parent('div').remove();
+                  that.updateNamesOfPumps(pumpNumberDeleted);
+                } else {                  
+                  $(this).parent('div').remove();
+                }
+              }
+            });
+            //set position according body to droppable
+            let currentPos=this.selectedEle.offset();
+            let droppablePos=$('#droppable').offset();
+            this.selectedEle.css({
+              top: currentPos.top-(droppablePos.top*2+2),
+              left: currentPos.left-(droppablePos.left*2+2)
+            });
+            this.selectedEle.dblclick(function(){
+              if($(this).hasClass("ui-resizable")){
+                $(this).resizable('destroy');
+                $(this).find('.delete').hide();
+              }
+              else
+              {
+                $(this).resizable({
+                  handles: 'all',
+                  maxHeight: $('#droppable').height(),
+                  maxWidth: $('#droppable').width()
+                }); 
+                $(this).find('.delete').show();
+              }
+            })
+          }
+        // }
+      }
+    });
+  }
+
+  updateNamesOfPumps(pumpNumberDeleted){
+    let pumpNumberDel = pumpNumberDeleted.split(" ")[1];
+    $('#droppable').find('.drag').each(function(){
+      let el=$(this);
+      if(el.find('img').attr('category') === "Pumps"){
+        let iteratedPump = el.find('img').attr('name');
+        let iteratePumpNo = iteratedPump.split(" ")[1];
+        if(iteratePumpNo > pumpNumberDel){
+          let valuecount = (iteratePumpNo-1);
+          el.find('img').attr('name', "Pumps "+ valuecount)
+          el.find('img').attr('title', "Pumps "+ valuecount)
         }
+      }
+    });
+    let dataObj = {
+      pumpNumberDel: pumpNumberDel,
+      siteId: this.mimicId
+    }
+    this.mimicService.updateBlocksArch(dataObj).subscribe(res => {
+      if (res.code == 200) {
+        this.saveMimic();
       }
     });
   }
@@ -224,7 +290,7 @@ export class StudioComponent implements OnInit {
         let images=[];
         $('#droppable').find('.drag').each(function(){
             let el=$(this);
-            let imageAttr={'name':el.find('img').attr('src'),'style':el.attr('style')};
+            let imageAttr = {'image': el.find('img').attr('src'), 'style': el.attr('style'), 'name': el.find('img').attr('name'), 'category': el.find('img').attr('category')};
             images.push(imageAttr);
         });
         localStorage.setItem("currentMimic", JSON.stringify(images));
@@ -238,7 +304,7 @@ export class StudioComponent implements OnInit {
         let images = [];
         $('#droppable').find('.drag').each(function(){
             let el = $(this);
-            let imageAttr = {'name':el.find('img').attr('src'),'style':el.attr('style')};
+            let imageAttr = {'image': el.find('img').attr('src'), 'style': el.attr('style'), 'name': el.find('img').attr('name'), 'category': el.find('img').attr('category')};
             images.push(imageAttr);
         });
         let dataArray = {

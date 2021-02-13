@@ -1,7 +1,12 @@
 <div class="row">
     <div class="col-md-7" style="border: 5px solid #cecece;">
         <div id="wrapper" class='mn-studio preview'>
-            <div id="droppable"></div>
+            <div id="droppable" >
+                <div class="drag" *ngFor="let element of mimicDataArray; let i = index;" [attr.styleA]= element.style>
+                    <img *ngIf="element.name!='Pipes'" src="{{element.image}}" title="{{element.name}}" width="100%" height="100%" >
+                    <img *ngIf="element.name=='Pipes'" src="{{element.image}}" title="{{element.name}}" width="100%" height="100%" (click)="openModal(template,i)" >
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-md-5">
@@ -15,25 +20,30 @@
                         *ngFor="let item of statsForm.get('blocks')['controls']; let b = index;">
                         <div [formGroupName]="b">
                             <h3>Pump {{b+1}}</h3>
+                            <input formControlName="pumpValue" type="hidden" class="form-control" />
                             <hr />
                             <div formArrayName="details">
                                 <div class="form-row"
-                                    *ngFor="let field of item.get('details')['controls']; let ind = index; let first = first; let last = last"
-                                    [formGroupName]="ind">
-                                    <div class="form-group col-md-5">
-                                        <input type="text" class="form-control" formControlName="name"
-                                            placeholder="name">
-                                    </div>
-                                    <div class="form-group col-md-5"
-                                        (click)="openValueDialog(item, field, b, ind, composeEmail)">
-                                        <input type="text" class="form-control" formControlName="value"
-                                            placeholder="Value">
-                                    </div>
-                                    <div class="form-group col-md-2 clone-btns">
-                                        <i *ngIf="last" class="fa fa-plus add-btn" aria-hidden="true"
-                                            (click)="addRow(item)"></i> &nbsp;&nbsp;
-                                        <i *ngIf="ind > first" class="fa fa-trash remove-btn" aria-hidden="true"
-                                            (click)="removeRow(item, field, ind)"></i>
+                                    *ngFor="let field of item.get('details')['controls']; let j = index;">
+                                    <!-- let first = first; let last = last -->
+                                    <div [formGroupName]="j" style="display: flex;width: 100%;">
+                                        <div class="form-group col-md-5">
+                                            <input type="text" class="form-control" formControlName="name"
+                                                placeholder="name">
+                                        </div>
+                                        <div class="form-group col-md-5"
+                                            (click)="openValueDialog(item, field, b, j, composeEmail)">
+                                            <input type="text" class="form-control" formControlName="value"
+                                                placeholder="Value">
+                                        </div>
+                                        <div class="form-group col-md-2 clone-btns">
+                                            <!-- *ngIf="last"  -->
+                                            <i class="fa fa-plus add-btn" aria-hidden="true"
+                                                (click)="addRow(item)"></i> &nbsp;&nbsp;
+                                            <!-- *ngIf="j > first" -->
+                                            <i class="fa fa-trash remove-btn" aria-hidden="true"
+                                                (click)="removeRow(item, field, j)"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -102,6 +112,41 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" (click)="confirm(modalService.config.data.item,modalService.config.data.field,modalService.config.data.b, modalService.config.data.ind)">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #template>
+        <div id="template-popup">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">Select Pump/s for pipe association</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalPumpRef.hide()">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <form id="form-wizard3" [formGroup]="modalFormPump" >
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group {{ errorField }}">
+                                        <label for="pumps">Pump/s : *</label>
+                                        <select formControlName="pumps" class="form-control" multiple>
+                                            <option *ngFor="let item of statsForm.get('blocks')['controls']; let i = index;" value="{{i+1}}" >Pump {{i+1}}</option>
+                                        </select>
+                                        <p *ngIf="modalFormPump.controls['pumps'].hasError('required') && isSubmitted" class="error-msg">
+                                        <i class="fa fa-exclamation"></i> Pump/s  is required.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" formControlName='element'>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" (click)="savePipeAssociation()">Save changes</button>
                         </div>
                     </form>
                 </div>
