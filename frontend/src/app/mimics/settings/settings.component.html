@@ -7,7 +7,7 @@
             <div class="iq-card">
               <div class="iq-card-header d-flex justify-content-between">
                 <div class="iq-header-title">
-                  <h4 class="card-title">Add New Site</h4>
+                  <h4 class="card-title">Mimic Settings</h4>
                 </div>
               </div>
               <div class="iq-card-body">
@@ -60,6 +60,16 @@
                         <div class="form-group custom-control custom-checkbox d-inline-block mt-2 pt-1">
                           <input type="checkbox" class="custom-control-input check_box_all" id="low_level" name="low_level" formControlName="low_level">
                           <label class="custom-control-label" for="low_level">Low Level</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <br/>
+                        <div class="form-group {{ errorField }}">
+                          <label for="name">Select Frequency For API: *</label>
+                          <select formControlName="frequency_for_api" class="form-control" name="frequency_for_api" (change)="changeSelectedFrequency($event)">
+                            <option [attr.value]="fre.value" *ngFor="let fre of frequencyArr" [attr.selected]="selectedFre == fre.value ? true : null"
+                            >{{fre.name}}</option>
+                          </select>
                         </div>
                       </div>
                     </div>

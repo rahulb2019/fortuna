@@ -35,7 +35,8 @@ var MimicSchema = new Schema(
       high_current: { type: Boolean, default: false },
       low_current: { type: Boolean, default: false },
       high_level: { type: Boolean, default: false },
-      low_level: { type: Boolean, default: false }
+      low_level: { type: Boolean, default: false },
+      frequency_for_api: { type: Number, default: 0 },
     },
     is_deleted: {
       type: Boolean,

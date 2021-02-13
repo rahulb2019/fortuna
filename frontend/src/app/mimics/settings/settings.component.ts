@@ -21,6 +21,37 @@ export class SettingsComponent implements OnInit {
   isValid: boolean = true;
   errorField: string;
   mimicId: any;
+  selectedFre: Number = 30;
+  frequencyArr:any = [
+    {
+      value: 30,
+      name: "30 Seconds"
+    },
+    {
+      value: 60,
+      name: "1 minute"
+    },
+    {
+      value: 180,
+      name: "3 minutes"
+    },
+    {
+      value: 300,
+      name: "5 minutes"
+    },
+    {
+      value: 600,
+      name: "10 minutes"
+    },
+    {
+      value: 900,
+      name: "15 minutes"
+    },
+    {
+      value: 1800,
+      name: "30 minutes"
+    }
+  ]
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -37,6 +68,7 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.selectedFre = 30;
   }
   
   getMimicDataById(){
@@ -62,12 +94,17 @@ export class SettingsComponent implements OnInit {
       high_current: [false, [Validators.required]],
       low_current: [false, [Validators.required]],
       high_level: [false, [Validators.required]],
-      low_level: [false, [Validators.required]]
+      low_level: [false, [Validators.required]],
+      frequency_for_api: ["30", [Validators.required]]
     });
   }
 
   goBack(){
     this.router.navigate(["/admin/mimics/mimic_list"]);
+  }
+
+  changeSelectedFrequency(event){
+    this.selectedFre = event.target.value ? event.target.value : this.selectedFre;
   }
 
   saveMimicSettings() {
@@ -95,7 +132,8 @@ export class SettingsComponent implements OnInit {
           high_current: this.settingForm.value.high_current,
           low_current: this.settingForm.value.low_current,
           high_level: this.settingForm.value.high_level,
-          low_level: this.settingForm.value.low_level
+          low_level: this.settingForm.value.low_level,
+          frequency_for_api: this.settingForm.value.frequency_for_api
         },
         _id: this.mimicId
       }

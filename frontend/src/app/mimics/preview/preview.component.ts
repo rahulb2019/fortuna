@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
@@ -14,8 +14,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { MimicService } from "../../services/mimic/mimic.service";
 import * as $ from 'jquery';
 import 'jquery-ui-dist/jquery-ui';
-import { Observable, Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-mimic',
@@ -24,6 +22,8 @@ import { startWith } from 'rxjs/operators';
 
 })
 export class PreviewComponent implements OnInit {
+  
+  //@ViewChild("ele", { static: false }) ele;
 
   mimicId: any;
   pumpsCount: any;
@@ -43,7 +43,6 @@ export class PreviewComponent implements OnInit {
   errorField: string;
 
   document: any;
-  private _docSub: Subscription;
 
 
   constructor(public apiService: ApiService,
@@ -65,6 +64,7 @@ export class PreviewComponent implements OnInit {
     var images =  JSON.parse(localStorage.getItem('currentMimic'));
     this.displayExistingMimic(images);
     this.mimicDataArray=images;
+    //this.openMeterValueDialog();
   }
   
   createModalFormFnc(){
@@ -236,6 +236,7 @@ export class PreviewComponent implements OnInit {
       Object.assign({}, { class: 'compose-popup modal-sticky-bottom-right modal-sticky-lg', id: 'template-popup'})
     ); 
   }
+
   savePipeAssociation(){
     var index = this.pumpData.findIndex((el, index) => {
       if (el.element === this.modalFormPump.value.element) {
@@ -251,7 +252,6 @@ export class PreviewComponent implements OnInit {
   
 
   openValueDialog(item, field, b, ind, content){
-    console.log("------",item, field, b, ind);
     if(item && item.value && item.value.details[ind] && item.value.details[ind].slave_id) {
       this.modalForm.patchValue({
         slave_id: item.value.details[ind].slave_id,

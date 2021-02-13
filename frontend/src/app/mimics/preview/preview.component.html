@@ -10,13 +10,15 @@
         </div>
     </div>
     <div class="col-md-5">
-        <button type="button" class="btn btn-primary rounded-pill mb-3 mr-2" (click)="saveAll()"><i
-            class="fa fa-plus" aria-hidden="true"></i>
-        Save all</button>
+        <div class="row">
+            <div class="col-md-8" style="margin-top:20px;margin-left:10px;text-align: right;">
+                <button type="button" class="btn btn-primary rounded-pill mb-3" (click)="saveAll()" style="width: 100%;">Save All Pumps Data</button>
+            </div>
+        </div>
         <form (ngSubmit)="doSubmit()" [formGroup]="statsForm">
             <div class="row">
                 <div formArrayName="blocks" class="stat-box-container">
-                    <div class="col-md-6 stat-box"
+                    <div class="col-md-8 stat-box"
                         *ngFor="let item of statsForm.get('blocks')['controls']; let b = index;">
                         <div [formGroupName]="b">
                             <h3>Pump {{b+1}}</h3>
@@ -24,9 +26,8 @@
                             <hr />
                             <div formArrayName="details">
                                 <div class="form-row"
-                                    *ngFor="let field of item.get('details')['controls']; let j = index;">
-                                    <!-- let first = first; let last = last -->
-                                    <div [formGroupName]="j" style="display: flex;width: 100%;">
+                                    *ngFor="let field of item.get('details')['controls']; let j = index; let first = first; let last = last ">
+                                    <div [formGroupName]="j" style="display: flex;width: 100%; margin-right: 20px;">
                                         <div class="form-group col-md-5">
                                             <input type="text" class="form-control" formControlName="name"
                                                 placeholder="name">
@@ -37,11 +38,9 @@
                                                 placeholder="Value">
                                         </div>
                                         <div class="form-group col-md-2 clone-btns">
-                                            <!-- *ngIf="last"  -->
-                                            <i class="fa fa-plus add-btn" aria-hidden="true"
+                                            <i *ngIf="last" class="fa fa-plus add-btn" aria-hidden="true"
                                                 (click)="addRow(item)"></i> &nbsp;&nbsp;
-                                            <!-- *ngIf="j > first" -->
-                                            <i class="fa fa-trash remove-btn" aria-hidden="true"
+                                            <i *ngIf="j > first" class="fa fa-trash remove-btn" aria-hidden="true"
                                                 (click)="removeRow(item, field, j)"></i>
                                         </div>
                                     </div>
