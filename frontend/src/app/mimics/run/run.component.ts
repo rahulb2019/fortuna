@@ -58,88 +58,74 @@ export class RunComponent implements OnInit, OnDestroy {
   ngOnInit() {
     var images =  JSON.parse(localStorage.getItem('currentMimic'));
     this.displayExistingMimic(images);
-
-    // this._docSub =this.mimicService.currentDocument
-    // // The .subscribe() method accepts 3 callbacks
-    // .subscribe(
-    //   // The 1st callback handles the data emitted by the observable.
-    //   // In your case, it's the JSON data extracted from the response.
-    //   // That's where you'll find your total property.
-    //   (res) => {
-    //    this.document=res;
-    //   },
-    //   // The 2nd callback handles errors.
-    //   (err) => console.error(err),
-    //   // The 3rd callback handles the "complete" event.
-    //   () => console.log("observable complete")
-    // );
     this._docSub = this.mimicService.currentDocument.subscribe(res => 
     {  
       this.document=res;
-      console.log(res);
       this.pumpData=res[0].pumpData;
       var ang=this;
       //find active pumps
+      var offPumpArr=[];
+      // console.log(res);
+      // re
       $('.stat-box').each(function(i){
         if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
           let offImg=$("img[title='Pumps "+(i+1)+"']").attr('src');
           let onImg=offImg.replace("_off.svg", "_on.gif");
           if(onImg.indexOf("_off.png") !== -1)
             onImg=onImg.replace("_off.png", "_on.gif");
-          $("img[title='Pumps "+(i+1)+"']").attr('src',onImg+"?time="+new Date().getTime());
+          $("img[title='Pumps "+(i+1)+"']").attr('src',onImg);
           let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
           let offImgConnector=el.find('img').attr('src');
           let onImgConnector=offImgConnector.replace("_off.svg", "_on.svg");
           if(onImgConnector.indexOf("_off.png") !== -1)
             onImgConnector=onImgConnector.replace("_off.png", "_on.svg");
-          el.find('img').attr('src',onImgConnector+"?time="+new Date().getTime());
-          //find connected pipe
-          // $("img[title='Pipes']").each(function(){
-          //   let indexPipe=$(this).data('index');
-          //   var index = ang.pumpData.findIndex((el, index) => {
-          //     if ((el.element === indexPipe) && (el.pumps.indexOf(String(i+1)) !== -1)) {
-          //       return true
-          //     }
-          //   });
-          //   if (index!==-1)
-          //   {
-          //     let offImg=$(this).attr('src');
-          //     let onImg=offImg.replace("_off.svg", "_on.gif");
-          //     if(onImg.indexOf("_off.png") !== -1)
-          //       onImg=onImg.replace("_off.png", "_on.gif");
-          //     $(this).attr('src',onImg+"?time="+new Date().getTime());
-          //   }
-          // })
-          }
-          else{
-            let offImg=$("img[title='Pumps "+(i+1)+"']").data('off-src');
-            $("img[title='Pumps "+(i+1)+"']").attr('src',offImg+"?time="+new Date().getTime());
-
-            let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
-            let offImgConnector=el.find('img').data('off-src');
-            el.find('img').attr('src',offImgConnector+"?time="+new Date().getTime());
-          }
-          // var offPumpArr=[]
+          el.find('img').attr('src',onImgConnector);
+          // find connected pipe
           $("img[title='Pipes']").each(function(){
-            let offImg=$(this).data('off-src');
             let indexPipe=$(this).data('index');
             var index = ang.pumpData.findIndex((el, index) => {
               if ((el.element === indexPipe) && (el.pumps.indexOf(String(i+1)) !== -1)) {
                 return true
               }
             });
-            if (($("input[name='Pumps "+(i+1)+"']").val())==='ON' && index!==-1)
+            if (index!==-1)
             {
+              let offImg=$(this).attr('src');
               let onImg=offImg.replace("_off.svg", "_on.gif");
               if(onImg.indexOf("_off.png") !== -1)
                 onImg=onImg.replace("_off.png", "_on.gif");
-              $(this).attr('src',onImg+"?time="+new Date().getTime());
+              $(this).attr('src',onImg);
             }
-            // else{
-            //   $(this).attr('src',offImg+"?time="+new Date().getTime());
-            // }
           })
+        }
+        else{
+            let offImg=$("img[title='Pumps "+(i+1)+"']").data('off-src');
+            $("img[title='Pumps "+(i+1)+"']").attr('src',offImg);
+
+            let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
+            let offImgConnector=el.find('img').data('off-src');
+            el.find('img').attr('src',offImgConnector);
+            offPumpArr.push(i+1);
+        }
       });
+      //rerun to mark pump off
+      $('.stat-box').each(function(i){
+        if(($("input[name='Pumps "+(i+1)+"']").val())==='OFF'){
+          $("img[title='Pipes']").each(function(){
+            let indexPipe=$(this).data('index');
+            var index = ang.pumpData.findIndex((el, index) => {
+              if ((el.element === indexPipe) && (JSON.stringify(el.pumps)==JSON.stringify(offPumpArr) || JSON.stringify(el.pumps)==JSON.stringify([String(i+1)])) ) {
+                return true
+              }
+            });
+            if (index!==-1)
+            {
+              $(this).attr('src',$(this).data('off-src'));
+            }
+          })
+        }
+      });
+      
     });
     this.mimicService.getDocument(this.mimicId);
   }
