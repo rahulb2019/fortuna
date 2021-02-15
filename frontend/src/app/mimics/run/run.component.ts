@@ -66,6 +66,7 @@ export class RunComponent implements OnInit, OnDestroy {
       var ang=this;
       //find active pumps
       var offPumpArr=[];
+      var onPumpArr=[];
       responseArray.forEach((data, i) => {
         if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
           let offImg=$("img[title='Pumps "+(i+1)+"']").attr('src');
@@ -79,23 +80,7 @@ export class RunComponent implements OnInit, OnDestroy {
           if(onImgConnector.indexOf("_off.png") !== -1)
             onImgConnector=onImgConnector.replace("_off.png", "_on.svg");
           el.find('img').attr('src',onImgConnector);
-          // find connected pipe
-          $("img[title='Pipes']").each(function(){
-            let indexPipe=$(this).data('index');
-            var index = ang.pumpData.findIndex((el, index) => {
-              if ((el.element === indexPipe) && (el.pumps.indexOf(String(i+1)) !== -1)) {
-                return true
-              }
-            });
-            if (index!==-1)
-            {
-              let offImg=$(this).attr('src');
-              let onImg=offImg.replace("_off.svg", "_on.gif");
-              if(onImg.indexOf("_off.png") !== -1)
-                onImg=onImg.replace("_off.png", "_on.gif");
-              $(this).attr('src',onImg);
-            }
-          })
+          onPumpArr.push(String(i+1));
         }
         else{
             let offImg=$("img[title='Pumps "+(i+1)+"']").data('off-src');
@@ -104,25 +89,31 @@ export class RunComponent implements OnInit, OnDestroy {
             let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
             let offImgConnector=el.find('img').data('off-src');
             el.find('img').attr('src',offImgConnector);
-            offPumpArr.push(i+1);
+            offPumpArr.push(String(i+1));
         }
+        $("img[title='Pipes']").each(function(){
+          $(this).attr('src',$(this).data('off-src'));
+        });
       });
-      //rerun to mark pump off
+      //rerun to mark pump on
       responseArray.forEach((data, i) => {
-      // $('.stat-box').each(function(i){
-        if(($("input[name='Pumps "+(i+1)+"']").val())==='OFF'){
+        if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
           $("img[title='Pipes']").each(function(){
-            let indexPipe=$(this).data('index');
-            var index = ang.pumpData.findIndex((el, index) => {
-              if ((el.element === indexPipe) && (JSON.stringify(el.pumps)==JSON.stringify(offPumpArr) || JSON.stringify(el.pumps)==JSON.stringify([String(i+1)])) ) {
-                return true
+              let indexPipe=$(this).data('index');
+              var index = ang.pumpData.findIndex((el, index) => {
+                if ((el.element === indexPipe) && (el.pumps.indexOf(String(i+1)) !== -1)) {
+                  return true
+                }
+              });
+              if (index!==-1)
+              {
+                let offImg=$(this).attr('src');
+                let onImg=offImg.replace("_off.svg", "_on.gif");
+                if(onImg.indexOf("_off.png") !== -1)
+                  onImg=onImg.replace("_off.png", "_on.gif");
+                $(this).attr('src',onImg);
               }
             });
-            if (index!==-1)
-            {
-              $(this).attr('src',$(this).data('off-src'));
-            }
-          })
         }
       });
       
