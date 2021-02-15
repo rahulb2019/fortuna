@@ -61,11 +61,12 @@ export class RunComponent implements OnInit, OnDestroy {
     this._docSub = this.mimicService.currentDocument.subscribe(res => 
     {  
       this.document=res;
+      let responseArray = res ? Object.entries(res) : []
       this.pumpData=res[0].pumpData;
       var ang=this;
       //find active pumps
       var offPumpArr=[];
-      this.document.forEach((data, i) => {
+      responseArray.forEach((data, i) => {
         if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
           let offImg=$("img[title='Pumps "+(i+1)+"']").attr('src');
           let onImg=offImg.replace("_off.svg", "_on.gif");
@@ -107,7 +108,7 @@ export class RunComponent implements OnInit, OnDestroy {
         }
       });
       //rerun to mark pump off
-      this.document.forEach((data, i) => {
+      responseArray.forEach((data, i) => {
       // $('.stat-box').each(function(i){
         if(($("input[name='Pumps "+(i+1)+"']").val())==='OFF'){
           $("img[title='Pipes']").each(function(){
