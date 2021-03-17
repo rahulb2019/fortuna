@@ -28,6 +28,7 @@ export class StudioComponent implements OnInit {
   totalPumpsCount: number = 0
   selectedPumpsCount: number = 0
   selectedCategory: any = "";
+  fromEditorManagement: boolean = false;
 
   constructor(public apiService: ApiService,
     private router: Router,
@@ -183,11 +184,13 @@ export class StudioComponent implements OnInit {
       activeClass: "drop-area",
       drop: function (e, ui) {
         //condition to be set for no of pumps selection
-        // if (that.selectedPumpsCount === that.totalPumpsCount && that.selectedCategory && that.selectedCategory.name === "Pumps") {
-        //   alert("You cannot add more pumps/motors to this mimic");
-        //   return;
-        // } else {
-          that.selectedPumpsCount++;
+        if (that.selectedPumpsCount === that.totalPumpsCount && that.selectedCategory && that.selectedCategory.name === "Pumps") {
+          alert("You cannot add more pumps/motors to this mimic");
+          return;
+        } else {
+          if(that.selectedCategory.name === "Pumps"){
+            that.selectedPumpsCount++;
+          }
           if ($(ui.draggable)[0].id != "") {
             this.selectedEle = ui.helper.clone();
             ui.helper.remove();
@@ -254,7 +257,7 @@ export class StudioComponent implements OnInit {
               }
             })
           }
-        // }
+        }
       }
     });
   }
@@ -279,7 +282,8 @@ export class StudioComponent implements OnInit {
     }
     this.mimicService.updateBlocksArch(dataObj).subscribe(res => {
       if (res.code == 200) {
-        this.saveMimic();
+        this.fromEditorManagement = true
+        this.saveMimic(this.fromEditorManagement);
       }
     });
   }
@@ -298,8 +302,34 @@ export class StudioComponent implements OnInit {
     }
   }
 
-  saveMimic() {    
-    if ($('#droppable .drag').length == 0) this.toastr.error('You have not selected any images to show mimic preview');
+  saveMimic(fromEditorFlag) { 
+    if(!fromEditorFlag){   
+      if ($('#droppable .drag').length == 0) { 
+        this.toastr.error('You have not selected any images to show mimic preview'); 
+      }
+      else {
+        let images = [];
+        $('#droppable').find('.drag').each(function(){
+            let el = $(this);
+            let imageAttr = {'image': el.find('img').attr('src'), 'style': el.attr('style'), 'name': el.find('img').attr('name'), 'category': el.find('img').attr('category')};
+            images.push(imageAttr);
+        });
+        let dataArray = {
+          id: this.mimicId,
+          mimic_data: images
+        };
+        this.mimicService.updateMimicArch(dataArray).subscribe(res => {
+          if (res.code == 200) {
+                if(!fromEditorFlag){
+                  this.toastr.success(res.message);
+                  this.router.navigate(["/admin/mimics/mimic_list"]);
+                }
+          } else {
+            this.toastr.error(res.message);
+          }
+        });
+      }
+    }
     else {
         let images = [];
         $('#droppable').find('.drag').each(function(){
@@ -313,8 +343,10 @@ export class StudioComponent implements OnInit {
         };
         this.mimicService.updateMimicArch(dataArray).subscribe(res => {
           if (res.code == 200) {
-                this.toastr.success(res.message);
-                this.router.navigate(["/admin/mimics/mimic_list"]);
+                if(!fromEditorFlag){
+                  this.toastr.success(res.message);
+                  this.router.navigate(["/admin/mimics/mimic_list"]);
+                }
           } else {
             this.toastr.error(res.message);
           }

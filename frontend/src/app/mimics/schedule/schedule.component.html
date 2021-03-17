@@ -1,0 +1,132 @@
+<div class="row">
+  <div class="col-sm-12 col-lg-12">
+    <div class="iq-card">
+      <div class="iq-card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="iq-card">
+              <div class="iq-card-header d-flex justify-content-between">
+                <div class="iq-header-title">
+                  <h4 class="card-title">Manage Schedule</h4>
+                </div>
+              </div>
+              <div class="iq-card-body">
+                <div class="row">
+                  <div class="col-md-12" style="margin-top:20px;margin-left:10px;text-align: right;">
+                    <button type="button" class="btn btn-primary rounded-pill mb-3" (click)="saveMimicSchedule()">Save
+                      Schedule</button>
+                  </div>
+                </div>
+                <form id="form-wizard4" [formGroup]="scheduleForm">
+                  <div class="row">
+                    <div formArrayName="schedules">
+                      <div *ngFor="let item of scheduleForm.get('schedules')['controls']; let b = index; let firstblock = first; let lastblock = last  ">
+                        <div class="stat-box row" [formGroupName]="b">
+                          <div class="col-md-12">
+                            <h3>Pump {{b+1}}</h3>
+                            <input formControlName="pumpValue" type="hidden" class="form-control" [ngModel]="b+1"/>
+                            <button *ngIf="b > firstblock" type="button" class="btn btn-secondary rounded-pill mb-3" (click)="removePumpScBlock(b)">Remove Pump Schedule</button>
+                            <hr />
+                          </div>
+                          <div formArrayName="schedule_blocks">
+                            <div class="form-row"
+                              *ngFor="let field of item.get('schedule_blocks')['controls']; let j = index; let first = first; let last = last ">
+                              <div [formGroupName]="j" style="display: flex;width: 100%; margin-right: 20px;">
+                                <div class="form-group col-md-3">
+                                  <input type="text" class="form-control" formControlName="startHour" placeholder="Start Hour" (click)="openValueDialog(item, field, b, j, composeRegister, 'hour', 'startHour')"> hr
+                                </div>
+                                <div class="form-group col-md-2">
+                                  <input type="text" class="form-control" formControlName="startMinute" placeholder="Start Minute" (click)="openValueDialog(item, field, b, j, composeRegister, 'minute', 'startMinute')"> min
+                                </div>
+                                <div class="form-group col-md-3">
+                                  <input type="text" class="form-control" formControlName="endHour" placeholder="End Hour" (click)="openValueDialog(item, field, b, j, composeRegister, 'hour', 'endHour')"> hr
+                                </div>
+                                <div class="form-group col-md-2">
+                                  <input type="text" class="form-control" formControlName="endMinute" placeholder="End Minute" (click)="openValueDialog(item, field, b, j, composeRegister, 'minute', 'endMinute')"> min
+                                </div>
+                                <div class="form-group col-md-2 clone-btns">
+                                  <i *ngIf="last && j < 3" class="fa fa-plus add-btn" aria-hidden="true"
+                                    (click)="addSchedule(item)"></i>&nbsp;&nbsp;
+                                  <i *ngIf="j > first" class="fa fa-trash remove-btn" aria-hidden="true"
+                                    (click)="removeSchedule(item, j)"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>                         
+                        <div class="col-md-12" style="margin-top:20px;margin-left:10px;text-align: right;">
+                          <button *ngIf="lastblock" type="button" class="btn btn-primary rounded-pill mb-3" (click)="addPumpScBlock()">Add New Pump Schedule</button>
+                        </div>
+                      </div> 
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <ng-template #composeRegister>
+    <div id="compose-email-popup">
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">Value Properties</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalRef.hide()">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <form id="form-wizard3" [formGroup]="modalForm">
+            <div class="modal-body">
+              <div class="row">
+                <div *ngIf="modalService.config.data.type == 'hour'" class="col-md-6">
+                  <div class="form-group {{ errorField }}">
+                    <label for="value">Select Hour (hr): *</label>                   
+                    <select formControlName="value" class="form-control">
+                      <option *ngFor="let hrVal of hourJsonArr" value="{{hrVal.key}}">{{hrVal.value}}</option>
+                    </select>
+                    <p *ngIf="modalForm.controls['value'].hasError('required') && isSubmitted" class="error-msg">
+                      <i class="fa fa-exclamation"></i> Hour is required.
+                    </p>
+                  </div>
+                </div>
+                <div *ngIf="modalService.config.data.type == 'minute'" class="col-md-6">
+                  <div class="form-group {{ errorField }}">
+                    <label for="value">Select Minute (min): *</label> 
+                    <select formControlName="value" class="form-control">
+                      <option *ngFor="let minVal of minuteJsonArr" value="{{minVal.key}}">{{minVal.value}}</option>
+                    </select>
+                    <p *ngIf="modalForm.controls['value'].hasError('required') && isSubmitted" class="error-msg">
+                      <i class="fa fa-exclamation"></i> Minute is required.
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group {{ errorField }}">
+                    <label for="register_address">Register Address: *</label>
+                    <input formControlName="register_address" type="text" class="form-control"
+                      name="register_address" />
+                    <p *ngIf="modalForm.controls['register_address'].hasError('required') && isSubmitted"
+                      class="error-msg">
+                      <i class="fa fa-exclamation"></i> Register Address is required.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary"
+                (click)="confirm(modalService.config.data.item,modalService.config.data.field,modalService.config.data.b, modalService.config.data.ind)">Save
+                changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

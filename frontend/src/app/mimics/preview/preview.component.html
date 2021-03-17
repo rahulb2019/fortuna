@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-7" style="border: 5px solid #cecece;">
+    <div class="col-md-8" style="border: 5px solid #cecece;">
         <div id="wrapper" class='mn-studio preview'>
             <div id="droppable" >
                 <div class="drag" *ngFor="let element of mimicDataArray; let i = index;" [attr.styleA]= element.style>
@@ -9,7 +9,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-5">
+    <div class="col-md-4">
         <div class="row">
             <div class="col-md-8" style="margin-top:20px;margin-left:10px;text-align: right;">
                 <button type="button" class="btn btn-primary rounded-pill mb-3" (click)="saveAll()" style="width: 100%;">Save All Pumps Data</button>

@@ -3,6 +3,7 @@ var Mimic = mongoose.model("sites");
 var SIC = mongoose.model("site_image_categories");
 var siteImage = mongoose.model("site_images");
 var siteBlock = mongoose.model("site_blocks");
+var siteSchedule = mongoose.model("site_schedules");
 var crypto = require("crypto");
 const ObjectId = require("mongoose").Types.ObjectId;
 
@@ -395,6 +396,66 @@ obj.saveMimicSettingsData = (data) => {
                 }
             }
         );
+    })
+}
+
+
+
+
+obj.addMimicScheduleData = (data, siteId) => {
+    return new Promise(function (resolve, reject) {
+        let respArr = [];
+        function forEachLoop(i) {
+            if (i < data.length) {
+                let dataToSave = {
+                    schedule_blocks: data[i].schedule_blocks,
+                    pumpValue: data[i].pumpValue,
+                    site_id: siteId
+                }
+                if (dataToSave) {
+                    siteSchedule.create(dataToSave)
+                        .then(result => {
+                            respArr.push(result);
+                            forEachLoop(i + 1);
+                        })
+                }
+            } else {
+                return resolve(respArr);
+            }
+        }
+        forEachLoop(0);
+    });
+}
+
+obj.deleteScheduleData = (siteId) => {
+    return new Promise((resolve, reject) => {
+        let query = { site_id: ObjectId(siteId) };
+        siteSchedule.deleteMany(query).then(async result => {
+            resolve(result);
+        }).catch(err => {
+            resolve({
+                status: "Failure",
+                code: 301
+            });
+        });
+
+    })
+}
+
+obj.getSiteSchedulesData = (data) => {
+    return new Promise((resolve, reject) => {
+        let aggregateQuery = [];
+        let query = { site_id: ObjectId(data.mimicId) };
+        aggregateQuery.push({ $match: query });
+        siteSchedule.aggregate(aggregateQuery).then(async result => {
+            resolve(result);
+        }).catch(err => {
+            resolve({
+                status: "Failure",
+                code: 301
+            });
+        });
+
     })
 }
 

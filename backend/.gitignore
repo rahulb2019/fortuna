@@ -4,3 +4,5 @@
 /node_modules
 #/dist
 /config/connection.js
+#uploaded images
+/backend/public/uploadMedia/images/mimics

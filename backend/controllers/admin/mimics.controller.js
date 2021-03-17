@@ -290,6 +290,41 @@ const saveMimicSettings = async function (req, res) {
 };
 
 
+
+const saveMimicSchedule = async function (req, res) { 
+    let schedulesData = req.body ? req.body.schedulesData : {};
+    let siteId = req.body ? req.body.site_id : {};
+    try {
+        let delData = await mimicQueries.deleteScheduleData(siteId);
+        let respData = await mimicQueries.addMimicScheduleData(schedulesData, siteId);
+        if (respData){
+            res.status(200).json({ code: 200, message: "Data added successfully" });
+        } else {
+            res.status(400).json({ code: 301, message: "Unable to add data", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to add data", result: error.sqlMessage })
+    }
+};
+
+const getScheduleData = async function (req, res) {
+    let data = req.body ? req.body : {};
+    let token = "";
+    try {
+        const respData = await mimicQueries.getSiteSchedulesData(data);
+        if (respData.length == 0)
+            res.status(200).json({ code: 200, message: "No data saved yet", result: respData });
+        else {
+            let resp=[];
+            resp.push(respData)
+            res.status(200).json({ code: 200, message: "Record fetched successfully", result: resp });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to fetch data", result: error.sqlMessage })
+    }
+};
+
+
 exports.fetchMimicsData = fetchMimicsData;
 exports.addMimic = addMimic;
 exports.updateMimic = updateMimic;
@@ -305,3 +340,5 @@ exports.saveBlocksData = saveBlocksData;
 exports.getBlocksData = getBlocksData;
 exports.updateBlocksArch = updateBlocksArch;
 exports.saveMimicSettings = saveMimicSettings;
+exports.saveMimicSchedule = saveMimicSchedule;
+exports.getScheduleData = getScheduleData;

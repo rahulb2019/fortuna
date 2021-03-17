@@ -195,9 +195,12 @@ export class PreviewComponent implements OnInit {
         pipe++;
         title='Pipe '+pipe;
         html+='<img src="'+element.image+'" title="'+title+'" width="100%" height="100%" class="pipes" (mouseDown)="openModal(template)" >';
+      } else if(title == 'Pressure Meter') {
+        html+='<img src="'+element.image+'" title="'+title+'" width="100%" height="100%" class="pressure_meter" (mouseDown)="openMeterModal(template)" >';
       }
-      else
+      else {
         html+='<img src="'+element.image+'" title="'+title+'" width="100%" height="100%">';
+      }
       html+='</div>';      
     });
     setTimeout(() => {
@@ -248,6 +251,29 @@ export class PreviewComponent implements OnInit {
     else
       this.pumpData[index]=this.modalFormPump.value;
     this.modalPumpRef.hide();
+  }
+  
+
+  openMeterDialog(item, field, b, ind, content){
+    if(item && item.value && item.value.details[ind] && item.value.details[ind].slave_id) {
+      this.modalForm.patchValue({
+        slave_id: item.value.details[ind].slave_id,
+        register_address: item.value.details[ind].register_address,
+        data_type: item.value.details[ind].data_type,
+        unit: item.value.details[ind].unit
+      })
+    } else {
+      this.modalForm.reset();
+    }
+    this.modalRef = this.modalService.show(
+      content,
+      Object.assign({}, { class: 'compose-popup modal-sticky-bottom-right modal-sticky-lg', id: 'compose-email-popup', data: {
+        item: item,
+        field: field,
+        b: b,
+        ind: ind
+      }})
+    ); 
   }
   
 

@@ -23,6 +23,7 @@ import { StudioComponent } from './studio/studio.component';
 import { PreviewComponent } from './preview/preview.component';
 import { SettingsComponent } from './settings/settings.component';
 import { RunComponent } from './run/run.component';
+import { ScheduleComponent } from './schedule/schedule.component';
 
 export function playerFactory() {
   return player;
@@ -38,6 +39,7 @@ export function playerFactory() {
     MimicListComponent,
     SettingsComponent,
     RunComponent,
+    ScheduleComponent
   ],
   imports: [
     CommonModule,

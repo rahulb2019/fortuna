@@ -141,6 +141,10 @@ export class MimicListComponent implements OnInit {
     this.router.navigate(["/admin/mimics/settings", mimicId]);
   }  
 
+  manageMimicSchedule(mimicId) {
+    this.router.navigate(["/admin/mimics/schedule", mimicId]);
+  }
+
   manageMimicDetails(mimicId) {    
     this.router.navigate(["/admin/mimics/studio", mimicId]);
   }  
