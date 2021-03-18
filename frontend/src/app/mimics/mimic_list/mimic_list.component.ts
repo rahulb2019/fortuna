@@ -154,6 +154,9 @@ export class MimicListComponent implements OnInit {
   }  
   runMimicDetails(mimicId) {    
     this.router.navigate(["/admin/mimics/run", mimicId]);
+  }
+  manageMeterData(mimicId) {    
+    this.router.navigate(["/admin/mimics/add_meter_data", mimicId]);
   }  
 
   changeActivation(mimicId, activeVal){

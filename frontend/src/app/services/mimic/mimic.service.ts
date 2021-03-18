@@ -176,5 +176,13 @@ export class MimicService {
     );
   }
 
+  saveMetersData(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/saveMetersData/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
 }
 

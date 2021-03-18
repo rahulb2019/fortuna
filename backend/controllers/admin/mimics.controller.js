@@ -227,8 +227,6 @@ const saveBlocksData = async function (req, res) {
     let data = req.body ? req.body.blocksData : {};
     let siteId = req.body ? req.body.site_id : {};
     let pumpData = req.body ? req.body.pumpData : [];
-    console.log(data);
-    console.log(siteId);
     try {
         let delData = await mimicQueries.deleteBlocksData(siteId);
         let respData = await mimicQueries.addMimicBlockData(data, siteId, pumpData);
@@ -324,6 +322,22 @@ const getScheduleData = async function (req, res) {
     }
 };
 
+const saveMetersData = async function (req, res) { 
+    let mimic_data = req.body ? req.body.mimic_data : {};
+    let siteId = req.body ? req.body.site_id : {};
+    try {
+        let respData = await mimicQueries.saveMetersDataDataFnc(mimic_data, siteId);
+        if (respData){
+            res.status(200).json({ code: 200, message: "Data added successfully" });
+        } else {
+            res.status(400).json({ code: 301, message: "Unable to add data", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to add data", result: error.sqlMessage })
+    }
+};
+
+
 
 exports.fetchMimicsData = fetchMimicsData;
 exports.addMimic = addMimic;
@@ -342,3 +356,4 @@ exports.updateBlocksArch = updateBlocksArch;
 exports.saveMimicSettings = saveMimicSettings;
 exports.saveMimicSchedule = saveMimicSchedule;
 exports.getScheduleData = getScheduleData;
+exports.saveMetersData = saveMetersData;

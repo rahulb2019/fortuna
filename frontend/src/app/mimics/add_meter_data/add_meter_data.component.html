@@ -1,0 +1,78 @@
+<div class="row">
+  <div class="col-sm-12 col-lg-12">
+    <div class="iq-card">
+      <div class="iq-card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="iq-card">
+              <div class="iq-card-header d-flex justify-content-between">
+                <div class="iq-header-title">
+                  <h4 class="card-title">Add New Site</h4>
+                </div>
+              </div>
+              <div class="iq-card-body">
+                <form id="form-wizard3" class="text-center" [formGroup]="mimicForm" (submit)="addNewMimic()">
+                  <div class="form-card text-left">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group {{ errorField }}">
+                          <label for="name">Site Name: *</label>
+                          <input formControlName="name" type="text" class="form-control" name="name" />
+                          <p *ngIf="mimicForm.controls['name'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Site name is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="lattitude">Lattitude: *</label>
+                          <input formControlName="lattitude" type="text" class="form-control" name="lattitude" />
+                          <p *ngIf="mimicForm.controls['lattitude'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Lattitude is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="longitude">Longitude: *</label>
+                          <input formControlName="longitude" type="text" class="form-control" name="longitude" />
+                          <p *ngIf="mimicForm.controls['longitude'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Longitude is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label for="no_of_pumps">No Of Pumps: *</label>
+                          <input formControlName="no_of_pumps" type="number" class="form-control" name="no_of_pumps" />
+                          <p *ngIf="mimicForm.controls['no_of_pumps'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Number Of Pumps is required.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
+                          <label class="d-block">Site Type: *</label> 
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" formControlName="mimic_type" value="0" (change)="changeMimicType('zps')" id="customRadio6">
+                            <label class="custom-control-label" for="customRadio6"> ZPS </label>
+                          </div>
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" formControlName="mimic_type" value="1" (change)="changeMimicType('tubewell')" id="customRadio7"> 
+                            <label class="custom-control-label" for="customRadio7"> TubeWell </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button id="submit" type="submit" class="btn btn-primary rounded-pill float-right  mb-3"
+                      value="Submit">Save Information</button>
+                    <button type="button" class="btn btn-secondary rounded-pill float-right mb-3 mr-1" (click)="goBack()">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

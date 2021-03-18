@@ -24,6 +24,8 @@ import { PreviewComponent } from './preview/preview.component';
 import { SettingsComponent } from './settings/settings.component';
 import { RunComponent } from './run/run.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { AddMeterDataComponent } from './add_meter_data/add_meter_data.component';
+
 
 export function playerFactory() {
   return player;
@@ -39,7 +41,8 @@ export function playerFactory() {
     MimicListComponent,
     SettingsComponent,
     RunComponent,
-    ScheduleComponent
+    ScheduleComponent,
+    AddMeterDataComponent
   ],
   imports: [
     CommonModule,

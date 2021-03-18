@@ -459,4 +459,25 @@ obj.getSiteSchedulesData = (data) => {
     })
 }
 
+obj.saveMetersDataDataFnc = (mimic_data, siteId) => {
+    return new Promise((resolve, reject) => {
+        let requestPostObj = { mimic_data: mimic_data };
+        Mimic.update(
+            {
+              _id: ObjectId(siteId)
+            },
+            { $set: requestPostObj },
+            function (err, result) {
+                if(err){
+                    resolve({
+                        status: "Failure",
+                        code: 301
+                    });
+                } else {
+                    resolve(result);
+                }
+            }
+        );
+    })
+}
 module.exports = obj;
