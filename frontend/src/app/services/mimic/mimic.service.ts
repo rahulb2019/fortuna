@@ -184,5 +184,13 @@ export class MimicService {
     );
   }
 
+  addDataMeterBlock(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/addDataMeterBlock/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
 }
 

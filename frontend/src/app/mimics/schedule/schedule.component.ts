@@ -123,8 +123,10 @@ export class ScheduleComponent implements OnInit {
         scheduleDataResponse && scheduleDataResponse.forEach(element => {
           schedulesData.push(element);
         });
-        this.scheduleForm.patchValue(scheduleDataResponse);
-        this.patchSchedules(schedulesData);
+        if(schedulesData && schedulesData.length > 0){
+          this.scheduleForm.patchValue(scheduleDataResponse);
+          this.patchSchedules(schedulesData);
+        }
       }
     });
   }

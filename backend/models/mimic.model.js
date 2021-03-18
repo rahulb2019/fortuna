@@ -38,7 +38,7 @@ var MimicSchema = new Schema(
       low_level: { type: Boolean, default: false },
       frequency_for_api: { type: Number, default: 0 },
     },
-    mimic_schedule: [],
+    meter_data: [],
     is_deleted: {
       type: Boolean,
       default: false

@@ -480,4 +480,49 @@ obj.saveMetersDataDataFnc = (mimic_data, siteId) => {
         );
     })
 }
+
+obj.deleteDataMeterBlocks = (siteId) => {
+    return new Promise((resolve, reject) => {
+        let requestPostObj = { meter_data: [] };
+        Mimic.update(
+            {
+              _id: ObjectId(siteId)
+            },
+            { $set: requestPostObj },
+            function (err, result) {
+                if(err){
+                    resolve({
+                        status: "Failure",
+                        code: 301
+                    });
+                } else {
+                    resolve(result);
+                }
+            }
+        );
+
+    })
+}
+obj.addDataMeterBlockFnc = (meter_data, siteId) => {
+    return new Promise((resolve, reject) => {
+        let requestPostObj = { meter_data: meter_data };
+        Mimic.update(
+            {
+              _id: ObjectId(siteId)
+            },
+            { $set: requestPostObj },
+            function (err, result) {
+                if(err){
+                    resolve({
+                        status: "Failure",
+                        code: 301
+                    });
+                } else {
+                    resolve(result);
+                }
+            }
+        );
+    })
+}
+
 module.exports = obj;

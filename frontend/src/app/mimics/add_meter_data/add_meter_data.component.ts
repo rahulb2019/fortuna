@@ -26,6 +26,7 @@ export class AddMeterDataComponent implements OnInit {
   userDetails: any;
   mimicType: any;
   mimicId: any;
+  meter_data: FormArray;
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -50,7 +51,9 @@ export class AddMeterDataComponent implements OnInit {
     }
     this.mimicService.getMimicDetail(dataObj).subscribe(res => {  
       if (res.code === 200) {
-        //this.meterDataForm.patchValue(res.result[0]);  
+        if(res.result[0] && res.result[0].meter_data && res.result[0].meter_data.length > 0){
+          this.patchBlocks(res.result[0].meter_data);          
+        }  
       }
       else {        
         this.toastr.error(res.message); //alert error message
@@ -58,25 +61,58 @@ export class AddMeterDataComponent implements OnInit {
     });
   }
 
+  patchBlocks(blocksData) {
+    let meter_data = this.meterDataForm.get('meter_data') as FormArray;
+    while (meter_data.length > 0) {
+      meter_data.removeAt(0);
+    }
+    blocksData.forEach((element, index) => {
+      if (index >= 0) {
+        meter_data.push(
+          this.createMeterBlock()
+        );
+      }
+    });
+    if (blocksData.length == meter_data.value.length) {
+      this.meterDataForm.patchValue({
+        meter_data: blocksData
+      })
+    }
+  }
+
   createMeterDataForm(){
     this.meterDataForm = this.fb.group({
-      voltry_register: ['', [Validators.required]],
-      voltyb_register: ['', [Validators.required]],
-      voltbr_register: ['', [Validators.required]],
-      currentr_register: ['', [Validators.required]],
-      currenty_register: ['', [Validators.required]],
-      currentb_register: ['', [Validators.required]],
-      frequency: ['', [Validators.required]],
-      pow_fact: ['', [Validators.required]],
-      killowatt: ['', [Validators.required]],
+      meter_data: this.fb.array([this.createMeterBlock()]),
     });
+  }
+
+  /**Create Meter Block*/
+  createMeterBlock() {
+    return this.fb.group({
+      name: [''],
+      register_address: [''],
+      data_type: [''],
+      unit: [''],
+      value: ['']
+    });
+  }
+
+  /**Create Meter Block */
+  addMeterBlock(item) {
+    this.meter_data = this.meterDataForm.get('meter_data') as FormArray;
+    this.meter_data.push(this.createMeterBlock());
+  }
+  /**Remove Meter Block */
+  removeMeterBlock(index) {
+    this.meter_data = this.meterDataForm.get('meter_data') as FormArray;
+    this.meter_data.removeAt(index);
   }
 
   goBack(){
     this.router.navigate(["/admin/mimics/mimic_list"]);
   }
 
-  addNewMimic() {
+  saveMeterDetails() {
     if (this.meterDataForm.invalid) {
       const invalid = [];
       const controls = this.meterDataForm.controls;
@@ -90,16 +126,14 @@ export class AddMeterDataComponent implements OnInit {
       return;
     } else {
       this.errorField = "";
-      this.meterDataForm.value.siteId = this.mimicId;
-      console.log(".....---....", this.meterDataForm.value); return false;
-      // this.mimicService.addMeterData(this.meterDataForm.value).subscribe(res => {
-      //   if (res.code == 200) {
-      //         this.toastr.success(res.message);
-      //         this.router.navigate(["/admin/mimics/mimic_list"]);
-      //   } else {
-      //     this.toastr.error(res.message);
-      //   }
-      // });
+      this.meterDataForm.value.siteId = this.mimicId;this.mimicService.addDataMeterBlock(this.meterDataForm.value).subscribe(res => {
+        if (res.code == 200) {
+              this.toastr.success(res.message);
+              this.router.navigate(["/admin/mimics/mimic_list"]);
+        } else {
+          this.toastr.error(res.message);
+        }
+      });
     }
   }
 }

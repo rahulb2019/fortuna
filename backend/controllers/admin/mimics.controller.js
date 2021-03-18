@@ -337,6 +337,23 @@ const saveMetersData = async function (req, res) {
     }
 };
 
+// function save meter blocks details positioned on running mimic
+const addDataMeterBlock = async function (req, res) { 
+    let meter_details = req.body ? req.body.meter_data : {};
+    let siteId = req.body ? req.body.siteId : {};
+    try {
+        let delData = await mimicQueries.deleteDataMeterBlocks(siteId);
+        let respData = await mimicQueries.addDataMeterBlockFnc(meter_details, siteId);
+        if (respData){
+            res.status(200).json({ code: 200, message: "Data added successfully" });
+        } else {
+            res.status(400).json({ code: 301, message: "Unable to add data", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to add data", result: error.sqlMessage })
+    }
+};
+
 
 
 exports.fetchMimicsData = fetchMimicsData;
@@ -357,3 +374,4 @@ exports.saveMimicSettings = saveMimicSettings;
 exports.saveMimicSchedule = saveMimicSchedule;
 exports.getScheduleData = getScheduleData;
 exports.saveMetersData = saveMetersData;
+exports.addDataMeterBlock = addDataMeterBlock;
