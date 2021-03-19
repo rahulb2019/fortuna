@@ -160,5 +160,37 @@ export class MimicService {
     this.socket.emit('getDoc', mimicId);
   }
 
+  saveMimicSchedule(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/saveMimicSchedule/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
+  getScheduleData(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/getScheduleData/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
+  saveMetersData(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/saveMetersData/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
+  addDataMeterBlock(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/addDataMeterBlock/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
 }
 

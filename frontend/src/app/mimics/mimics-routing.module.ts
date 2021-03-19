@@ -10,6 +10,8 @@ import { StudioComponent } from './studio/studio.component';
 import { PreviewComponent } from './preview/preview.component';
 import { SettingsComponent } from './settings/settings.component';
 import { RunComponent } from './run/run.component';
+import { ScheduleComponent } from './schedule/schedule.component';
+import { AddMeterDataComponent } from './add_meter_data/add_meter_data.component';
 
 
 const routes: Routes = [
@@ -45,6 +47,14 @@ const routes: Routes = [
     path: 'run/:id',
     component: RunComponent
   },
+  {
+    path: 'schedule/:id',
+    component: ScheduleComponent
+  }, 
+  {
+    path: 'add_meter_data/:id',
+    component: AddMeterDataComponent
+  }, 
   
 ];
 

@@ -227,8 +227,6 @@ const saveBlocksData = async function (req, res) {
     let data = req.body ? req.body.blocksData : {};
     let siteId = req.body ? req.body.site_id : {};
     let pumpData = req.body ? req.body.pumpData : [];
-    console.log(data);
-    console.log(siteId);
     try {
         let delData = await mimicQueries.deleteBlocksData(siteId);
         let respData = await mimicQueries.addMimicBlockData(data, siteId, pumpData);
@@ -290,6 +288,74 @@ const saveMimicSettings = async function (req, res) {
 };
 
 
+
+const saveMimicSchedule = async function (req, res) { 
+    let schedulesData = req.body ? req.body.schedulesData : {};
+    let siteId = req.body ? req.body.site_id : {};
+    try {
+        let delData = await mimicQueries.deleteScheduleData(siteId);
+        let respData = await mimicQueries.addMimicScheduleData(schedulesData, siteId);
+        if (respData){
+            res.status(200).json({ code: 200, message: "Data added successfully" });
+        } else {
+            res.status(400).json({ code: 301, message: "Unable to add data", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to add data", result: error.sqlMessage })
+    }
+};
+
+const getScheduleData = async function (req, res) {
+    let data = req.body ? req.body : {};
+    let token = "";
+    try {
+        const respData = await mimicQueries.getSiteSchedulesData(data);
+        if (respData.length == 0)
+            res.status(200).json({ code: 200, message: "No data saved yet", result: respData });
+        else {
+            let resp=[];
+            resp.push(respData)
+            res.status(200).json({ code: 200, message: "Record fetched successfully", result: resp });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to fetch data", result: error.sqlMessage })
+    }
+};
+
+const saveMetersData = async function (req, res) { 
+    let mimic_data = req.body ? req.body.mimic_data : {};
+    let siteId = req.body ? req.body.site_id : {};
+    try {
+        let respData = await mimicQueries.saveMetersDataDataFnc(mimic_data, siteId);
+        if (respData){
+            res.status(200).json({ code: 200, message: "Data added successfully" });
+        } else {
+            res.status(400).json({ code: 301, message: "Unable to add data", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to add data", result: error.sqlMessage })
+    }
+};
+
+// function save meter blocks details positioned on running mimic
+const addDataMeterBlock = async function (req, res) { 
+    let meter_details = req.body ? req.body.meter_data : {};
+    let siteId = req.body ? req.body.siteId : {};
+    try {
+        let delData = await mimicQueries.deleteDataMeterBlocks(siteId);
+        let respData = await mimicQueries.addDataMeterBlockFnc(meter_details, siteId);
+        if (respData){
+            res.status(200).json({ code: 200, message: "Data added successfully" });
+        } else {
+            res.status(400).json({ code: 301, message: "Unable to add data", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to add data", result: error.sqlMessage })
+    }
+};
+
+
+
 exports.fetchMimicsData = fetchMimicsData;
 exports.addMimic = addMimic;
 exports.updateMimic = updateMimic;
@@ -305,3 +371,7 @@ exports.saveBlocksData = saveBlocksData;
 exports.getBlocksData = getBlocksData;
 exports.updateBlocksArch = updateBlocksArch;
 exports.saveMimicSettings = saveMimicSettings;
+exports.saveMimicSchedule = saveMimicSchedule;
+exports.getScheduleData = getScheduleData;
+exports.saveMetersData = saveMetersData;
+exports.addDataMeterBlock = addDataMeterBlock;

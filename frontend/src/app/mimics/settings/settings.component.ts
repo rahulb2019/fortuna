@@ -24,6 +24,14 @@ export class SettingsComponent implements OnInit {
   selectedFre: Number = 30;
   frequencyArr:any = [
     {
+      value: 5,
+      name: "5 Seconds"
+    },
+    {
+      value: 10,
+      name: "10 Seconds"
+    },
+    {
       value: 30,
       name: "30 Seconds"
     },

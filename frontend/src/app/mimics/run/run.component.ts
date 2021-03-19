@@ -39,6 +39,7 @@ export class RunComponent implements OnInit, OnDestroy {
   isSubmitted: boolean;
   isValid: boolean = true;
   errorField: string;
+  meterDataArray: any;
 
   document: any=[];
   private _docSub: Subscription;
@@ -152,10 +153,12 @@ export class RunComponent implements OnInit, OnDestroy {
     }
     this.mimicService.getMimicDetail(dataObj).subscribe(res => {  
       if (res.code === 200) {
+        console.log("-----res.result[0]...", res.result[0]);
         if (res.result[0] && res.result[0].mimic_data.length > 0) {
           this.mimicDataArray = res.result[0].mimic_data;
-          this.pumpsCount = res.result[0].no_of_pumps
           this.displayExistingMimic(this.mimicDataArray);
+          this.meterDataArray = res.result[0].meter_data;
+          this.pumpsCount = res.result[0].no_of_pumps
         }
       }
     });
@@ -171,6 +174,9 @@ export class RunComponent implements OnInit, OnDestroy {
     let index=0;
     mimicData && mimicData.forEach(element => {
       html+='<div class="drag" style="'+element.style+'">';
+      if (element.name == 'Flow Meter' || element.name == 'Pressure Meter') {
+        html+='<div class="meter_tooltip"><span class="meter_tooltiptext">'+element.name+': <br/>'+element.value+' '+element.unit+'</span></div>';
+      }
       html+='<img data-off-src="'+element.image+'"  src="'+element.image+'" title="'+element.name+'" width="100%" height="100%" data-index="'+index+'">';
       html+='</div>'; 
       index++;     
