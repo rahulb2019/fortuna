@@ -225,7 +225,7 @@ export class StudioComponent implements OnInit {
                   that.selectedPumpsCount--;
                   let pumpNumberDeleted = $(this).parent('div').children("img").attr('name');
                   $(this).parent('div').remove();
-                  that.updateNamesOfPumps(pumpNumberDeleted);
+                  // that.updateNamesOfPumps(pumpNumberDeleted);
                 } else {                  
                   $(this).parent('div').remove();
                 }
