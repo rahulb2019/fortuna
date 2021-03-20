@@ -30,12 +30,11 @@ modbus.tcp.server({debug: "server"}, (connection) => {
                     console.log(err);
                 } else {
                     if(result.length >0){
-                        console.log(result);
                         let mimicsData=result[0].mimic_data;
                         let meterData=result[0].meter_data;
                         let siteBlocks=result[0].site_blocks;
-                        // let externalResponseMeter = await internalFnc(result[0]._id, meterData, connection, db, 0);
-                        // let externalResponseBlock = await externalfnc(result[0]._id, siteBlocks, connection, db, 1);
+                        let externalResponseMeter = await internalFnc(result[0]._id, meterData, connection, db, 0);
+                        let externalResponseBlock = await externalfnc(result[0]._id, siteBlocks, connection, db, 1);
                         let externalResponseMimic = await internalFnc(result[0]._id, mimicsData, connection, db, 2);
                     }
                 }
