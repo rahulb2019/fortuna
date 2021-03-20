@@ -30,10 +30,13 @@ modbus.tcp.server({debug: "server"}, (connection) => {
                     console.log(err);
                 } else {
                     if(result.length >0){
+                        console.log(result);
+                        let mimicsData=result[0].mimic_data;
                         let meterData=result[0].meter_data;
                         let siteBlocks=result[0].site_blocks;
-                        let externalResponseBlock = await externalfnc(result[0]._id, siteBlocks, connection, db, 1);
-                        let externalResponseMeter = await internalFnc(result[0]._id, meterData, connection, db, 0);
+                        // let externalResponseMeter = await internalFnc(result[0]._id, meterData, connection, db, 0);
+                        // let externalResponseBlock = await externalfnc(result[0]._id, siteBlocks, connection, db, 1);
+                        let externalResponseMimic = await internalFnc(result[0]._id, mimicsData, connection, db, 2);
                     }
                 }
             });
@@ -49,7 +52,7 @@ modbus.tcp.server({debug: "server"}, (connection) => {
                 } else {
                     console.log(result);
                     if(result.length >0){
-                        let externalResponseBlock = await externalfnc(result[0]._id, result, connection, db, 2);
+                        let externalResponseBlock = await externalfnc(result[0]._id, result, connection, db, 3);
                     }
                 }
             });
@@ -77,6 +80,7 @@ modbus.tcp.server({debug: "server"}, (connection) => {
             let intArr = [];
             async function forEachLoop(j) {
                 if(type==0 && j < detailsArray.length){
+                    console.log('Meter data');
                     connection.readHoldingRegisters({address: detailsArray[j].register_address, quantity: 1, extra: {unitId: detailsArray[j].slave_id, retry: 500000}}, function (err, info) {
                         if (err != null) {
                             console.log(err);
@@ -112,7 +116,32 @@ modbus.tcp.server({debug: "server"}, (connection) => {
                         }
                     });
                 }
-                else if(type==2 && j < detailsArray.schedule_blocks.length){
+                else if(type==2 && j < detailsArray.length){
+                    console.log('mimic data');
+                    if (typeof detailsArray[j].register_address !== 'undefined') {
+                        // the variable is defined
+                        console.log(j);
+                        console.log(detailsArray[j]);
+                        console.log(detailsArray[j].register_address);
+                        connection.readHoldingRegisters({address: detailsArray[j].register_address, quantity: 1, extra: {unitId: detailsArray[j].slave_id, retry: 500000}}, function (err, info) {
+                            if (err != null) {
+                                console.log(err);
+                            } else if (info != null) {
+                                let value;
+                                if(detailsArray[j].data_type.toLowerCase().replace(/\s/g, '')!='float')
+                                    value = readInteger(info);
+                                else
+                                    value = readfloat(info);
+                                // let value = info.response.data[0].readInt16BE(0);
+                                console.log(value);
+                                db.collection("sites").update({"_id": siteId}, {$set: {[`mimic_data.${j}.value`]: value}});
+                                forEachLoop(j + 1);
+                            }
+                        });
+                    
+                    }
+                }
+                else if(type==3 && j < detailsArray.schedule_blocks.length){
                     console.log('schedule write');
                     let writeData1 = Buffer.alloc(4);
                     writeData1.writeUInt16BE(detailsArray.schedule_blocks[j].startHour, 0);
