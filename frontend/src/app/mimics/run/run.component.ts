@@ -73,26 +73,32 @@ export class RunComponent implements OnInit, OnDestroy {
       var onPumpArr=[];
       responseArray.forEach((data, i) => {
         if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
-          let offImg=$("img[title='Pumps "+(i+1)+"']").attr('src');
-          let onImg=offImg.replace("_off.svg", "_on.gif");
-          if(onImg.indexOf("_off.png") !== -1)
-            onImg=onImg.replace("_off.png", "_on.gif");
-          $("img[title='Pumps "+(i+1)+"']").attr('src',onImg);
-          let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
-          let offImgConnector=el.find('img').attr('src');
-          let onImgConnector=offImgConnector.replace("_off.svg", "_on.svg");
-          if(onImgConnector.indexOf("_off.png") !== -1)
-            onImgConnector=onImgConnector.replace("_off.png", "_on.svg");
-          el.find('img').attr('src',onImgConnector);
-          onPumpArr.push(String(i+1));
+          if($("img[title='Pumps "+(i+1)+"']").length >0){
+            let offImg=$("img[title='Pumps "+(i+1)+"']").attr('src');
+            console.log(offImg);
+            let onImg=offImg.replace("_off.svg", "_on.gif");
+            if(onImg.indexOf("_off.png") !== -1)
+              onImg=onImg.replace("_off.png", "_on.gif");
+            $("img[title='Pumps "+(i+1)+"']").attr('src',onImg);
+            console.log($("img[title='Pumps "+(i+1)+"']").offset())
+            let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
+            let offImgConnector=el.find('img').attr('src');
+            let onImgConnector=offImgConnector.replace("_off.svg", "_on.svg");
+            if(onImgConnector.indexOf("_off.png") !== -1)
+              onImgConnector=onImgConnector.replace("_off.png", "_on.svg");
+            el.find('img').attr('src',onImgConnector);
+            onPumpArr.push(String(i+1));
+          }
         }
         else{
-            let offImg=$("img[title='Pumps "+(i+1)+"']").data('off-src');
-            $("img[title='Pumps "+(i+1)+"']").attr('src',offImg);
-
-            let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
-            let offImgConnector=el.find('img').data('off-src');
-            el.find('img').attr('src',offImgConnector);
+            if($("img[title='Pumps "+(i+1)+"']").length >0)
+            {
+              let offImg=$("img[title='Pumps "+(i+1)+"']").data('off-src');
+              $("img[title='Pumps "+(i+1)+"']").attr('src',offImg);
+              let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
+              let offImgConnector=el.find('img').data('off-src');
+              el.find('img').attr('src',offImgConnector);
+            }
             offPumpArr.push(String(i+1));
         }
         $("img[title='Pipes']").each(function(){
