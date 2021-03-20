@@ -348,7 +348,6 @@ export class PreviewComponent implements OnInit {
       }
       this.mimicService.saveMetersData(meterObj).subscribe(res => {
         if (res.code == 200) {
-          this.getMimicDataById();
           this.modalRef.hide();
         } else {
           this.toastr.error(res.message);
