@@ -354,6 +354,21 @@ const addDataMeterBlock = async function (req, res) {
     }
 };
 
+const deleteImage = async function (req, res) {
+    let data = req.body ? req.body : {};
+    let token = "";
+    try {
+        const respData = await mimicQueries.deleteImageData(data);
+        if (respData.length == 0)
+            res.status(400).json({ code: 301, message: "Unable to delete data", result: respData });
+        else {
+            res.status(200).json({ code: 200, message: "Record(s) deleted successfully", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to delete data", result: error.sqlMessage })
+    }
+};
+
 
 
 exports.fetchMimicsData = fetchMimicsData;
@@ -375,3 +390,4 @@ exports.saveMimicSchedule = saveMimicSchedule;
 exports.getScheduleData = getScheduleData;
 exports.saveMetersData = saveMetersData;
 exports.addDataMeterBlock = addDataMeterBlock;
+exports.deleteImage = deleteImage;

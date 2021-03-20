@@ -3,9 +3,9 @@
         <div id="wrapper" class='mn-studio preview'>
             <div id="droppable" >
                 <div class="drag" *ngFor="let element of mimicDataArray; let i = index;" [attr.styleA]= element.style>
-                    <img *ngIf="element.name!='Pipes' && element.name!='Flow Meter' && element.name!='Pressure Meter'" src="{{element.image}}" title="{{element.name}}" width="100%" height="100%" >
+                    <img *ngIf="element.name!='Pipes' && element.name!='Flow Meter' && element.name!='Pressure Meter' && element.name!='Level Sensor'" src="{{element.image}}" title="{{element.name}}" width="100%" height="100%" >
                     <img *ngIf="element.name=='Pipes'" src="{{element.image}}" title="{{element.name}}" width="100%" height="100%" (click)="openModal(template,i)" >
-                    <img *ngIf="element.name=='Flow Meter' || element.name=='Pressure Meter'" src="{{element.image}}" title="{{element.name}} {{element.value}}" width="100%" height="100%" (click)="openMeterDialog(meterPopup, i)" >
+                    <img *ngIf="element.name=='Flow Meter' || element.name=='Pressure Meter' || element.name=='Level Sensor'" src="{{element.image}}" title="{{element.name}} {{element.value}}" width="100%" height="100%" (click)="openMeterDialog(meterPopup, i)" >
                 </div>
             </div>
         </div>

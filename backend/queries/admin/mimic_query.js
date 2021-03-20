@@ -525,4 +525,20 @@ obj.addDataMeterBlockFnc = (meter_data, siteId) => {
     })
 }
 
+
+obj.deleteImageData = (data) => {
+    return new Promise((resolve, reject) => {
+        siteImage.remove({ _id: ObjectId(data._id) }, function(err, result) {
+            if(err){
+                resolve({
+                    status: "Failure",
+                    code: 301
+                });
+            } else {
+                resolve(result);
+            }
+        });
+    })
+}
+
 module.exports = obj;

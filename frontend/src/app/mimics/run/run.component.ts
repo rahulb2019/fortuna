@@ -183,7 +183,7 @@ export class RunComponent implements OnInit, OnDestroy {
     let index=0;
     mimicData && mimicData.forEach(element => {
       html+='<div class="drag" style="'+element.style+'">';
-      if (element.name == 'Flow Meter' || element.name == 'Pressure Meter') {
+      if (element.name == 'Flow Meter' || element.name == 'Pressure Meter' || element.name == 'Level Sensor') {
         html+='<div class="meter_tooltip"><span class="meter_tooltiptext">'+element.name+': <br/>'+element.value+' '+element.unit+'</span></div>';
       }
       html+='<img data-off-src="'+element.image+'"  src="'+element.image+'" title="'+element.name+'" width="100%" height="100%" data-index="'+index+'">';
