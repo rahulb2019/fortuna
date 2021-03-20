@@ -74,6 +74,20 @@ export class ViewGalleryComponent implements OnInit {
     this.getAllImages();
   }
 
+  deleteImage(selectedImage) {
+    if (confirm('Please confirm! Do you really want to delete the image?')) {
+      this.mimicService.deleteImage(selectedImage).subscribe(res => {
+        if (res.code === 200) {
+          this.toastr.success("Image deleted successfully!");
+          this.getAllCategories();
+        }
+        else {
+          this.toastr.error(res.message); //alert error message
+        }
+      });
+    }
+  }
+
   getAllImages(){
     let data = {
       site_image_category_id: this.selectedCat,

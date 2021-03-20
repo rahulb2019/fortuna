@@ -54,7 +54,9 @@
                   <div class="iq-card-body">
                       <div class="row">
                         <div class="col-md-3" *ngFor="let selImg of selectedImages">
+                          <i class="fa fa-trash fa-2x float-right" (click)="deleteImage(selImg)"></i>
                           <img src="{{imageUrl+selImg.name}}" class="img-thumbnail" alt="Responsive image">
+                          <div class="text-center"><strong>{{selImg.name}}</strong></div>
                         </div>
                       </div>
                   </div>

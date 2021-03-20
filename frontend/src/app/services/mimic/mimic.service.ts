@@ -192,5 +192,17 @@ export class MimicService {
     );
   }
 
+  /*
+   * Function: deleteImage
+   * Des: Funtion is to fetch all companies data
+   */
+  deleteImage(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/deleteImage/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
 }
 

@@ -23,6 +23,7 @@ module.exports = function(app, route) {
   route.post("/getScheduleData", mimicsCtrl.getScheduleData);
   route.post("/saveMetersData", mimicsCtrl.saveMetersData);
   route.post("/addDataMeterBlock", mimicsCtrl.addDataMeterBlock);
+  route.post("/deleteImage", mimicsCtrl.deleteImage);
  
   app.use("/mimics", route);
 };
