@@ -17,12 +17,20 @@ const ObjectId = require("mongoose").Types.ObjectId;
 io.on('connection', socket => {
     socket.on('getDoc', input => {
       console.log(input);
-      var siteBlock = mongoose.model("site_blocks");
+      var Mimic = mongoose.model("sites");
       let aggregateQuery = [];
-      let query = { site_id: ObjectId(input) };
+      let query = { _id: ObjectId(input) };
       aggregateQuery.push({ $match: query });
+      aggregateQuery.push({ 
+        $lookup:{
+                      from: "site_blocks", // collection to join
+                      localField: "_id",//field from the input documents
+                      foreignField: "site_id",//field from the documents of the "from" collection
+                      as: "site_blocks"// output array field
+                }
+       });
       function emitResponse(){
-        siteBlock.aggregate(aggregateQuery).then(async result => {
+        Mimic.aggregate(aggregateQuery).then(async result => {
           // console.log(result);
           io.emit('document', result);
         }).catch(err => {

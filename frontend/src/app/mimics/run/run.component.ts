@@ -59,9 +59,12 @@ export class RunComponent implements OnInit, OnDestroy {
   ngOnInit() {
     var images =  JSON.parse(localStorage.getItem('currentMimic'));
     this.displayExistingMimic(images);
-    this._docSub = this.mimicService.currentDocument.subscribe(res => 
+    this._docSub = this.mimicService.currentDocument.subscribe(result => 
     {  
+      var res=result[0].site_blocks;
       this.document=res;
+      this.meterDataArray = result[0].meter_data;
+      console.log(res);
       let responseArray = res ? Object.entries(res) : []
       this.pumpData=res[0].pumpData;
       var ang=this;

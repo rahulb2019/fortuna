@@ -152,6 +152,10 @@ export class ScheduleComponent implements OnInit {
       startMinute: ['', [Validators.required]],
       endHour: ['', [Validators.required]],
       endMinute: ['', [Validators.required]],
+      startHourSlaveId: ['', [Validators.required]],
+      startMinuteSlaveId: ['', [Validators.required]],
+      endHourSlaveId: ['', [Validators.required]],
+      endMinuteSlaveId: ['', [Validators.required]],
       startHourRegister: ['', [Validators.required]],
       startMinuteRegister: ['', [Validators.required]],
       endHourRegister: ['', [Validators.required]],
@@ -193,6 +197,7 @@ export class ScheduleComponent implements OnInit {
   createModalFormFnc(){
     this.modalForm = this.fb.group({
       value: ['', [Validators.required]],
+      slave_id: ['', [Validators.required]],
       register_address: ['', [Validators.required]]
     });
   }  
@@ -200,22 +205,27 @@ export class ScheduleComponent implements OnInit {
   openValueDialog(item, field, b, ind, content, type, fieldtype){
     this.selectedInput = fieldtype;
     if(item && item.value && item.value.schedule_blocks[ind]) {
-      let registerAddrVal = "", valueInputVal = "";
+      let registerAddrVal = "", valueInputVal = "",slaveIdVal = "";;
       if(this.selectedInput === "startHour") {
         valueInputVal = item.value.schedule_blocks[ind].startHour;
         registerAddrVal = item.value.schedule_blocks[ind].startHourRegister;
+        slaveIdVal= item.value.schedule_blocks[ind].startHourSlaveId;
       } else if(this.selectedInput === "startMinute") {
         valueInputVal = item.value.schedule_blocks[ind].startMinute;
         registerAddrVal = item.value.schedule_blocks[ind].startMinuteRegister;
+        slaveIdVal= item.value.schedule_blocks[ind].startHourSlaveId;
       } else if(this.selectedInput === "endHour") {
         valueInputVal = item.value.schedule_blocks[ind].endHour;
         registerAddrVal = item.value.schedule_blocks[ind].endHourRegister;
+        slaveIdVal= item.value.schedule_blocks[ind].startHourSlaveId;
       } else if(this.selectedInput === "endMinute") {
         valueInputVal = item.value.schedule_blocks[ind].endMinute;
         registerAddrVal = item.value.schedule_blocks[ind].endMinuteRegister;
+        slaveIdVal= item.value.schedule_blocks[ind].startHourSlaveId;
       }
       this.modalForm.patchValue({
         value: valueInputVal,
+        slave_id: slaveIdVal,
         register_address: registerAddrVal
       })
     } else {
@@ -251,12 +261,16 @@ export class ScheduleComponent implements OnInit {
       this.scheduleForm.value.site_id = this.mimicId;
       if(this.selectedInput === "startHour") {
         item.controls['schedule_blocks'].at(ind).controls['startHourRegister'].setValue(this.modalForm.value.register_address);
+        item.controls['schedule_blocks'].at(ind).controls['startHourSlaveId'].setValue(this.modalForm.value.slave_id);
       } else if(this.selectedInput === "startMinute") {
         item.controls['schedule_blocks'].at(ind).controls['startMinuteRegister'].setValue(this.modalForm.value.register_address);
+        item.controls['schedule_blocks'].at(ind).controls['startMinuteSlaveId'].setValue(this.modalForm.value.slave_id);
       } else if(this.selectedInput === "endHour") {
         item.controls['schedule_blocks'].at(ind).controls['endHourRegister'].setValue(this.modalForm.value.register_address);        
+        item.controls['schedule_blocks'].at(ind).controls['endHourSlaveId'].setValue(this.modalForm.value.slave_id);
       } else if(this.selectedInput === "endMinute") {
         item.controls['schedule_blocks'].at(ind).controls['endMinuteRegister'].setValue(this.modalForm.value.register_address);        
+        item.controls['schedule_blocks'].at(ind).controls['endMinuteSlaveId'].setValue(this.modalForm.value.slave_id);
       }
       item.controls['schedule_blocks'].at(ind).controls[this.selectedInput].setValue(this.modalForm.value.value);
     }
@@ -314,6 +328,10 @@ export class ScheduleComponent implements OnInit {
         startMinuteRegister: y.startMinuteRegister,
         endHourRegister: y.endHourRegister,
         endMinuteRegister: y.endMinuteRegister,
+        startHourSlaveId: y.startHourSlaveId,
+        startMinuteSlaveId: y.startMinuteSlaveId,
+        endHourSlaveId: y.endHourRegister,
+        endMinuteSlaveId: y.endMinuteSlaveId,
       }))
     })
     return arr;

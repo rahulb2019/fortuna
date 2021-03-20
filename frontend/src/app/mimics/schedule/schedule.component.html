@@ -108,6 +108,17 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-group {{ errorField }}">
+                    <label for="slave_id">Slave Id: *</label>
+                    <input formControlName="slave_id" type="text" class="form-control"
+                      name="slave_id" />
+                    <p *ngIf="modalForm.controls['slave_id'].hasError('required') && isSubmitted"
+                      class="error-msg">
+                      <i class="fa fa-exclamation"></i>Slave id is required.
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group {{ errorField }}">
                     <label for="register_address">Register Address: *</label>
                     <input formControlName="register_address" type="text" class="form-control"
                       name="register_address" />

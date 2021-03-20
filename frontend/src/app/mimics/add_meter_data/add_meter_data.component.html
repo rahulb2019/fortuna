@@ -16,10 +16,13 @@
                     <div formArrayName="meter_data">
                       <div *ngFor="let item of meterDataForm.get('meter_data')['controls']; let b = index; let firstblock = first; let lastblock = last  ">
                         <div class="row" [formGroupName]="b">
-                          <div class="form-group col-md-3">
+                          <div class="form-group col-md-2">
                             <input type="text" class="form-control" formControlName="name" placeholder="Name">
                           </div>
-                          <div class="form-group col-md-3">
+                          <div class="form-group col-md-2">
+                            <input type="text" class="form-control" formControlName="slave_id" placeholder="Slave Id">
+                          </div>
+                          <div class="form-group col-md-2">
                             <input type="text" class="form-control" formControlName="register_address" placeholder="Register Address">
                           </div>
                           <div class="form-group col-md-2">

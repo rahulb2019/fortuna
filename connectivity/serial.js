@@ -67,37 +67,3 @@ function internalFnc(detailsArray, connection,db) {
         forEachLoop(0);
     });
 }
-
-
-
-
-// var modbus = require("modbus-stream");
-// var registers=[4096,4097,4098,4099,4100]
-// modbus.serial.connect("COM1", {
-//     baudRate: 9600,
-//     dataBits: 8,
-//     stopBits: 1,
-//     parity: "none",
-//     debug: "automaton-0"
-// }, (err, connection) => {
-//     if (err)
-//         throw err;
-//         let i=0;
-//         recursive(i);
-//         function recursive(i){
-//             if (i==registers.length) {
-//                 process.exit(0);
-//             }
-//             connection.readHoldingRegisters({ address: registers[i], quantity: 1, extra: {slaveId:1, retry: 500000}}, function (err, res) {
-//                 if (err != null) {
-//                     console.log(err);
-//                 } else if (res != null) {
-//                     console.log(res.response.data[0].readInt16BE(0));
-//                     i++;
-//                     recursive(i);
-//                 }
-//             });
-//         };
-
-
-// });

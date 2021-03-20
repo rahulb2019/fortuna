@@ -90,6 +90,7 @@ export class AddMeterDataComponent implements OnInit {
   createMeterBlock() {
     return this.fb.group({
       name: [''],
+      slave_id: [''],
       register_address: [''],
       data_type: [''],
       unit: [''],
