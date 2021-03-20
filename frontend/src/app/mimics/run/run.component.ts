@@ -64,7 +64,20 @@ export class RunComponent implements OnInit, OnDestroy {
       var res=result[0].site_blocks;
       this.document=res;
       this.meterDataArray = result[0].meter_data;
-      console.log(res);
+      var sensorDataArray = result[0].mimic_data;
+      sensorDataArray && sensorDataArray.forEach((element,i) => {
+        if ((element.name == 'Flow Meter' || element.name == 'Pressure Meter' || element.name == 'Level Sensor')) {
+          let value=0,unit='';
+          if(element.value)
+              value=element.value;
+          if(element.unit) 
+            unit=element.unit;   
+          let html='<div class="meter_tooltip" id="el'+i+'"><span class="meter_tooltiptext">'+element.name+': <br/>'+value+' '+unit+'</span></div>';
+          $('#el'+i).html(html);
+        }   
+      });
+
+      
       let responseArray = res ? Object.entries(res) : []
       this.pumpData=res[0].pumpData;
       var ang=this;
@@ -75,12 +88,10 @@ export class RunComponent implements OnInit, OnDestroy {
         if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
           if($("img[title='Pumps "+(i+1)+"']").length >0){
             let offImg=$("img[title='Pumps "+(i+1)+"']").attr('src');
-            console.log(offImg);
             let onImg=offImg.replace("_off.svg", "_on.gif");
             if(onImg.indexOf("_off.png") !== -1)
               onImg=onImg.replace("_off.png", "_on.gif");
             $("img[title='Pumps "+(i+1)+"']").attr('src',onImg);
-            console.log($("img[title='Pumps "+(i+1)+"']").offset())
             let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
             let offImgConnector=el.find('img').attr('src');
             let onImgConnector=offImgConnector.replace("_off.svg", "_on.svg");
@@ -181,10 +192,15 @@ export class RunComponent implements OnInit, OnDestroy {
     $('.mn-studio #droppable').css({'background-image':'none','margin-top':'25px'});
     let html='';
     let index=0;
-    mimicData && mimicData.forEach(element => {
+    mimicData && mimicData.forEach((element,i) => {
       html+='<div class="drag" style="'+element.style+'">';
-      if (element.name == 'Flow Meter' || element.name == 'Pressure Meter' || element.name == 'Level Sensor') {
-        html+='<div class="meter_tooltip"><span class="meter_tooltiptext">'+element.name+': <br/>'+element.value+' '+element.unit+'</span></div>';
+      if ((element.name == 'Flow Meter' || element.name == 'Pressure Meter' || element.name == 'Level Sensor')) {
+        let value=0,unit='';
+        if(element.value)
+            value=element.value;
+        if(element.unit) 
+          unit=element.unit;   
+        html+='<div class="meter_tooltip" id="el'+i+'"><span class="meter_tooltiptext">'+element.name+': <br/>'+value+' '+unit+'</span></div>';
       }
       html+='<img data-off-src="'+element.image+'"  src="'+element.image+'" title="'+element.name+'" width="100%" height="100%" data-index="'+index+'">';
       html+='</div>'; 
