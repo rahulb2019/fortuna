@@ -184,79 +184,81 @@ export class StudioComponent implements OnInit {
       activeClass: "drop-area",
       drop: function (e, ui) {
         //condition to be set for no of pumps selection
-        if (that.selectedPumpsCount === that.totalPumpsCount && that.selectedCategory && that.selectedCategory.name === "Pumps") {
-          alert("You cannot add more pumps/motors to this mimic");
-          return;
-        } else {
-          if(that.selectedCategory.name === "Pumps"){
-            that.selectedPumpsCount++;
+        if ($(ui.draggable)[0].id != "") {
+          if (that.selectedPumpsCount === that.totalPumpsCount && that.selectedCategory && that.selectedCategory.name === "Pumps") {
+            alert("You cannot add more pumps/motors to this mimic");
+            return;
           }
-          if ($(ui.draggable)[0].id != "") {
-            this.selectedEle = ui.helper.clone();
-            ui.helper.remove();
-            this.selectedEle.draggable({
-              helper: 'original',
-              cursor: 'move',
-              //containment: '#droppable',
-              tolerance: 'fit',
-              scroll: false,
-              drop: function (event, ui) {
-                $(ui.draggable).remove();
-              }
-            });
-            this.selectedEle.resizable({
-              handles: 'all',
-              maxHeight: $('#droppable').height(),
-              maxWidth: $('#droppable').width()
-            });
-            this.selectedEle.addClass('remove');
-            if(that.selectedCategory.name === "Pumps") {
-              this.selectedEle.children('img').attr('name', that.selectedCategory.name +" "+ that.selectedPumpsCount);
-              this.selectedEle.children('img').attr('title', that.selectedCategory.name +" "+ that.selectedPumpsCount);
-            } else {
-              this.selectedEle.children('img').attr('name', that.selectedCategory.name);
-              this.selectedEle.children('img').attr('title', that.selectedCategory.name);
+          else
+          {
+            if(that.selectedCategory.name === "Pumps"){
+              that.selectedPumpsCount++;
             }
-            this.selectedEle.children('img').attr('category', that.selectedCategory.name);
-            let el = $('<span class="xicon delete ui-icon ui-icon-close" title="Remove"></span>');
-            $(el).insertAfter($(this.selectedEle.find('img')));
-            this.selectedEle.appendTo('#droppable');
-            this.selectedEle.find('.delete').click(function () {
-              var r = confirm("Are you sure to delete?");
-              if (r == true) {
-                if($(this).parent('div').children("img").attr('category') === "Pumps") {
-                  that.selectedPumpsCount--;
-                  let pumpNumberDeleted = $(this).parent('div').children("img").attr('name');
-                  $(this).parent('div').remove();
-                  // that.updateNamesOfPumps(pumpNumberDeleted);
-                } else {                  
-                  $(this).parent('div').remove();
-                }
-              }
-            });
-            //set position according body to droppable
-            let currentPos=this.selectedEle.offset();
-            let droppablePos=$('#droppable').offset();
-            this.selectedEle.css({
-              top: currentPos.top-(droppablePos.top*2+2),
-              left: currentPos.left-(droppablePos.left*2+2)
-            });
-            this.selectedEle.dblclick(function(){
-              if($(this).hasClass("ui-resizable")){
-                $(this).resizable('destroy');
-                $(this).find('.delete').hide();
-              }
-              else
-              {
-                $(this).resizable({
-                  handles: 'all',
-                  maxHeight: $('#droppable').height(),
-                  maxWidth: $('#droppable').width()
-                }); 
-                $(this).find('.delete').show();
-              }
-            })
           }
+          this.selectedEle = ui.helper.clone();
+          ui.helper.remove();
+          this.selectedEle.draggable({
+            helper: 'original',
+            cursor: 'move',
+            //containment: '#droppable',
+            tolerance: 'fit',
+            scroll: false,
+            drop: function (event, ui) {
+              $(ui.draggable).remove();
+            }
+          });
+          this.selectedEle.resizable({
+            handles: 'all',
+            maxHeight: $('#droppable').height(),
+            maxWidth: $('#droppable').width()
+          });
+          this.selectedEle.addClass('remove');
+          if(that.selectedCategory.name === "Pumps") {
+            this.selectedEle.children('img').attr('name', that.selectedCategory.name +" "+ that.selectedPumpsCount);
+            this.selectedEle.children('img').attr('title', that.selectedCategory.name +" "+ that.selectedPumpsCount);
+          } else {
+            this.selectedEle.children('img').attr('name', that.selectedCategory.name);
+            this.selectedEle.children('img').attr('title', that.selectedCategory.name);
+          }
+          this.selectedEle.children('img').attr('category', that.selectedCategory.name);
+          let el = $('<span class="xicon delete ui-icon ui-icon-close" title="Remove"></span>');
+          $(el).insertAfter($(this.selectedEle.find('img')));
+          this.selectedEle.appendTo('#droppable');
+          this.selectedEle.find('.delete').click(function () {
+            var r = confirm("Are you sure to delete?");
+            if (r == true) {
+              if($(this).parent('div').children("img").attr('category') === "Pumps") {
+                that.selectedPumpsCount--;
+                let pumpNumberDeleted = $(this).parent('div').children("img").attr('name');
+                $(this).parent('div').remove();
+                // that.updateNamesOfPumps(pumpNumberDeleted);
+              } else {                  
+                $(this).parent('div').remove();
+              }
+            }
+          });
+          //set position according body to droppable
+          let currentPos=this.selectedEle.offset();
+          let droppablePos=$('#droppable').offset();
+          this.selectedEle.css({
+            top: currentPos.top-(droppablePos.top*2+2),
+            left: currentPos.left-(droppablePos.left*2+2)
+          });
+          this.selectedEle.dblclick(function(){
+            if($(this).hasClass("ui-resizable")){
+              $(this).resizable('destroy');
+              $(this).find('.delete').hide();
+            }
+            else
+            {
+              $(this).resizable({
+                handles: 'all',
+                maxHeight: $('#droppable').height(),
+                maxWidth: $('#droppable').width()
+              }); 
+              $(this).find('.delete').show();
+            }
+          })
         }
       }
     });
