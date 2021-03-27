@@ -245,6 +245,7 @@ obj.addMimicBlockData = (data, siteId, pumpData) => {
             if (i < data.length) {
                 let dataToSave = {
                     details: data[i].details,
+                    pumpValue: data[i].pumpValue,
                     site_id: siteId,
                     pumpData: pumpData
                 }

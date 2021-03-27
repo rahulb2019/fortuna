@@ -118,13 +118,13 @@ modbus.tcp.server({debug: "server"}, (connection) => {
                 }
                 else if(type==2 && j < detailsArray.length){
                     console.log('mimic data');
-					console.log(detailsArray[j]);
-					console.log(detailsArray[j].register_address);
+					//console.log(detailsArray[j]);
+					//console.log(detailsArray[j].register_address);
                     if (typeof detailsArray[j].register_address !== 'undefined') {
                         // the variable is defined
                         //console.log(j);
                         //console.log(detailsArray[j]);
-                        //console.log(detailsArray[j].register_address);
+                        console.log(detailsArray[j].register_address);
                         connection.readHoldingRegisters({address: detailsArray[j].register_address, quantity: 1, extra: {unitId: detailsArray[j].slave_id, retry: 500000}}, function (err, info) {
                             if (err != null) {
                                 console.log(err);
@@ -191,36 +191,38 @@ modbus.tcp.server({debug: "server"}, (connection) => {
     }
     function readfloat(info){
          //read float value
-            var hexVal = info.response.data[1].toString("hex");
-            console.log(hexVal);
-            var str = '0x' + hexVal + '0000';
-            console.log(str);
-            function parseFloat(str) {
-                var float = 0, sign, order, mantiss, exp,
-                        int = 0, multi = 1;
-                if (/^0x/.exec(str)) {
-                    int = parseInt(str, 16);
-                } else {
-                    for (var i = str.length - 1; i >= 0; i -= 1) {
-                        if (str.charCodeAt(i) > 255) {
-                            console.log('Wrong string parametr');
-                            return false;
-                        }
-                        int += str.charCodeAt(i) * multi;
-                        multi *= 256;
-                    }
-                }
-                sign = (int >>> 31) ? -1 : 1;
-                exp = (int >>> 23 & 0xff) - 127;
-                mantissa = ((int & 0x7fffff) + 0x800000).toString(2);
-                for (i = 0; i < mantissa.length; i += 1) {
-                    float += parseInt(mantissa[i]) ? Math.pow(2, exp) : 0;
-                    exp--;
-                }
-                return float * sign;
-            }
-            let value = parseFloat(str);
-            return value;
+		var hexVal = info.response.data[0].toString("hex");
+		//console.log(hexVal);
+		
+		var str = '0x' + hexVal + '0000';
+		//console.log(str);
+		//ecxit;
+		function parseFloat(str) {
+			var float = 0, sign, order, mantiss, exp,
+					int = 0, multi = 1;
+			if (/^0x/.exec(str)) {
+				int = parseInt(str, 16);
+			} else {
+				for (var i = str.length - 1; i >= 0; i -= 1) {
+					if (str.charCodeAt(i) > 255) {
+						console.log('Wrong string parametr');
+						return false;
+					}
+					int += str.charCodeAt(i) * multi;
+					multi *= 256;
+				}
+			}
+			sign = (int >>> 31) ? -1 : 1;
+			exp = (int >>> 23 & 0xff) - 127;
+			mantissa = ((int & 0x7fffff) + 0x800000).toString(2);
+			for (i = 0; i < mantissa.length; i += 1) {
+				float += parseInt(mantissa[i]) ? Math.pow(2, exp) : 0;
+				exp--;
+			}
+			return float * sign;
+		}
+		let value = parseFloat(str);
+		return value;
     }
 }).listen(1028, () => {
     console.log('server is running on 1028');

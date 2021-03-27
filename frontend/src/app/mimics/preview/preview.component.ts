@@ -357,19 +357,8 @@ export class PreviewComponent implements OnInit {
   }
 
   saveAll() {
-    this.statsForm.value.blocks.forEach(element => {
-      element.details.forEach(ele => {
-        if (ele.name == "") {
-          var index = element.details.indexOf(ele);
-          element.details.splice(index, 1);
-        }
-      });
-    });
-    const filteredItems = this.statsForm.value.blocks.filter(function (item) {
-      return item.details.length > 0
-    })
     let dataObj = {
-      blocksData: filteredItems,
+      blocksData: this.statsForm.value.blocks,
       site_id: this.mimicId,
       pumpData: this.pumpData
     }

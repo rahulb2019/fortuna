@@ -173,7 +173,6 @@ export class RunComponent implements OnInit, OnDestroy {
     }
     this.mimicService.getMimicDetail(dataObj).subscribe(res => {  
       if (res.code === 200) {
-        console.log("-----res.result[0]...", res.result[0]);
         if (res.result[0] && res.result[0].mimic_data.length > 0) {
           this.mimicDataArray = res.result[0].mimic_data;
           this.displayExistingMimic(this.mimicDataArray);
