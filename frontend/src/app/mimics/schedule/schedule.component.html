@@ -86,10 +86,11 @@
               <div class="row">
                 <div *ngIf="modalService.config.data.type == 'hour'" class="col-md-6">
                   <div class="form-group {{ errorField }}">
-                    <label for="value">Select Hour (hr): *</label>                   
-                    <select formControlName="value" class="form-control">
+                    <label for="value">Hour (hr): *</label>    
+                    <input type="text" class="form-control" formControlName="value" placeholder="Hour (hr)" >               
+                    <!-- <select formControlName="value" class="form-control">
                       <option *ngFor="let hrVal of hourJsonArr" value="{{hrVal.key}}">{{hrVal.value}}</option>
-                    </select>
+                    </select> -->
                     <p *ngIf="modalForm.controls['value'].hasError('required') && isSubmitted" class="error-msg">
                       <i class="fa fa-exclamation"></i> Hour is required.
                     </p>
@@ -97,10 +98,11 @@
                 </div>
                 <div *ngIf="modalService.config.data.type == 'minute'" class="col-md-6">
                   <div class="form-group {{ errorField }}">
-                    <label for="value">Select Minute (min): *</label> 
-                    <select formControlName="value" class="form-control">
+                    <label for="value">Minute (min): *</label> 
+                    <input type="text" class="form-control" formControlName="value" placeholder="Minute (min)" >               
+                    <!-- <select formControlName="value" class="form-control">
                       <option *ngFor="let minVal of minuteJsonArr" value="{{minVal.key}}">{{minVal.value}}</option>
-                    </select>
+                    </select> -->
                     <p *ngIf="modalForm.controls['value'].hasError('required') && isSubmitted" class="error-msg">
                       <i class="fa fa-exclamation"></i> Minute is required.
                     </p>
