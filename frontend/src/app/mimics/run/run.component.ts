@@ -26,6 +26,7 @@ import { startWith } from 'rxjs/operators';
 export class RunComponent implements OnInit, OnDestroy {
 
   mimicId: any;
+  mimicName: any;
   pumpsCount: any;
   statsForm: FormGroup;
   blocks: FormArray;
@@ -61,9 +62,10 @@ export class RunComponent implements OnInit, OnDestroy {
     this.displayExistingMimic(images);
     this._docSub = this.mimicService.currentDocument.subscribe(result => 
     {  
+	  console.log(result);
 	
       var res=result[0].site_blocks;
-      this.document=res;
+	  this.document=res;
       this.meterDataArray = result[0].meter_data;
       var sensorDataArray = result[0].mimic_data;
       sensorDataArray && sensorDataArray.forEach((element,i) => {
@@ -127,7 +129,6 @@ export class RunComponent implements OnInit, OnDestroy {
           $(this).attr('src',$(this).data('off-src'));
         });
       });
-	  
       //rerun to mark pump on
       responseArray.forEach((data, i) => {
         if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
@@ -197,7 +198,8 @@ export class RunComponent implements OnInit, OnDestroy {
           this.mimicDataArray = res.result[0].mimic_data;
           this.displayExistingMimic(this.mimicDataArray);
           this.meterDataArray = res.result[0].meter_data;
-          this.pumpsCount = res.result[0].no_of_pumps
+          this.pumpsCount = res.result[0].no_of_pumps;
+		  this.mimicName = res.result[0].name;
         }
       }
     });

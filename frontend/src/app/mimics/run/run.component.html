@@ -1,6 +1,9 @@
 <div class="row mt-2">
     <div class="col-md-8" style="border: 5px solid #cecece;">
         <div id="wrapper" class='mn-studio preview'>
+			<div class="site-name row" role="alert">
+			  {{mimicName}}
+			</div>
             <div id="droppable"></div>
         </div>
     </div>
@@ -14,11 +17,11 @@
                                 <input type="text" class="form-control block-data" value="Status" disabled>
                             </div>
                             <div class="form-group col-md-6">
-                                <div *ngIf="!item.details[0].value" class="alert alert-danger block-data" role="alert" style="padding:.45rem 6px;">
-                                        OFF
+                                <div *ngIf="!item.details[0].value" class="alert alert-danger block-data" role="alert" style="padding:0 6px;">
+									<input type="text" name="Pumps {{b+1}}" class="form-control block-data" value="{{item.details[0].value ? 'ON' : 'OFF'}}" disabled style="background:transparent;color:inherit;">
                                 </div>
-                                <div *ngIf="item.details[0].value" class="alert alert-success block-data" role="alert" style="padding:.45rem 6px;">
-                                    ON
+                                <div *ngIf="item.details[0].value" class="alert alert-success block-data" role="alert" style="padding:0 6px;">
+                                    <input type="text" name="Pumps {{b+1}}" class="form-control block-data" value="{{item.details[0].value ? 'ON' : 'OFF'}}" disabled style="background:transparent;color:inherit;">
                                 </div>
                                 <!-- <input type="text" name="Pumps {{b+1}}" class="form-control block-data" value="{{item.details[0].value ? 'ON' : 'OFF'}}" disabled> -->
                             </div>
