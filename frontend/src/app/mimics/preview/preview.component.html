@@ -93,6 +93,7 @@
                                         <select formControlName="data_type" class="form-control">
                                             <option value="integer" selected>Integer</option>
                                             <option value="float">Float</option>
+                                            <option value="bool">Bool</option>
                                         </select>
                                         <p *ngIf="modalForm.controls['data_type'].hasError('required') && isSubmitted" class="error-msg">
                                         <i class="fa fa-exclamation"></i> Data Type is required.

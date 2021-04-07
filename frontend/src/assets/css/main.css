@@ -137,3 +137,4 @@
 .mn-studio .ui-resizable-ne {cursor: ne-resize;width: 7px;height: 7px;right: -5px;top: -5px;border: 1px solid black;background-color: white;}
 .mn-studio .ui-icon-close {background-position: -95px -128px;}
 .mn-studio.preview #droppable{height:100vh;width:auto;border:none;}
+.block-data{font-weight: bold;font-size: 16px;}
