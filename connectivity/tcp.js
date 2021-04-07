@@ -222,7 +222,7 @@ modbus.tcp.server({debug: "server"}, (connection) => {
 			return float * sign;
 		}
 		let value = parseFloat(str);
-		return value;
+		return value.toFixed(2);
     }
 }).listen(1028, () => {
     console.log('server is running on 1028');

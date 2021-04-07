@@ -109,8 +109,8 @@
 /*  MN 04122020*/
 
 .mn-studio .col{float:left;margin:5px;padding:5px;}
-.mn-studio #col1{width:16%;height:600px;overflow-y: scroll;border:1px solid black;}
-.mn-studio #droppable{width:80%;height:600px;border:1px solid black;/*overflow-y: scroll;*/position:relative;background-image:linear-gradient(rgba(0, 0, 0, .1) .1em, transparent .1em), linear-gradient(90deg, rgba(0, 0, 0, .1) .1em, transparent .1em);background-size: 2em 2em;}
+.mn-studio #col1{width:16%;height:90vh;overflow-y: scroll;border:1px solid black;}
+.mn-studio #droppable{width:80%;height:90vh;border:1px solid black;/*overflow-y: scroll;*/position:relative;background-image:linear-gradient(rgba(0, 0, 0, .1) .1em, transparent .1em), linear-gradient(90deg, rgba(0, 0, 0, .1) .1em, transparent .1em);background-size: 2em 2em;}
 /* .mn-studio #droppable:after{z-index:0;content: '';position:absolute;background-image:linear-gradient(rgba(0, 0, 0, .2) .1em, transparent .1em), linear-gradient(90deg, rgba(0, 0, 0, .2) .1em, transparent .1em);background-size: 2em 2em;height:100%;width:99.6%;} */
 .mn-studio #droppable button{float: right;background: #006666;color:#fff;border-radius: 7px;border: none;padding: 5px 12px;}
 .mn-studio #droppable button:hover,#droppable button:active{border: none;}

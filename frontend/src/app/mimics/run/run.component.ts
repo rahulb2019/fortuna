@@ -61,6 +61,7 @@ export class RunComponent implements OnInit, OnDestroy {
     this.displayExistingMimic(images);
     this._docSub = this.mimicService.currentDocument.subscribe(result => 
     {  
+	
       var res=result[0].site_blocks;
       this.document=res;
       this.meterDataArray = result[0].meter_data;
@@ -91,7 +92,17 @@ export class RunComponent implements OnInit, OnDestroy {
             let onImg=offImg.replace("_off.svg", "_on.gif");
             if(onImg.indexOf("_off.png") !== -1)
               onImg=onImg.replace("_off.png", "_on.gif");
-            $("img[title='Pumps "+(i+1)+"']").attr('src',onImg);
+			var xhr = new XMLHttpRequest();
+			xhr.onload = () => {
+				if (xhr.status == 200) {
+					$("img[title='Pumps "+(i+1)+"']").attr('src',onImg);
+				} else {
+					onImg=onImg.replace("_on.gif", "_on.png");
+					$("img[title='Pumps "+(i+1)+"']").attr('src',onImg);
+				}
+			};
+			xhr.open('HEAD', onImg);
+			xhr.send();
             let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
             let offImgConnector=el.find('img').attr('src');
             let onImgConnector=offImgConnector.replace("_off.svg", "_on.svg");
@@ -116,6 +127,7 @@ export class RunComponent implements OnInit, OnDestroy {
           $(this).attr('src',$(this).data('off-src'));
         });
       });
+	  
       //rerun to mark pump on
       responseArray.forEach((data, i) => {
         if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
@@ -128,10 +140,10 @@ export class RunComponent implements OnInit, OnDestroy {
               });
               if (index!==-1)
               {
-                let offImg=$(this).attr('src');
+				let offImg=$(this).attr('src');
                 let onImg=offImg.replace("_off.svg", "_on.gif");
-                if(onImg.indexOf("_off.png") !== -1)
-                  onImg=onImg.replace("_off.png", "_on.gif");
+				if(onImg.indexOf("_off.png") !== -1)
+                  onImg = onImg.replace("_off.png", "_on.gif");
                 $(this).attr('src',onImg);
               }
             });
@@ -141,6 +153,14 @@ export class RunComponent implements OnInit, OnDestroy {
     });
     this.mimicService.getDocument(this.mimicId);
   }
+  
+  imageExists(url, callback) {
+	  var img = new Image();
+	  img.onload = function() { callback(true); };
+	  img.onerror = function() { callback(false); };
+	  img.src = url;
+	}
+
   ngOnDestroy() {
     this._docSub.unsubscribe();
   }
