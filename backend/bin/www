@@ -16,20 +16,21 @@ const ObjectId = require("mongoose").Types.ObjectId;
 
 io.on('connection', socket => {
     socket.on('getDoc', input => {
-      console.log(input);
-      var Mimic = mongoose.model("sites");
-      let aggregateQuery = [];
-      let query = { _id: ObjectId(input) };
-      aggregateQuery.push({ $match: query });
-      aggregateQuery.push({ 
-        $lookup:{
-                      from: "site_blocks", // collection to join
-                      localField: "_id",//field from the input documents
-                      foreignField: "site_id",//field from the documents of the "from" collection
-                      as: "site_blocks"// output array field
-                }
-       });
-      function emitResponse(){
+      //console.log("input start ",input);
+      function emitResponse(input){
+        //console.log("input in ",input);
+        var Mimic = mongoose.model("sites");
+        let aggregateQuery = [];
+        let query = { _id: ObjectId(input) };
+        aggregateQuery.push({ $match: query });
+        aggregateQuery.push({ 
+          $lookup:{
+                        from: "site_blocks", // collection to join
+                        localField: "_id",//field from the input documents
+                        foreignField: "site_id",//field from the documents of the "from" collection
+                        as: "site_blocks"// output array field
+                  }
+        });
         Mimic.aggregate(aggregateQuery).then(async result => {
           // console.log(result);
           io.emit('document', result);
@@ -37,12 +38,12 @@ io.on('connection', socket => {
           console.log(err);
         });
       }
-      emitResponse();
+      emitResponse(input);
       setTimeout(function(){ 
-        emitResponse();
+        emitResponse(input);
       }, 3000);
       setInterval(function(){ 
-        emitResponse();
+        emitResponse(input);
       }, 15000);
     });
     console.log(`Socket ${socket.id} has connected`);

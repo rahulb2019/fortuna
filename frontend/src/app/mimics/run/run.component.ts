@@ -60,98 +60,99 @@ export class RunComponent implements OnInit, OnDestroy {
     var images =  JSON.parse(localStorage.getItem('currentMimic'));
     this.displayExistingMimic(images);
     this._docSub = this.mimicService.currentDocument.subscribe(result => 
-    {  
-	
-      var res=result[0].site_blocks;
-      this.document=res;
-      this.meterDataArray = result[0].meter_data;
-      var sensorDataArray = result[0].mimic_data;
-      sensorDataArray && sensorDataArray.forEach((element,i) => {
-        if ((element.name == 'Flow Meter' || element.name == 'Pressure Meter' || element.name == 'Level Sensor')) {
-          let value=0,unit='';
-          if(element.value)
-              value=element.value;
-          if(element.unit) 
-            unit=element.unit;   
-          let html='<div class="meter_tooltip" id="el'+i+'"><span class="meter_tooltiptext">'+element.name+': <br/>'+value+' '+unit+'</span></div>';
-          $('#el'+i).html(html);
-        }   
-      });
-
-      
-      let responseArray = res ? Object.entries(res) : []
-      this.pumpData=res[0].pumpData;
-      var ang=this;
-      //find active pumps
-      var offPumpArr=[];
-      var onPumpArr=[];
-      responseArray.forEach((data, i) => {
-        if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
-          if($("img[title='Pumps "+(i+1)+"']").length >0){
-            let offImg=$("img[title='Pumps "+(i+1)+"']").attr('src');
-            let onImg=offImg.replace("_off.svg", "_on.gif");
-            if(onImg.indexOf("_off.png") !== -1)
-              onImg=onImg.replace("_off.png", "_on.gif");
-			var xhr = new XMLHttpRequest();
-			xhr.onload = () => {
-				if (xhr.status == 200) {
-					$("img[title='Pumps "+(i+1)+"']").attr('src',onImg);
-				} else {
-					onImg=onImg.replace("_on.gif", "_on.png");
-					$("img[title='Pumps "+(i+1)+"']").attr('src',onImg);
-				}
-			};
-			xhr.open('HEAD', onImg);
-			xhr.send();
-            let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
-            let offImgConnector=el.find('img').attr('src');
-            let onImgConnector=offImgConnector.replace("_off.svg", "_on.svg");
-            if(onImgConnector.indexOf("_off.png") !== -1)
-              onImgConnector=onImgConnector.replace("_off.png", "_on.svg");
-            el.find('img').attr('src',onImgConnector);
-            onPumpArr.push(String(i+1));
-          }
-        }
-        else{
-            if($("img[title='Pumps "+(i+1)+"']").length >0)
-            {
-              let offImg=$("img[title='Pumps "+(i+1)+"']").data('off-src');
-              $("img[title='Pumps "+(i+1)+"']").attr('src',offImg);
-              let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
-              let offImgConnector=el.find('img').data('off-src');
-              el.find('img').attr('src',offImgConnector);
-            }
-            offPumpArr.push(String(i+1));
-        }
-        $("img[title='Pipes']").each(function(){
-          $(this).attr('src',$(this).data('off-src'));
+    { 
+      if(this.mimicId==result[0]._id){
+        var res=result[0].site_blocks;
+        this.document=res;
+        this.meterDataArray = result[0].meter_data;
+        var sensorDataArray = result[0].mimic_data;
+        sensorDataArray && sensorDataArray.forEach((element,i) => {
+          if ((element.name == 'Flow Meter' || element.name == 'Pressure Meter' || element.name == 'Level Sensor')) {
+            let value=0,unit='';
+            if(element.value)
+                value=element.value;
+            if(element.unit) 
+              unit=element.unit;   
+            let html='<div class="meter_tooltip" id="el'+i+'"><span class="meter_tooltiptext">'+element.name+': <br/>'+value+' '+unit+'</span></div>';
+            $('#el'+i).html(html);
+          }   
         });
-      });
-	  
-      //rerun to mark pump on
-      responseArray.forEach((data, i) => {
-        if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
+  
+        
+        let responseArray = res ? Object.entries(res) : []
+        this.pumpData=res[0].pumpData;
+        var ang=this;
+        //find active pumps
+        var offPumpArr=[];
+        var onPumpArr=[];
+        responseArray.forEach((data, i) => {
+          if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
+            if($("img[title='Pumps "+(i+1)+"']").length >0){
+              let offImg=$("img[title='Pumps "+(i+1)+"']").attr('src');
+              let onImg=offImg.replace("_off.svg", "_on.gif");
+              if(onImg.indexOf("_off.png") !== -1)
+                onImg=onImg.replace("_off.png", "_on.gif");
+        var xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          if (xhr.status == 200) {
+            $("img[title='Pumps "+(i+1)+"']").attr('src',onImg);
+          } else {
+            onImg=onImg.replace("_on.gif", "_on.png");
+            $("img[title='Pumps "+(i+1)+"']").attr('src',onImg);
+          }
+        };
+        xhr.open('HEAD', onImg);
+        xhr.send();
+              let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
+              let offImgConnector=el.find('img').attr('src');
+              let onImgConnector=offImgConnector.replace("_off.svg", "_on.svg");
+              if(onImgConnector.indexOf("_off.png") !== -1)
+                onImgConnector=onImgConnector.replace("_off.png", "_on.svg");
+              el.find('img').attr('src',onImgConnector);
+              onPumpArr.push(String(i+1));
+            }
+          }
+          else{
+              if($("img[title='Pumps "+(i+1)+"']").length >0)
+              {
+                let offImg=$("img[title='Pumps "+(i+1)+"']").data('off-src');
+                $("img[title='Pumps "+(i+1)+"']").attr('src',offImg);
+                let el=ang.getClosestElement($("img[title='Pumps "+(i+1)+"']").offset().left, $("img[title='Pumps "+(i+1)+"']").offset().top);
+                let offImgConnector=el.find('img').data('off-src');
+                el.find('img').attr('src',offImgConnector);
+              }
+              offPumpArr.push(String(i+1));
+          }
           $("img[title='Pipes']").each(function(){
-              let indexPipe=$(this).data('index');
-              var index = ang.pumpData.findIndex((el, index) => {
-                if ((el.element === indexPipe) && (el.pumps.indexOf(String(i+1)) !== -1)) {
-                  return true
+            $(this).attr('src',$(this).data('off-src'));
+          });
+        });
+      
+        //rerun to mark pump on
+        responseArray.forEach((data, i) => {
+          if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
+            $("img[title='Pipes']").each(function(){
+                let indexPipe=$(this).data('index');
+                var index = ang.pumpData.findIndex((el, index) => {
+                  if ((el.element === indexPipe) && (el.pumps.indexOf(String(i+1)) !== -1)) {
+                    return true
+                  }
+                });
+                if (index!==-1)
+                {
+          let offImg=$(this).attr('src');
+                  let onImg=offImg.replace("_off.svg", "_on.gif");
+          if(onImg.indexOf("_off.png") !== -1)
+                    onImg = onImg.replace("_off.png", "_on.gif");
+                  $(this).attr('src',onImg);
                 }
               });
-              if (index!==-1)
-              {
-				let offImg=$(this).attr('src');
-                let onImg=offImg.replace("_off.svg", "_on.gif");
-				if(onImg.indexOf("_off.png") !== -1)
-                  onImg = onImg.replace("_off.png", "_on.gif");
-                $(this).attr('src',onImg);
-              }
-            });
-        }
-      });
-      
+          }
+        });
+      }
     });
     this.mimicService.getDocument(this.mimicId);
+
   }
   
   imageExists(url, callback) {
