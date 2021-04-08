@@ -10,6 +10,7 @@ modbus.tcp.server({debug: "server"}, (connection) => {
         read();
         write();
     }, 15000);
+
     function read() {
         MongoClient.connect(uri, function (err, db) {
             if (err)
@@ -30,17 +31,38 @@ modbus.tcp.server({debug: "server"}, (connection) => {
                     console.log(err);
                 } else {
                     if(result.length >0){
-                        //console.log(result);
-                        let mimicsData=result[0].mimic_data;
-                        let meterData=result[0].meter_data;
-                        let siteBlocks=result[0].site_blocks;
-						//console.log(mimicsData);
-                        let externalResponseMeter = await internalFnc(result[0]._id, meterData, connection, db, 0);
-                        let externalResponseBlock = await externalfnc(result[0]._id, siteBlocks, connection, db, 1);
-                        let externalResponseMimic = await internalFnc(result[0]._id, mimicsData, connection, db, 2);
+						//console.log(result);
+						let sites = await siteLoopfnc(result, connection, db);
+						read();
+						write();
                     }
                 }
             });
+        });
+    }
+	function siteLoopfnc(result, connection, db) {
+        return new Promise(function (resolve, reject) {
+            let siteResponse = [];
+            async function forEachLoop(i) {
+                if (i < result.length) {
+                    var site = result[i];
+                    let mimicsData=site.mimic_data;
+                    let meterData=site.meter_data;
+                    let siteBlocks=site.site_blocks;
+					//console.log(mimicsData);
+					//if(i==1){
+						console.log("SITE NAME : ",site.name);
+						let externalResponseMeter = await internalFnc(site._id, meterData, connection, db, 0);
+						let externalResponseBlock = await externalfnc(site._id, siteBlocks, connection, db, 1);
+						let externalResponseMimic = await internalFnc(site._id, mimicsData, connection, db, 2);
+					//}
+                    siteResponse.push(site)
+                    forEachLoop(i + 1);
+                } else {
+                    return resolve(siteResponse);
+                }
+            }
+            forEachLoop(0);
         });
     }
     function write() {
@@ -80,63 +102,101 @@ modbus.tcp.server({debug: "server"}, (connection) => {
             let intArr = [];
             async function forEachLoop(j) {
                 if(type==0 && j < detailsArray.length){
-                    console.log('Meter data');
-					connection.readHoldingRegisters({address: detailsArray[j].register_address, quantity: 1, extra: {unitId: detailsArray[j].slave_id, retry: 500000}}, function (err, info) {
-                        if (err != null) {
-                            console.log(err);
-                        } else if (info != null) {
-                            let value;
-                            if(detailsArray[j].data_type.toLowerCase().replace(/\s/g, '')!='float')
-                                value = readInteger(info);
-                            else
-                                value = readfloat(info);
-                            // let value = info.response.data[0].readInt16BE(0);
-                            console.log(value);
-                            db.collection("sites").update({"_id": siteId}, {$set: {[`meter_data.${j}.value`]: value}});
-                        }
+                    if (typeof detailsArray[j].register_address !== 'undefined' && detailsArray[j].register_address) {
+						console.log('Meter data');
+						console.log("Register ",detailsArray[j].register_address);
+						connection.readHoldingRegisters({address: detailsArray[j].register_address, quantity: 1, extra: {unitId: detailsArray[j].slave_id, retry: 500000}}, function (err, info) {
+							if (err != null) {
+								console.log(err);
+							} else if (info != null) {
+								if(detailsArray[j].data_type.toLowerCase().replace(/\s/g, '')!='float')
+								{
+                                    let value = readInteger(info);
+									console.log("Value ", value);
+									db.collection("sites").update({"_id": siteId}, {$set: {[`meter_data.${j}.value`]: value}});
+								}
+                                else{
+									readfloat(info).then(
+									  function(value) { 
+										console.log("Value ", value);
+										db.collection("sites").update({"_id": siteId}, {$set: {[`meter_data.${j}.value`]: value}});
+									  },
+									  function(error) { console.log("Error ", error); }
+									);
+                                    //value = readfloat(info);
+								}
+							}
+							forEachLoop(j + 1);
+						});
+					}
+					else
 						forEachLoop(j + 1);
-                    });
                 }
                 else if(type==1 && j < detailsArray.details.length){
-                    console.log('Block');
                     //console.log(detailsArray.details[j]);
-                    connection.readHoldingRegisters({address: detailsArray.details[j].register_address, quantity: 1, extra: {unitId: detailsArray.details[j].slave_id, retry: 500000}}, function (err, info) {
-						if (err != null) {
-                            console.log(err);
-                        } else if (info != null) {
-                            let value;
-                            if(detailsArray.details[j].data_type.toLowerCase().replace(/\s/g, '')!='float')
-                                value = readInteger(info);
-                            else
-                                value = readfloat(info);
-                            // let value = info.response.data[0].readInt16BE(0);
-                            console.log(value);
-                            db.collection("site_blocks").update({"_id": detailsArray._id}, {$set: {[`details.${j}.value`]: value}});
-                        }
+					if (typeof detailsArray.details[j].register_address !== 'undefined' && detailsArray.details[j].register_address) {
+						console.log('Block');
+						console.log("Register ",detailsArray.details[j].register_address);
+						connection.readHoldingRegisters({address: detailsArray.details[j].register_address, quantity: 1, extra: {unitId: detailsArray.details[j].slave_id, retry: 500000}}, function (err, info) {
+							if (err != null) {
+								console.log(err);
+							} else if (info != null) {
+								if(detailsArray.details[j].data_type.toLowerCase().replace(/\s/g, '')!='float')
+								{
+                                    let value = readInteger(info);
+									console.log("Value ", value);
+									db.collection("site_blocks").update({"_id": detailsArray._id}, {$set: {[`details.${j}.value`]: value}});
+								}
+                                else{
+									readfloat(info).then(
+									  function(value) { 
+										console.log("Value ", value);
+										db.collection("site_blocks").update({"_id": detailsArray._id}, {$set: {[`details.${j}.value`]: value}});
+									  },
+									  function(error) { console.log("Error ", error); }
+									);
+                                    //value = readfloat(info);
+								}
+							}
+							forEachLoop(j + 1);
+						});
+					}
+					else
 						forEachLoop(j + 1);
-                    });
                 }
                 else if(type==2 && j < detailsArray.length){
-                    console.log('mimic data');
+                    //console.log('mimic data');
 					//console.log(detailsArray[j]);
 					//console.log(detailsArray[j].register_address);
-                    if (typeof detailsArray[j].register_address !== 'undefined') {
+                    if (typeof detailsArray[j].register_address !== 'undefined' && detailsArray[j].register_address) {
                         // the variable is defined
                         //console.log(j);
                         //console.log(detailsArray[j]);
-                        console.log(detailsArray[j].register_address);
+						console.log("mimic Register ",detailsArray[j].register_address);
                         connection.readHoldingRegisters({address: detailsArray[j].register_address, quantity: 1, extra: {unitId: detailsArray[j].slave_id, retry: 500000}}, function (err, info) {
                             if (err != null) {
                                 console.log(err);
                             } else if (info != null) {
-                                let value;
                                 if(detailsArray[j].data_type.toLowerCase().replace(/\s/g, '')!='float')
-                                    value = readInteger(info);
-                                else
-                                    value = readfloat(info);
+								{
+                                    let value = readInteger(info);
+									console.log("Value ", value);
+									db.collection("sites").update({"_id": siteId}, {$set: {[`mimic_data.${j}.value`]: value}});
+								}
+                                else{
+									readfloat(info).then(
+									  function(value) { 
+										console.log("Value ", value);
+										db.collection("sites").update({"_id": siteId}, {$set: {[`mimic_data.${j}.value`]: value}});
+									  },
+									  function(error) { console.log("Error ", error); }
+									);
+                                    //value = readfloat(info);
+								}
                                 // let value = info.response.data[0].readInt16BE(0);
-                                console.log(value);
-                                db.collection("sites").update({"_id": siteId}, {$set: {[`mimic_data.${j}.value`]: value}});
+                                
+								
+                                
                             }
 							forEachLoop(j + 1);
                         });
@@ -189,15 +249,15 @@ modbus.tcp.server({debug: "server"}, (connection) => {
         let value = info.response.data[0].readInt16BE(0);
         return value;
     }
-    function readfloat(info){
-         //read float value
+    async function readfloat(info){
+		 //read float value
 		var hexVal = info.response.data[0].toString("hex");
 		//console.log(hexVal);
 		
 		var str = '0x' + hexVal + '0000';
 		//console.log(str);
 		//ecxit;
-		function parseFloat(str) {
+	    function parseFloat(str) {
 			var float = 0, sign, order, mantiss, exp,
 					int = 0, multi = 1;
 			if (/^0x/.exec(str)) {
@@ -221,7 +281,7 @@ modbus.tcp.server({debug: "server"}, (connection) => {
 			}
 			return float * sign;
 		}
-		let value = parseFloat(str);
+		let value = await parseFloat(str);
 		return value.toFixed(2);
     }
 }).listen(1028, () => {

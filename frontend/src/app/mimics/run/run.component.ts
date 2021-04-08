@@ -26,6 +26,7 @@ import { startWith } from 'rxjs/operators';
 export class RunComponent implements OnInit, OnDestroy {
 
   mimicId: any;
+  mimicName: any;
   pumpsCount: any;
   statsForm: FormGroup;
   blocks: FormArray;
@@ -60,7 +61,7 @@ export class RunComponent implements OnInit, OnDestroy {
     var images =  JSON.parse(localStorage.getItem('currentMimic'));
     this.displayExistingMimic(images);
     this._docSub = this.mimicService.currentDocument.subscribe(result => 
-    { 
+    {  
       if(this.mimicId==result[0]._id){
         var res=result[0].site_blocks;
         this.document=res;
@@ -77,7 +78,7 @@ export class RunComponent implements OnInit, OnDestroy {
             $('#el'+i).html(html);
           }   
         });
-  
+
         
         let responseArray = res ? Object.entries(res) : []
         this.pumpData=res[0].pumpData;
@@ -127,7 +128,6 @@ export class RunComponent implements OnInit, OnDestroy {
             $(this).attr('src',$(this).data('off-src'));
           });
         });
-      
         //rerun to mark pump on
         responseArray.forEach((data, i) => {
           if(($("input[name='Pumps "+(i+1)+"']").val())==='ON'){
@@ -150,17 +150,17 @@ export class RunComponent implements OnInit, OnDestroy {
           }
         });
       }
+      
     });
     this.mimicService.getDocument(this.mimicId);
-
   }
   
   imageExists(url, callback) {
-	  var img = new Image();
-	  img.onload = function() { callback(true); };
-	  img.onerror = function() { callback(false); };
-	  img.src = url;
-	}
+    var img = new Image();
+    img.onload = function() { callback(true); };
+    img.onerror = function() { callback(false); };
+    img.src = url;
+  }
 
   ngOnDestroy() {
     this._docSub.unsubscribe();
@@ -198,7 +198,8 @@ export class RunComponent implements OnInit, OnDestroy {
           this.mimicDataArray = res.result[0].mimic_data;
           this.displayExistingMimic(this.mimicDataArray);
           this.meterDataArray = res.result[0].meter_data;
-          this.pumpsCount = res.result[0].no_of_pumps
+          this.pumpsCount = res.result[0].no_of_pumps;
+      this.mimicName = res.result[0].name;
         }
       }
     });
