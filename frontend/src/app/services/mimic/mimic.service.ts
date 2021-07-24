@@ -204,5 +204,21 @@ export class MimicService {
     );
   }
 
+  fetchCumulativeData(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/fetchCumulativeData/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
+  fetchSummaryDataFnc(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/fetchSummaryData/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
 }
 

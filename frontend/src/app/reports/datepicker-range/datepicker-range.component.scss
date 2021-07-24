@@ -1,0 +1,89 @@
+.form-group.hidden {
+    width: 0;
+    margin: 0;
+    border: none;
+    padding: 0;
+    input {
+        width: 0;
+        margin: 0;
+        border: none;
+        padding: 0;
+        height: 0;
+    }
+}
+
+.custom-day {
+    text-align: center;
+    padding: 0.185rem 0.25rem;
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+}
+
+.custom-day.focused {
+    background-color: #e6e6e6;
+}
+
+.custom-day.range,
+.custom-day:hover {
+    background-color: rgb(2, 117, 216);
+    color: white;
+}
+
+.custom-day.faded {
+    background-color: rgba(2, 216, 30, 0.5);
+}
+
+.calendar .mat-icon {
+    font-size: 14px;
+}
+
+input,
+.btn-outline-secondary {
+    border: 1px solid #00000061;
+}
+
+input {
+    border-right-width: 0;
+}
+
+.btn-outline-secondary {
+    border-left-width: 0;
+}
+
+label {
+    margin-bottom: 6px !important;
+    font-family: "Roboto-Regular";
+    font-size: 14px !important;
+    line-height: 16.8px;
+    color: #000000;
+    opacity: 0.87 !important;
+}
+
+.date-picker-style .input-group>.input-group-append>.btn:hover {
+    background-color: transparent !important;
+}
+
+.input-group:not(.has-validation)>.custom-file:not(:last-child) .custom-file-label::after,
+.input-group:not(.has-validation)>.custom-select:not(:last-child),
+.input-group:not(.has-validation)>.form-control:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    font-size: 16px;
+    padding: 12px !important;
+}
+
+.date-input {
+    height: 40px;
+    opacity: 0.38;
+    border: 1px solid #000000;
+    border-right: 0;
+    font-family: 'Roboto-Regular';
+    line-height: 19.2;
+}
+.change-date-text {
+    opacity: 0.87 !important;
+    border: 1px solid #00000061 !important;
+    border-right: 0 !important;
+    color: #000000;
+}

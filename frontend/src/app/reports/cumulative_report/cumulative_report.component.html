@@ -1,0 +1,169 @@
+<div class="row">
+  <div class="col-sm-12 col-lg-12">
+    <div class="iq-card">
+      <div class="iq-card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="iq-card">
+              <div class="iq-card-header d-flex justify-content-between">
+                <div class="iq-header-title">
+                  <h4 class="card-title">Cumulative Report</h4>
+                </div>
+              </div>
+              <div class="iq-card-body">
+                <form id="form-wizard3" class="text-center">
+                  <div class="form-card text-left">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <!-- <table id="mytable" class="table table-striped table-bordered table-sm row-border hover">
+                          <thead>
+                            <tr>
+                              <th>Country</th>
+                              <th>Population</th>
+                              <th>Date</th>
+                              <th>Age</th>
+                              <th>REMARKS</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>India</td>
+                              <td>1363480000</td>
+                              <td>March 24 2014</td>
+                              <td>19.1</td>
+                              <td>₹</td>
+                            </tr>
+                            <tr>
+                              <td>India</td>
+                              <td>1241900000</td>
+                              <td>March 24 2014</td>
+                              <td>17.4</td>
+                              <td>Remarks 2</td>
+                            </tr>
+                            <tr>
+                              <td>United States</td>
+                              <td>317746000</td>
+                              <td>March 24 2014</td>
+                              <td>4.44</td>
+                              <td>Remarks 3</td>
+                            </tr>
+                            <tr>
+                              <td>Indonesia</td>
+                              <td>249866000</td>
+                              <td>July 1 2013</td>
+                              <td>3.49</td>
+                              <td>Remarks 4</td>
+                            </tr>
+                            <tr>
+                              <td>Brazil</td>
+                              <td>201032714</td>
+                              <td>July 1 2013</td>
+                              <td>2.81</td>
+                              <td>Remarks 5</td>
+                            </tr>
+                          </tbody>
+                        </table> -->
+
+                        <div class="table-responsive">
+                          <div class="row justify-content-between">
+                            <div class="col-md-12">
+                              <button class="mr-1 mb-2" (click)="exportAs('csv')">export as csv</button>
+                              <button class="mr-1 mb-2" (click)="exportAs('xlsx')">export as Ms-Excel</button>
+                            </div>
+                          </div>
+                          <div class="row justify-content-between">
+                            <div class="col-md-6">
+                              <select class="form-control" name="site_id" (change)="changeSiteSelection($event)"
+                                [value]="selectedSiteId">
+                                <option [attr.value]="col._id" *ngFor="let col of sitesArr">{{col.name}}</option>
+                              </select>
+                            </div>
+                            <div class="col-md-6 iq-email-search d-flex">
+                              <app-datepicker-range (dateSelection)="setFilter('date', $event)"></app-datepicker-range>
+                            </div>
+                          </div>
+                          <div class="row justify-content-between">
+                            <div class="col-md-12">
+                              <table id="mytable" class="table table-striped table-bordered mt-4" role="grid"
+                                aria-describedby="user-list-page-info">
+                                <thead *ngIf="dataArr && dataArr.length > 0">
+                                  <tr>
+                                    <th colspan="20" class="text-center">STATION NAME:
+                                      {{selectedSiteData?.name}}</th>
+                                  </tr>
+                                  <tr>
+                                    <th colspan="20" class="text-center">DETAILED REPORT FOR THE PERIOD OF: {{getDateRangeVal(options)}}</th>
+                                  </tr>
+                                  <tr>
+                                    <th width="10%">DATE-TIME</th>
+                                    <th width="60%" class="text-center"
+                                      *ngFor='let pmpTh of dataArr[0].pumpData; let pumpInd = index;'
+                                      [attr.colspan]="getPumpDataLength(dataArr[0].pumpData[pumpInd])">
+                                      PUMP {{ pumpInd + 1}}
+                                    </th>
+                                    <th width="20%" class="text-center"
+                                      *ngFor='let meterTh of dataArr[0].meterData; let meterInd = index;'
+                                      [attr.colspan]="getMeterDataLength(dataArr[0].meterData[meterInd])">
+                                      DATA METER {{ meterInd + 1}}
+                                    </th>
+                                    <th width="5%">FLOW RATE</th>
+                                    <th width="5%">LEVEL RATE</th>
+                                  </tr>
+                                  <tr>
+                                    <th width="10%"></th>
+                                    <ng-container *ngFor='let key of dataArr[0].pumpData'>
+                                      <th *ngFor='let subheader of key | keyvalue'>
+                                        {{subheader.key | uppercase}}
+                                      </th>
+                                    </ng-container>
+                                    <ng-container *ngFor='let mtkey of dataArr[0].meterData'>
+                                      <th *ngFor='let subheaderMt of mtkey | keyvalue'>
+                                        {{subheaderMt.key | uppercase}}
+                                      </th>
+                                    </ng-container>
+                                    <th></th>
+                                    <th></th>
+                                  </tr>
+                                </thead>
+                                <tbody *ngIf="dataArr && dataArr.length > 0">
+                                  <tr
+                                    *ngFor="let dataEle of dataArr">
+                                    <td>{{ dataEle.date | date: 'MMMM d, y, h:mm:ss a' }}</td>
+                                    <ng-container *ngFor='let pEle of dataEle.pumpData'>
+                                      <th *ngFor='let subheaderPmp of pEle | keyvalue'>
+                                        {{subheaderPmp.value}}
+                                      </th>
+                                    </ng-container>
+                                    <ng-container *ngFor='let mEle of dataEle.meterData'>
+                                      <th *ngFor='let subheaderMt of mEle | keyvalue'>
+                                        {{subheaderMt.value}}
+                                      </th>
+                                    </ng-container>
+                                    <td class="text-center">
+                                      {{dataEle.flowData[0]}}</td>
+                                    <td class="text-center">
+                                      {{dataEle.levelData[0]}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                          <!-- <div class="row justify-content-between mt-3 mb-3">
+                            <div class="col-md-12">
+                              <ngb-pagination [collectionSize]="dataArr.length" [(page)]="page" [maxSize]="5"
+                                [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+                            </div>
+                          </div> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

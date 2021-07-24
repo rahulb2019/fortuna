@@ -4,6 +4,8 @@ var SIC = mongoose.model("site_image_categories");
 var siteImage = mongoose.model("site_images");
 var siteBlock = mongoose.model("site_blocks");
 var siteSchedule = mongoose.model("site_schedules");
+var siteData = mongoose.model("site_datas");
+var siteSummary = mongoose.model("site_summaries");
 var crypto = require("crypto");
 const ObjectId = require("mongoose").Types.ObjectId;
 
@@ -245,7 +247,6 @@ obj.addMimicBlockData = (data, siteId, pumpData) => {
             if (i < data.length) {
                 let dataToSave = {
                     details: data[i].details,
-                    pumpValue: data[i].pumpValue,
                     site_id: siteId,
                     pumpData: pumpData
                 }
@@ -539,6 +540,92 @@ obj.deleteImageData = (data) => {
                 resolve(result);
             }
         });
+    })
+}
+
+
+obj.getAllCumulative = (data) => {
+    return new Promise((resolve, reject) => {
+        let aggregateQuery = [];
+        let query = { is_deleted: false,  site_id: ObjectId(data.selectedSite)  };
+        if (data.options && data.options.date) {
+            let dateQuery = {
+                date: {
+                    $gte: new Date(data.options.date.fromDate),
+                    $lt: new Date(data.options.date.toDate)
+                }
+            };
+            query = { $and: [query, dateQuery] };
+         }
+        
+        aggregateQuery.push({ $match: query });
+        if (data.options && data.options.sort) {
+            let sortField = "$" + data.options.sort;
+            aggregateQuery.push({
+                $addFields: { sortField: { $toLower: sortField } }
+            });
+            let sortOrder = Number(data.options.order);
+            aggregateQuery.push({ $sort: { sortField: sortOrder } });
+        } else {
+            aggregateQuery.push({ $sort: { date: -1 } });
+        }
+        if (data.options && data.options.offSet && data.options.limit) {
+            let offSet = Number(data.options.offSet);
+            let skip = (Number(offSet) - 1) * data.options.limit;
+            aggregateQuery.push({ $skip: skip }, { $limit: data.options.limit });
+        }
+        siteData.aggregate(aggregateQuery).then(async result => {
+            resolve(result);
+        }).catch(err => {
+            resolve({
+                status: "Failure",
+                code: 301
+            });
+        });
+
+    })
+}
+
+
+obj.getAllSummary = (data) => {
+    return new Promise((resolve, reject) => {
+        let aggregateQuery = [];
+        let query = { is_deleted: false,  site_id: ObjectId(data.selectedSite)  };
+        if (data.options && data.options.date) {
+            let dateQuery = {
+                date: {
+                    $gte: new Date(data.options.date.fromDate),
+                    $lt: new Date(data.options.date.toDate)
+                }
+            };
+            query = { $and: [query, dateQuery] };
+         }
+        
+        aggregateQuery.push({ $match: query });
+        if (data.options && data.options.sort) {
+            let sortField = "$" + data.options.sort;
+            aggregateQuery.push({
+                $addFields: { sortField: { $toLower: sortField } }
+            });
+            let sortOrder = Number(data.options.order);
+            aggregateQuery.push({ $sort: { sortField: sortOrder } });
+        } else {
+            aggregateQuery.push({ $sort: { date: -1 } });
+        }
+        if (data.options && data.options.offSet && data.options.limit) {
+            let offSet = Number(data.options.offSet);
+            let skip = (Number(offSet) - 1) * data.options.limit;
+            aggregateQuery.push({ $skip: skip }, { $limit: data.options.limit });
+        }
+        siteSummary.aggregate(aggregateQuery).then(async result => {
+            resolve(result);
+        }).catch(err => {
+            resolve({
+                status: "Failure",
+                code: 301
+            });
+        });
+
     })
 }
 

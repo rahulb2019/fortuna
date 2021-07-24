@@ -1074,3 +1074,12 @@ agm-map {
   color: white;
   font-weight: bold;
 }
+
+/* customise run mimic color */
+.left-mimic-run{background-color:#808000;}
+.right-mimic-run{background-color:yellow}
+.right-mimic-run h3{font-size:50px;} /* pump name */
+#meterBoxTable th{font-size:30px;} /*heading meter box*/
+#meterBoxTable td{background:#e9ecef;font-size:25px;} /*content meter box*/
+.right-mimic-run .form-control:disabled, .form-control[readonly]{background:#e9ecef;font-size: 24px;} /* block pump fields */
+.meter_tooltip .meter_tooltiptext{background-color:#3cb371;width:200px;font-size:24px;} /*flow meter */

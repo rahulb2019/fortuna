@@ -41,16 +41,16 @@
           "isActive": false,
           "link": "/admin/mimic_images/view_gallery",
           "className": "",
-          "isIconClass": false,
-          "icon": ""
+          "isIconClass": true,
+          "icon": "ri-file-search-line"
         },
         {
           "title": "Upload Images",
           "isActive": false,
           "link": "/admin/mimic_images/upload_image",
           "className": "",
-          "isIconClass": false,
-          "icon": ""
+          "isIconClass": true,
+          "icon": "ri-file-upload-line"
         }
       ]
     },
@@ -61,7 +61,25 @@
       "link": "/admin/reports",
       "className": "",
       "isIconClass": true,
-      "icon": "ri-group-line "
+      "icon": "ri-file-chart-line ",
+      "children": [
+        {
+          "title": "Cumulative Report",
+          "isActive": false,
+          "link": "/admin/reports/cumulative_reports",
+          "className": "",
+          "isIconClass": true,
+          "icon": "ri-folder-chart-line"
+        },
+        {
+          "title": "Summary Report",
+          "isActive": false,
+          "link": "/admin/reports/summary_reports",
+          "className": "",
+          "isIconClass": true,
+          "icon": "ri-folder-chart-fill"
+        }
+      ]
     }
   ]
 }

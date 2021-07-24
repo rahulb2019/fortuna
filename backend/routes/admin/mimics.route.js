@@ -24,6 +24,8 @@ module.exports = function(app, route) {
   route.post("/saveMetersData", mimicsCtrl.saveMetersData);
   route.post("/addDataMeterBlock", mimicsCtrl.addDataMeterBlock);
   route.post("/deleteImage", mimicsCtrl.deleteImage);
+  route.post("/fetchCumulativeData", mimicsCtrl.fetchCumulativeData);
+  route.post("/fetchSummaryData", mimicsCtrl.fetchSummaryData);
  
   app.use("/mimics", route);
 };
