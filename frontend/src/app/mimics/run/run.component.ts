@@ -16,6 +16,8 @@ import * as $ from 'jquery';
 import 'jquery-ui-dist/jquery-ui';
 import { Observable, Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
+import { tick } from '@angular/core/testing';
+import { time } from 'highcharts';
 
 @Component({
   selector: 'app-mimic',
@@ -27,12 +29,14 @@ export class RunComponent implements OnInit, OnDestroy {
 
   mimicId: any;
   mimicName: any;
+  mimicUpdateAt: any;
   pumpsCount: any;
   statsForm: FormGroup;
   blocks: FormArray;
   details: FormArray;
   closeResult = '';
   mimicDataArray: any;
+  mimic: any;
   pumpData: any;
 
   modalForm: FormGroup;
@@ -65,6 +69,8 @@ export class RunComponent implements OnInit, OnDestroy {
       if(this.mimicId==result[0]._id){
         var res=result[0].site_blocks;
         this.document=res;
+        this.mimic = result[0];
+        this.mimicUpdateAt = result[0].site_blocks[0].updated_at;
         this.meterDataArray = result[0].meter_data;
         var sensorDataArray = result[0].mimic_data;
         sensorDataArray && sensorDataArray.forEach((element,i) => {
@@ -195,11 +201,15 @@ export class RunComponent implements OnInit, OnDestroy {
     this.mimicService.getMimicDetail(dataObj).subscribe(res => {  
       if (res.code === 200) {
         if (res.result[0] && res.result[0].mimic_data.length > 0) {
+          console.log(" res.result[0]", res.result[0]);
           this.mimicDataArray = res.result[0].mimic_data;
+          this.mimic = res.result[0];
           this.displayExistingMimic(this.mimicDataArray);
           this.meterDataArray = res.result[0].meter_data;
           this.pumpsCount = res.result[0].no_of_pumps;
-      this.mimicName = res.result[0].name;
+          this.mimicName = res.result[0].name;
+          this.mimicUpdateAt = res.result[0].updated_at;
+          document.title = res.result[0].name.toUpperCase();
         }
       }
     });
@@ -228,5 +238,35 @@ export class RunComponent implements OnInit, OnDestroy {
       index++;     
     });
     $('#droppable').html(html);
+  }
+
+  listMimics(){
+    window.open("/admin/mimics/mimic_list", "_blank");
+  }
+
+  editMimicDetails(mimicId) {    
+    window.open("/admin/mimics/edit_mimic/"+mimicId, "_blank");
+  }
+
+  mimicSettings(mimicId) {    
+    window.open("/admin/mimics/settings/"+mimicId, "_blank");
+  }  
+
+  manageMimicSchedule(mimicId) {
+    window.open("/admin/mimics/schedule/"+mimicId, "_blank");
+  }
+
+  manageMimicDetails(mimicId) {  
+    window.open("/admin/mimics/studio/"+mimicId, "_blank");
+  }  
+
+  previewMimicDetails(mimicId) {    
+    window.open("/admin/mimics/preview/"+mimicId, "_blank");
+  }  
+  runMimicDetails(mimicId) {  
+    window.open("/admin/mimics/run/"+mimicId, "_blank");
+  }
+  manageMeterData(mimicId) {    
+    window.open("/admin/mimics/add_meter_data/"+mimicId, "_blank");
   }
 }

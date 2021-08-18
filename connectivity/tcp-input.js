@@ -8,12 +8,47 @@ var ObjectId = require('mongodb').ObjectId;
 
 modbus.tcp.server({debug: null}, (connection) => {
     console.log('connected');
+    // console.log(connection);
     setInterval(function () {
         read();
         //write();
     }, 15000);
 
     function read() {
+        // connection.readCoils({address: 237, quantity: 2, extra: {unitId: 10, retry: 500000}}, function (err, info) {
+        //     console.log("readCoils");
+        //     if (err != null) {
+        //         console.log(err);
+        //     } else if (info != null) {
+        //         console.log(info);
+        //     }
+        // });
+        connection.readDiscreteInputs({address: 6, quantity: 1, extra: {unitId: 6, retry: 500000}}, function (err, info) {
+            console.log("readDiscreteInputs");
+            if (err != null) {
+                console.log(err);
+            } else if (info != null) {
+                // console.log(info.response);
+                console.log("value: ",info.response.data[0]);
+            }
+        });
+        // connection.readHoldingRegisters({address: 237, quantity: 2, extra: {unitId: 10, retry: 500000}}, function (err, info) {
+        //     console.log("readHoldingRegisters");
+        //     if (err != null) {
+        //         console.log(err);
+        //     } else if (info != null) {
+        //         console.log(info);
+        //     }
+        // });
+        // connection.readInputRegisters({address: 237, quantity: 2, extra: {unitId: 10, retry: 500000}}, function (err, info) {
+        //     console.log("readInputRegisters");
+        //     if (err != null) {
+        //         console.log(err);
+        //     } else if (info != null) {
+        //         console.log(info);
+        //     }
+        // });
+        return;
         MongoClient.connect(uri, function (err, db) {
             if (err)
                 console.log(err);
@@ -159,7 +194,7 @@ modbus.tcp.server({debug: null}, (connection) => {
 								{
                                     let value = readInteger(info);
 									console.log("Value ", value);
-									db.collection("site_blocks").update({"_id": detailsArray._id}, {$set: {[`details.${j}.value`]: value,[`updated_at`]:new Date()}});
+									db.collection("site_blocks").update({"_id": detailsArray._id}, {$set: {[`details.${j}.value`]: value}});
                                     let valueUnit = value+" "+detailsArray.details[j].unit;
                                     pumpDataResponse[detailsArray.details[j].name]= valueUnit;
 								}
@@ -167,7 +202,7 @@ modbus.tcp.server({debug: null}, (connection) => {
 									readfloat(info).then(
 									  function(value) { 
 										console.log("Value ", value);
-										db.collection("site_blocks").update({"_id": detailsArray._id}, {$set: {[`details.${j}.value`]: value,[`updated_at`]:new Date()}});
+										db.collection("site_blocks").update({"_id": detailsArray._id}, {$set: {[`details.${j}.value`]: value}});
                                         let valueUnit = value+" "+detailsArray.details[j].unit;
                                         pumpDataResponse[detailsArray.details[j].name]= valueUnit;
 									  },

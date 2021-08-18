@@ -138,5 +138,8 @@
 .mn-studio .ui-icon-close {background-position: -95px -128px;}
 .mn-studio.preview #droppable{height:100vh;width:auto;border:none;}
 .block-data{font-weight: bold;font-size: 16px;}
-.site-name{text-align:center;display:revert;font-size: 35px;font-weight: bold;background:#d1ecf1;color:#000}
+.site-details{background:#d1ecf1;}
+.site-name{text-align:center;display:revert;font-size: 35px;font-weight: bold;color:#000}
 .form-control,body{color:#000}
+.site-details .updated{font-size: 20px; text-transform: uppercase;font-weight: bold;}
+.site-details .settings{font-size: 35px;float: right;}

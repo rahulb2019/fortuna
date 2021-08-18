@@ -10,7 +10,6 @@ import { ExportAsService, ExportAsConfig, SupportedExtensions } from 'ngx-export
 import { MimicService } from "../../services/mimic/mimic.service";
 
 import * as moment from 'moment';
-import { Console } from 'console';
 const DATE_FORMATE = 'DD/MM/YYYY';
 
 @Component({
