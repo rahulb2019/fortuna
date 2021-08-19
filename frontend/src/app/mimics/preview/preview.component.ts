@@ -73,7 +73,9 @@ export class PreviewComponent implements OnInit {
       slave_id: ['', [Validators.required]],
       register_address: ['', [Validators.required]],
       data_type: ['', [Validators.required]],
-      unit: ['', [Validators.required]]
+      unit: ['', [Validators.required]],
+      register_type: ['0', [Validators.required]],
+      division_factor: [''],
     });
     this.modalFormPump = this.fb.group({
       pumps: ['', [Validators.required]],
@@ -103,7 +105,9 @@ export class PreviewComponent implements OnInit {
       slave_id: [''],
       register_address: [''],
       data_type: [''],
-      unit: ['']
+      unit: [''],
+      register_type: ['0'],
+      division_factor: ['']
     });
   }
 
@@ -176,6 +180,8 @@ export class PreviewComponent implements OnInit {
         slave_id: y.slave_id,
         unit: y.unit,
         value: y.value,
+        register_type: y.register_type,
+        division_factor: y.division_factor
       }))
     })
     return arr;
@@ -260,7 +266,9 @@ export class PreviewComponent implements OnInit {
         slave_id: itemObj.slave_id,
         register_address: itemObj.register_address,
         data_type: itemObj.data_type,
-        unit: itemObj.unit
+        unit: itemObj.unit,
+        register_type: 0,
+        division_factor: itemObj.division_factor
       })
     } else {
       this.modalForm.reset();
@@ -282,7 +290,9 @@ export class PreviewComponent implements OnInit {
         slave_id: item.value.details[ind].slave_id,
         register_address: item.value.details[ind].register_address,
         data_type: item.value.details[ind].data_type,
-        unit: item.value.details[ind].unit
+        unit: item.value.details[ind].unit,
+        register_type: item.value.details[ind].register_type || 0,
+        division_factor: item.value.details[ind].division_factor
       })
     } else {
       this.modalForm.reset();
@@ -319,6 +329,8 @@ export class PreviewComponent implements OnInit {
       item.controls['details'].at(ind).controls['register_address'].setValue(this.modalForm.value.register_address);
       item.controls['details'].at(ind).controls['slave_id'].setValue(this.modalForm.value.slave_id);
       item.controls['details'].at(ind).controls['unit'].setValue(this.modalForm.value.unit);
+      item.controls['details'].at(ind).controls['register_type'].setValue(this.modalForm.value.register_type);
+      item.controls['details'].at(ind).controls['division_factor'].setValue(this.modalForm.value.division_factor);
     }
     this.modalRef.hide();
   }
@@ -342,6 +354,8 @@ export class PreviewComponent implements OnInit {
       this.mimicDataArray[ind].slave_id = this.modalForm.value.slave_id;
       this.mimicDataArray[ind].unit = this.modalForm.value.unit;
       this.mimicDataArray[ind].value = "";
+      this.mimicDataArray[ind].register_type = this.modalForm.value.register_type;
+      this.mimicDataArray[ind].division_factor = this.modalForm.value.division_factor;
       let meterObj = {
         site_id: this.mimicId,
         mimic_data: this.mimicDataArray

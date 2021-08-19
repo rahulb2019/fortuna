@@ -94,7 +94,8 @@ export class AddMeterDataComponent implements OnInit {
       register_address: [''],
       data_type: [''],
       unit: [''],
-      value: ['']
+      value: [''],
+      division_factor: ['']
     });
   }
 

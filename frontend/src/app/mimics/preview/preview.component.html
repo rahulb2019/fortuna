@@ -61,7 +61,7 @@
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">Value Properties</h5>
+                        <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">Pump Properties</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalRef.hide()">
                             <span aria-hidden="true">×</span>
                         </button>
@@ -107,6 +107,24 @@
                                         <p *ngIf="modalForm.controls['unit'].hasError('required') && isSubmitted" class="error-msg">
                                         <i class="fa fa-exclamation"></i> Unit is required.
                                         </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group {{ errorField }}">
+                                        <label for="register_type">Register Type: *</label>
+                                        <select formControlName="register_type" class="form-control">
+                                            <option value="0" selected>Holding Register</option>
+                                            <option value="1">Input Register</option>
+                                        </select>
+                                        <p *ngIf="modalForm.controls['register_type'].hasError('required') && isSubmitted" class="error-msg">
+                                        <i class="fa fa-exclamation"></i> Register Type is required.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group {{ errorField }}">
+                                        <label for="division_factor">Division Factor:</label>
+                                        <input formControlName="division_factor" type="text" class="form-control" name="division_factor" />
                                     </div>
                                 </div>
                             </div>
@@ -159,7 +177,7 @@
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">Value Properties</h5>
+                        <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">Meter Properties</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalRef.hide()">
                             <span aria-hidden="true">×</span>
                         </button>
@@ -204,6 +222,24 @@
                                         <p *ngIf="modalForm.controls['unit'].hasError('required') && isSubmitted" class="error-msg">
                                         <i class="fa fa-exclamation"></i> Unit is required.
                                         </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group {{ errorField }}">
+                                        <label for="register_type">Register Type: *</label>
+                                        <select formControlName="register_type" class="form-control">
+                                            <option value="0" selected>Holding Register</option>
+                                            <option value="1">Input Register</option>
+                                        </select>
+                                        <p *ngIf="modalForm.controls['register_type'].hasError('required') && isSubmitted" class="error-msg">
+                                        <i class="fa fa-exclamation"></i> Register Type is required.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group {{ errorField }}">
+                                        <label for="division_factor">Division Factor:</label>
+                                        <input formControlName="division_factor" type="text" class="form-control" name="division_factor" />
                                     </div>
                                 </div>
                             </div>

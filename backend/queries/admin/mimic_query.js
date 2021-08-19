@@ -116,7 +116,9 @@ obj.updateMimicArchData = (data) => {
                                 slave_id: "",
                                 register_address: "",
                                 data_type: "",
-                                unit: ""
+                                unit: "",
+                                register_type: "",
+                                division_factor: "",
                             }], siteId: data.id, pumpValue: i + 1
                         });
                     }
