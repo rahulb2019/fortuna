@@ -29,6 +29,10 @@ export class CumulativeReportComponent implements OnInit {
   mimicType = 0;
   selectedSiteId = "";
   selectedSiteData: any = {};
+  dateFromVal: any = "";
+  dateToVal: any = "";
+  timeFromVal: any = "";
+  timeToVal: any = "";
 
   config: ExportAsConfig = {
     type: 'pdf',
@@ -160,31 +164,7 @@ export class CumulativeReportComponent implements OnInit {
     });
   
     return total;
-  }
-
-  getDateRangeVal(optionsObj) {
-    let dateString = '';
-    if (optionsObj && optionsObj.date && optionsObj.date.fromDate) {
-      dateString = this.formatDate(optionsObj.date.fromDate) + ' TO '+ this.formatDate(optionsObj.date.toDate);
-    } 
-    return dateString;
-  }
-
-  public formatDate(str): string {
-    try {
-      if (!this.isValidString(str)) {
-        return '';
-      }
-      const dateVal = moment(str, 'DD/MM/YYYY').format(DATE_FORMATE);
-      return dateVal.toUpperCase();
-    } catch (err) {
-      return str;
-    }
-  }
-
-  private isValidString(str: any): boolean {
-    return str !== null && str !== undefined && str !== 'null';
-  }  
+  } 
 
   getPumpDataLength(objPump){
     return Object.keys(objPump).length;
@@ -192,6 +172,26 @@ export class CumulativeReportComponent implements OnInit {
 
   getMeterDataLength(objMeter){
     return Object.keys(objMeter).length;
+  }
+
+  selectDateFrom(event){    
+    this.dateFromVal = moment(event.target.value).format(DATE_FORMATE);
+    this.options["fromDate"] = this.dateFromVal;
+  }
+
+  selectDateTo(event){
+    this.dateToVal = moment(event.target.value).format(DATE_FORMATE);
+    this.options["toDate"] = this.dateToVal;
+  }
+
+  selectTimeFrom(event){
+    this.timeFromVal = event.target.value;
+    this.options["fromTime"] = this.timeFromVal;
+  }
+
+  selectTimeTo(event){
+    this.timeToVal = event.target.value;
+    this.options["toTime"] = this.timeToVal;
   }
   
 }

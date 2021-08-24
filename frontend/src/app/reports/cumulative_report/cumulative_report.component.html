@@ -71,15 +71,47 @@
                               <button class="mr-1 mb-2" (click)="exportAs('xlsx')">export as Ms-Excel</button>
                             </div>
                           </div>
-                          <div class="row justify-content-between">
-                            <div class="col-md-6">
-                              <select class="form-control" name="site_id" (change)="changeSiteSelection($event)"
-                                [value]="selectedSiteId">
-                                <option [attr.value]="col._id" *ngFor="let col of sitesArr">{{col.name}}</option>
-                              </select>
+                          <div class="row">
+                            <div class="col-md-2">
+                              <!-- <app-datepicker-range 
+                              (dateSelection)="setFilter('date', $event)"></app-datepicker-range> -->
+                              <div class="form-group">
+                                <label for="exampleInputSite">Select Site</label>
+                                <select class="form-control" id="exampleInputSite" name="site_id" (change)="changeSiteSelection($event)"
+                                  [value]="selectedSiteId">
+                                  <option [attr.value]="col._id" *ngFor="let col of sitesArr">{{col.name}}</option>
+                                </select>
+                              </div>
                             </div>
-                            <div class="col-md-6 iq-email-search d-flex">
-                              <app-datepicker-range (dateSelection)="setFilter('date', $event)"></app-datepicker-range>
+                            <div class="col-md-2">
+                              <div class="form-group">
+                                <label for="exampleInputdateFrom">From Date</label>
+                                <input type="date" class="form-control" id="exampleInputdateFrom" (change)="selectDateFrom($event)">
+                              </div>
+                            </div>
+                            <div class="col-md-2">
+                              <div class="form-group">
+                                <label for="exampleInputdateTo">To Date</label>
+                                <input type="date" class="form-control" id="exampleInputdateTo" (change)="selectDateTo($event)">
+                              </div>
+                            </div>
+                            <div class="col-md-2">
+                              <div class="form-group">
+                                <label for="exampleInputtimeFrom">From Time</label>
+                                <input type="time" class="form-control" id="exampleInputtimeFrom" (change)="selectTimeFrom($event)">
+                              </div>
+                            </div>
+                            <div class="col-md-2">
+                              <div class="form-group">
+                                <label for="exampleInputtimeTo">To Time</label>
+                                <input type="time" class="form-control" id="exampleInputtimeTo" (change)="selectTimeTo($event)">
+                              </div>
+                            </div>
+                            <div class="col-md-2">
+                              <div class="form-group" style="margin-top: 35px;">
+                                <label>&nbsp;</label>
+                                <button type="button" class="btn btn-primary" value="Submit" (click)="fetchCumulativeData(selectedSiteId)">Apply Search</button>
+                              </div>
                             </div>
                           </div>
                           <div class="row justify-content-between">
@@ -92,7 +124,9 @@
                                       {{selectedSiteData?.name}}</th>
                                   </tr>
                                   <tr>
-                                    <th colspan="20" class="text-center">DETAILED REPORT FOR THE PERIOD OF: {{getDateRangeVal(options)}}</th>
+                                    <th colspan="20" class="text-center">DETAILED REPORT FOR THE PERIOD OF: {{dateFromVal}} To {{dateToVal}}
+                                      <span *ngIf="timeFromVal !== ''">{{timeFromVal}} To {{timeToVal}}</span>
+                                    </th>
                                   </tr>
                                   <tr>
                                     <th width="10%">DATE-TIME</th>
