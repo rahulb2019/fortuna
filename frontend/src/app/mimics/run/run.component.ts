@@ -75,11 +75,20 @@ export class RunComponent implements OnInit, OnDestroy {
         var sensorDataArray = result[0].mimic_data;
         sensorDataArray && sensorDataArray.forEach((element,i) => {
           if ((element.name == 'Flow Meter' || element.name == 'Pressure Meter' || element.name == 'Level Sensor')) {
-            let value=0,unit='';
+            let value='',unit='';
             if(element.value)
                 value=element.value;
             if(element.unit) 
               unit=element.unit;   
+            if(element.register_type == '1')
+            {
+              if(parseInt(value)==1)
+                value='';
+              else{
+                value ='----';
+                unit = "";
+              }
+            }
             let html='<div class="meter_tooltip" id="el'+i+'"><span class="meter_tooltiptext">'+element.name+': <br/>'+value+' '+unit+'</span></div>';
             $('#el'+i).html(html);
           }   
@@ -226,11 +235,20 @@ export class RunComponent implements OnInit, OnDestroy {
     mimicData && mimicData.forEach((element,i) => {
       html+='<div class="drag" style="'+element.style+'">';
       if ((element.name == 'Flow Meter' || element.name == 'Pressure Meter' || element.name == 'Level Sensor')) {
-        let value=0,unit='';
+        let value='',unit='';
         if(element.value)
             value=element.value;
         if(element.unit) 
           unit=element.unit;   
+        if(element.register_type == '1')
+        {
+          if(parseInt(value)==1)
+            value='';
+          else{
+            value ='----';
+            unit = "";
+          }
+        }
         html+='<div class="meter_tooltip" id="el'+i+'"><span class="meter_tooltiptext">'+element.name+': <br/>'+value+' '+unit+'</span></div>';
       }
       html+='<img data-off-src="'+element.image+'"  src="'+element.image+'" title="'+element.name+'" width="100%" height="100%" data-index="'+index+'">';

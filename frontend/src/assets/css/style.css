@@ -976,7 +976,7 @@ body a {
   width: 100%;
 }
 .stat-box{
-  border: 5px solid #cecece;
+  border: 2px solid #cecece;
   margin-left: 5px;
   margin-bottom: 10px;
   padding: 10px;
@@ -1058,7 +1058,7 @@ agm-map {
 
 #meterBoxTable td, #meterBoxTable th {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 4px;
   font-weight: bold;
   font-size: 15px;
 }
@@ -1067,8 +1067,8 @@ agm-map {
 #meterBoxTable tr:hover {background-color: #ddd;}
 
 #meterBoxTable th {
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   text-align: center;
   background-color: #4CAF50;
   color: white;
@@ -1076,10 +1076,13 @@ agm-map {
 }
 
 /* customise run mimic color */
-.left-mimic-run{background-color:#808000;}
-.right-mimic-run{background-color:yellow}
-.right-mimic-run h3{font-size:50px;} /* pump name */
+.left-mimic-run{background-color:white;}
+.right-mimic-run{background-color:white}
+.right-mimic-run h3{font-size:30px;} /* pump name */
 #meterBoxTable th{font-size:30px;} /*heading meter box*/
 #meterBoxTable td{background:#e9ecef;font-size:25px;} /*content meter box*/
-.right-mimic-run .form-control:disabled, .form-control[readonly]{background:#e9ecef;font-size: 24px;} /* block pump fields */
+.right-mimic-run .form-control:disabled, .form-control[readonly]{background:#e9ecef;} /* block pump fields */
+.right-mimic-run .form-control:disabled, .form-control[readonly],.input-type-value.block-data{font-size: 24px;} /* block pump fields */
 .meter_tooltip .meter_tooltiptext{background-color:#3cb371;width:200px;font-size:24px;} /*flow meter */
+.meter-block-lebel{width: 35%;} /* meter lebel width*/
+.meter-block-value{width: 65%;} /* meter value width*/

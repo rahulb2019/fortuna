@@ -24,6 +24,7 @@
 		"modbus-pdu": "^1.13.0",
 		"modbus-stream": "^0.44.0",
 		"mongodb": "^2.2.33",
+		"mongoose": "^5.13.7",
 		"serialport": ">=1.7.1 <7"
 	},
 	"devDependencies": {

@@ -32,7 +32,7 @@
                         <h3 class="pumpBoxHead">Pump {{b+1}}</h3>
                         <div class="form-row ">
                             <div class="form-group col-md-6">
-                                <input type="text" class="form-control block-data" value="Status" disabled>
+                                <input type="text" class="form-control block-data" value="STATUS" disabled>
                             </div>
                             <div class="form-group col-md-6">
                                 <div *ngIf="!item.details[0].value" class="alert alert-danger block-data" role="alert" style="padding:0 6px;">
@@ -41,23 +41,53 @@
                                 <div *ngIf="item.details[0].value" class="alert alert-success block-data" role="alert" style="padding:0 6px;">
                                     <input type="text" name="Pumps {{b+1}}" class="form-control block-data" value="{{item.details[0].value ? 'ON' : 'OFF'}}" disabled style="background:transparent;color:inherit;">
                                 </div>
-                                <!-- <input type="text" name="Pumps {{b+1}}" class="form-control block-data" value="{{item.details[0].value ? 'ON' : 'OFF'}}" disabled> -->
+                            </div>
+                        </div>
+                        <div class="form-row ">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control block-data" value="{{item.details[1].name}}" disabled>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div *ngIf="!item.details[1].value" class="alert alert-danger block-data" role="alert" style="padding:0 6px;">
+									<input type="text" name="Pumps {{b+1}}" class="form-control block-data" value="{{item.details[1].value ? item.details[1].unit : 'MANUAL'}}" disabled style="background:transparent;color:inherit;">
+                                </div>
+                                <div *ngIf="item.details[1].value" class="alert alert-success block-data" role="alert" style="padding:0 6px;">
+                                    <input type="text" name="Pumps {{b+1}}" class="form-control block-data" value="{{item.details[1].value ? item.details[1].unit : 'MANUAL'}}" disabled style="background:transparent;color:inherit;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row ">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control block-data" value="{{item.details[2].name}}" disabled>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div *ngIf="!item.details[2].value" class="alert alert-danger block-data" role="alert" style="padding:0 6px;">
+									<input type="text" name="Pumps {{b+1}}" class="form-control block-data" value="{{item.details[2].value ? item.details[2].unit : 'CLOSE'}}" disabled style="background:transparent;color:inherit;">
+                                </div>
+                                <div *ngIf="item.details[2].value" class="alert alert-success block-data" role="alert" style="padding:0 6px;">
+                                    <input type="text" name="Pumps {{b+1}}" class="form-control block-data" value="{{item.details[2].value ? item.details[2].unit : 'CLOSE'}}" disabled style="background:transparent;color:inherit;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row ">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control block-data" value="{{item.details[3].name}}" disabled>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div *ngIf="item.details[3].value" class="alert alert-danger block-data" role="alert" style="padding:0 6px;">
+									<input type="text" name="Pumps {{b+1}}" class="form-control block-data" value="{{item.details[3].value ? item.details[3].unit : 'NORMAL'}}" disabled style="background:transparent;color:inherit;">
+                                </div>
+                                <div *ngIf="!item.details[3].value" class="alert alert-success block-data" role="alert" style="padding:0 6px;">
+                                    <input type="text" name="Pumps {{b+1}}" class="form-control block-data" value="{{item.details[3].value ? item.details[3].unit : 'NORMAL'}}" disabled style="background:transparent;color:inherit;">
+                                </div>
                             </div>
                         </div>
                         <div class="form-row" *ngFor="let field of item.details; let i=index">
-                            <div class="form-group col-md-6" *ngIf="i !== 0">
+                            <div class="form-group col-md-6" *ngIf="i > 3">
                                 <input type="text" class="form-control block-data" value={{field.name}} disabled>
                             </div>
-                            <div class="form-group col-md-6" *ngIf="i !== 0">
-                                <input *ngIf="field.data_type !== 'bool'" type="text" class="form-control block-data" value="{{field.value ? field.value+field.unit : ''}}" disabled>
-                                <div *ngIf="field.data_type === 'bool'">
-                                    <div *ngIf="field.value" class="alert alert-danger block-data" role="alert" style="padding:.45rem 6px;">
-                                        {{field.unit}}
-                                    </div>
-                                    <div *ngIf="!field.value" class="alert alert-success block-data" role="alert" style="padding:.45rem 6px;">
-                                        Normal
-                                    </div>
-                                </div>
+                            <div class="form-group col-md-6" *ngIf="i > 3">
+                                <input type="text" class="form-control block-data" value="{{field.value ? field.value+field.unit : ''}}" disabled>
                             </div>
                         </div>
                 </div>
@@ -69,8 +99,8 @@
                                 <th colspan="2">Meter Data</th>
                             </tr>
                             <tr *ngFor="let meterBlock of meterDataArray; let b = index;">
-                                <td width="45%">{{meterBlock.name}}</td>
-                                <td width="55%">{{meterBlock.value}} <span *ngIf="meterBlock.value != ''">{{meterBlock.unit}}</span></td>
+                                <td class="meter-block-lebel">{{meterBlock.name}}</td>
+                                <td class="meter-block-value">{{meterBlock.value}} <span *ngIf="meterBlock.value != ''">{{meterBlock.unit}}</span></td>
                             </tr>
                         </table>
                 </div>
