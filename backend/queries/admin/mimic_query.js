@@ -346,8 +346,8 @@ obj.deleteBlocksData = (siteId) => {
 
 obj.updateBlocksArchData = (data) => {
     return new Promise((resolve, reject) => {
-        siteBlock.deleteOne({ site_id: ObjectId(data.siteId), pumpValue: data.pumpNumberDel}, async function (err, result) {
-            if(err){
+        siteBlock.deleteOne({ site_id: ObjectId(data.siteId), pumpValue: data.pumpNumberDel }, async function (err, result) {
+            if (err) {
                 resolve({
                     status: "Failure",
                     code: 301
@@ -365,8 +365,8 @@ function updateExtraPumpFnc(data) {
         let updatedArr = [];
         siteBlock.updateMany(
             { site_id: ObjectId(data.siteId), pumpValue: { $gt: data.pumpNumberDel } },
-            { $inc: { pumpValue : -1 } }, async function (err, result) {
-                if(err){
+            { $inc: { pumpValue: -1 } }, async function (err, result) {
+                if (err) {
                     resolve({
                         status: "Failure",
                         code: 301
@@ -386,11 +386,11 @@ obj.saveMimicSettingsData = (data) => {
         let requestPostObj = { mimic_settings: data.mimic_settings };
         Mimic.update(
             {
-              _id: ObjectId(data._id)
+                _id: ObjectId(data._id)
             },
             { $set: requestPostObj },
             function (err, result) {
-                if(err){
+                if (err) {
                     resolve({
                         status: "Failure",
                         code: 301
@@ -468,11 +468,11 @@ obj.saveMetersDataDataFnc = (mimic_data, siteId) => {
         let requestPostObj = { mimic_data: mimic_data };
         Mimic.update(
             {
-              _id: ObjectId(siteId)
+                _id: ObjectId(siteId)
             },
             { $set: requestPostObj },
             function (err, result) {
-                if(err){
+                if (err) {
                     resolve({
                         status: "Failure",
                         code: 301
@@ -490,11 +490,11 @@ obj.deleteDataMeterBlocks = (siteId) => {
         let requestPostObj = { meter_data: [] };
         Mimic.update(
             {
-              _id: ObjectId(siteId)
+                _id: ObjectId(siteId)
             },
             { $set: requestPostObj },
             function (err, result) {
-                if(err){
+                if (err) {
                     resolve({
                         status: "Failure",
                         code: 301
@@ -512,11 +512,11 @@ obj.addDataMeterBlockFnc = (meter_data, siteId) => {
         let requestPostObj = { meter_data: meter_data };
         Mimic.update(
             {
-              _id: ObjectId(siteId)
+                _id: ObjectId(siteId)
             },
             { $set: requestPostObj },
             function (err, result) {
-                if(err){
+                if (err) {
                     resolve({
                         status: "Failure",
                         code: 301
@@ -532,8 +532,8 @@ obj.addDataMeterBlockFnc = (meter_data, siteId) => {
 
 obj.deleteImageData = (data) => {
     return new Promise((resolve, reject) => {
-        siteImage.remove({ _id: ObjectId(data._id) }, function(err, result) {
-            if(err){
+        siteImage.remove({ _id: ObjectId(data._id) }, function (err, result) {
+            if (err) {
                 resolve({
                     status: "Failure",
                     code: 301
@@ -549,17 +549,26 @@ obj.deleteImageData = (data) => {
 obj.getAllCumulative = (data) => {
     return new Promise((resolve, reject) => {
         let aggregateQuery = [];
-        let query = { is_deleted: false,  site_id: ObjectId(data.selectedSite)  };
+        let query = { is_deleted: false, site_id: ObjectId(data.selectedSite) };
         if (data.options && data.options.date) {
             let dateQuery = {
                 date: {
-                    $gte: new Date(data.options.date.fromDate),
-                    $lt: new Date(data.options.date.toDate)
+                    $gte: new Date(data.options.fromDate),
+                    $lt: new Date(data.options.toDate)
                 }
             };
             query = { $and: [query, dateQuery] };
-         }
-        
+        }
+        if (data.options && data.options.fromTime) {
+            let timeQuery = {
+                time: {
+                    $gte: data.options.fromTime,
+                    $lt: data.options.toTime
+                }
+            };
+            query = { $and: [query, timeQuery] };
+        }
+
         aggregateQuery.push({ $match: query });
         if (data.options && data.options.sort) {
             let sortField = "$" + data.options.sort;
@@ -592,17 +601,17 @@ obj.getAllCumulative = (data) => {
 obj.getAllSummary = (data) => {
     return new Promise((resolve, reject) => {
         let aggregateQuery = [];
-        let query = { is_deleted: false,  site_id: ObjectId(data.selectedSite)  };
+        let query = { is_deleted: false, site_id: ObjectId(data.selectedSite) };
         if (data.options && data.options.date) {
             let dateQuery = {
                 date: {
-                    $gte: new Date(data.options.date.fromDate),
-                    $lt: new Date(data.options.date.toDate)
+                    $gte: new Date(data.options.fromDate),
+                    $lt: new Date(data.options.toDate)
                 }
             };
             query = { $and: [query, dateQuery] };
-         }
-        
+        }
+
         aggregateQuery.push({ $match: query });
         if (data.options && data.options.sort) {
             let sortField = "$" + data.options.sort;

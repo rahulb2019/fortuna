@@ -28,6 +28,8 @@ export class SummaryReportComponent implements OnInit {
   mimicType = 0;
   selectedSiteId = "";
   selectedSiteData: any = {};
+  dateFromVal: any = "";
+  dateToVal: any = "";
 
   config: ExportAsConfig = {
     type: 'pdf',
@@ -123,6 +125,8 @@ export class SummaryReportComponent implements OnInit {
   }
 
   fetchSummaryData(selectedSiteIdVal) {
+    console.log("selectedSiteIdVal......", selectedSiteIdVal, this.options);
+    return;
     let dataObj = {
       options: this.options,
       selectedSite: selectedSiteIdVal
@@ -163,27 +167,37 @@ export class SummaryReportComponent implements OnInit {
     return total;
   }
 
-  getDateRangeVal(optionsObj) {
-    let dateString = '';
-    if (optionsObj && optionsObj.date && optionsObj.date.fromDate) {
-      dateString = this.formatDate(optionsObj.date.fromDate) + ' TO '+ this.formatDate(optionsObj.date.toDate);
-    } 
-    return dateString;
+  // getDateRangeVal(optionsObj) {
+  //   let dateString = '';
+  //   if (optionsObj && optionsObj.date && optionsObj.date.fromDate) {
+  //     dateString = this.formatDate(optionsObj.date.fromDate) + ' TO '+ this.formatDate(optionsObj.date.toDate);
+  //   } 
+  //   return dateString;
+  // }
+
+  // public formatDate(str): string {
+  //   try {
+  //     if (!this.isValidString(str)) {
+  //       return '';
+  //     }
+  //     const dateVal = moment(str, 'DD/MM/YYYY').format(DATE_FORMATE);
+  //     return dateVal.toUpperCase();
+  //   } catch (err) {
+  //     return str;
+  //   }
+  // }
+
+  // private isValidString(str: any): boolean {
+  //   return str !== null && str !== undefined && str !== 'null';
+  // }  
+
+  selectDateFrom(event){    
+    this.dateFromVal = moment(event.target.value).format(DATE_FORMATE);
+    this.options["fromDate"] = this.dateFromVal;
   }
 
-  public formatDate(str): string {
-    try {
-      if (!this.isValidString(str)) {
-        return '';
-      }
-      const dateVal = moment(str, 'DD/MM/YYYY').format(DATE_FORMATE);
-      return dateVal.toUpperCase();
-    } catch (err) {
-      return str;
-    }
+  selectDateTo(event){
+    this.dateToVal = moment(event.target.value).format(DATE_FORMATE);
+    this.options["toDate"] = this.dateToVal;
   }
-
-  private isValidString(str: any): boolean {
-    return str !== null && str !== undefined && str !== 'null';
-  }  
 }

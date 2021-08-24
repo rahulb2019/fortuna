@@ -14,53 +14,77 @@
                 <form id="form-wizard3" class="text-center">
                   <div class="form-card text-left">
                     <div class="row">
-                      <div class="col-md-12">                        
+                      <div class="col-md-12">
                         <div class="table-responsive">
                           <div class="row justify-content-between">
-                            <div class="col-md-12">                              
+                            <div class="col-md-12">
                               <button class="mr-1 mb-2" (click)="exportAs('pdf', 'portrait')">export as pdf</button>
                               <button class="mr-1 mb-2" (click)="exportAs('csv')">export as csv</button>
                               <button class="mr-1 mb-2" (click)="exportAs('xlsx')">export as Ms-Excel</button>
                               <!-- <button class="mr-1 mb-2" (click)="exportAs('docx')">export as MS-Word</button> -->
                             </div>
                           </div>
-                          <div class="row justify-content-between">                          
-                            <div class="col-md-6">
-                              <select class="form-control" name="site_id" (change)="changeSiteSelection($event)" [value]="selectedSiteId" >
-                                  <option [attr.value]="col._id" *ngFor="let col of sitesArr"
-                                  >{{col.name}}</option>
-                              </select>
+                          <div class="row">
+                            <div class="col-md-3">
+                              <!-- <app-datepicker-range 
+                              (dateSelection)="setFilter('date', $event)"></app-datepicker-range> -->
+                              <div class="form-group">
+                                <label for="exampleInputSite">Select Site</label>
+                                <select class="form-control" id="exampleInputSite" name="site_id" (change)="changeSiteSelection($event)"
+                                  [value]="selectedSiteId">
+                                  <option [attr.value]="col._id" *ngFor="let col of sitesArr">{{col.name}}</option>
+                                </select>
+                              </div>
                             </div>
-                            <div class="col-md-6 iq-email-search d-flex">
-                              <app-datepicker-range 
-                              (dateSelection)="setFilter('date', $event)"></app-datepicker-range>
-                            </div>  
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label for="exampleInputdateFrom">From Date</label>
+                                <input type="date" class="form-control" id="exampleInputdateFrom" (change)="selectDateFrom($event)">
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label for="exampleInputdateTo">To Date</label>
+                                <input type="date" class="form-control" id="exampleInputdateTo" (change)="selectDateTo($event)">
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group" style="margin-top: 35px;">
+                                <label>&nbsp;</label>
+                                <button type="button" class="btn btn-primary" value="Submit" (click)="fetchSummaryData(selectedSiteId)">Apply Search</button>
+                              </div>
+                            </div>
                           </div>
                           <div class="row justify-content-between">
                             <div class="col-md-12">
-                              <table id="mytable" class="table table-striped table-bordered table-sm row-border hover mt-4">
+                              <table id="mytable"
+                                class="table table-striped table-bordered table-sm row-border hover mt-4">
                                 <thead>
                                   <tr>
-                                    <th colspan="10" class="text-center">Monthly Summary Report For {{ selectedSiteData.mimic_type == 0 ? 'Zonal Pumping Station' : 'Tube Well'}}</th>
+                                    <th colspan="10" class="text-center">Monthly Summary Report For {{
+                                      selectedSiteData.mimic_type == 0 ? 'Zonal Pumping Station' : 'Tube Well'}}</th>
                                   </tr>
                                   <tr>
                                     <th colspan="10" class="text-center">STATION NAME: {{selectedSiteData?.name}}</th>
                                   </tr>
                                   <tr>
-                                    <th colspan="10" class="text-center">DETAILED SUMMARY REPORT FOR THE PERIOD OF : {{getDateRangeVal(options)}}
-                                      </th>
+                                    <th colspan="10" class="text-center">DETAILED SUMMARY REPORT FOR THE PERIOD OF :
+                                      {{dateFromVal}} to {{dateToVal}}
+                                    </th>
                                   </tr>
                                   <tr>
                                     <th>DATE</th>
-                                    <th class="text-center" *ngFor='let in of counter(selectedSiteData?.no_of_pumps); let pumpNo = index'>PUMP {{pumpNo+1}} RUN HOUR</th>
+                                    <th class="text-center"
+                                      *ngFor='let in of counter(selectedSiteData?.no_of_pumps); let pumpNo = index'>PUMP
+                                      {{pumpNo+1}} RUN HOUR</th>
                                     <th class="text-center">TOTAL RUN HOURS</th>
                                   </tr>
                                 </thead>
                                 <tbody *ngIf="dataArr && dataArr.length > 0">
-                                  <tr
-                                    *ngFor="let dataEle of dataArr">
+                                  <tr *ngFor="let dataEle of dataArr">
                                     <td>{{ dataEle.date | date: 'MMMM d, y, h:mm:ss a' }}</td>
-                                    <td class="text-center" *ngFor="let pumhrEle of dataEle.pumpData">{{pumhrEle.runningHours}}</td>
+                                    <td class="text-center" *ngFor="let pumhrEle of dataEle.pumpData">
+                                      {{pumhrEle.runningHours}}</td>
                                     <td class="text-center">{{ getTotalHours(dataEle.pumpData) }}</td>
                                   </tr>
                                 </tbody>
