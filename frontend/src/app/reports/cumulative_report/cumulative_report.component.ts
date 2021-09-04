@@ -133,6 +133,7 @@ export class CumulativeReportComponent implements OnInit {
     this.mimicService.fetchCumulativeData(dataObj).subscribe(res => {
       if (res.code === 200) {
         this.dataArr = res.result;
+        console.log(this.dataArr);
       }
       else {
         this.toastr.error(res.message);

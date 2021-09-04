@@ -2,6 +2,7 @@ var modbus = require("modbus-stream");
 const uri = "mongodb://localhost:27017/fortuna";
 const mongoose = require('mongoose');
 var ObjectId = require('mongodb').ObjectId;
+const moment = require('moment');
 
 mongoose.connect(uri, {
     useNewUrlParser: true,
@@ -23,8 +24,8 @@ db.on('error', function (err) {
 
 modbus.tcp.server({ debug: null }, (connection) => {
     console.log('Connected');
-    setTimeout(function () {
-        read();
+    setTimeout( async function () {
+        await read();
     }, 3000);
     function read() {
         let aggregateQuery = [];
@@ -58,8 +59,8 @@ modbus.tcp.server({ debug: null }, (connection) => {
                     let mimicsData = site.mimic_data;
                     let meterData = site.meter_data;
                     let siteBlocks = site.site_blocks;
-                    // console.log("SITE NAME : ",site.name);
-                    // console.log('meterData',meterData);
+                    console.log("SITE NAME : ",site.name);
+                    // console.log('siteBlocks',siteBlocks);
                     let externalResponseMeter = await internalFnc(site._id, meterData, connection, 0);
                     let externalResponseBlock = await externalfnc(site._id, siteBlocks, connection, 1);
                     let externalResponseMimic = await internalFnc(site._id, mimicsData, connection, 2);
@@ -79,8 +80,11 @@ modbus.tcp.server({ debug: null }, (connection) => {
                 if (i < resultDetails.length) {
                     var detailsArray = resultDetails[i];
                     let internalResponse = await internalFnc(siteId, detailsArray, connection, db, type);
+                    extArr.push(internalResponse)
                     forEachLoop(i + 1);
                 } else {
+                    // console.log(extArr);
+                    historyPumpData(siteId,extArr)
                     return resolve(extArr);
                 }
             }
@@ -103,7 +107,8 @@ modbus.tcp.server({ debug: null }, (connection) => {
                             meterDataResponse.push(response);
                         if (j == detailsArray.length - 1) {
                             console.log('meterDataResponse', meterDataResponse)
-                            historyMeterData(siteId, meterDataResponse)
+                            await historyMeterData(siteId, meterDataResponse);
+                            return resolve(true);
                         }
                         forEachLoop(j + 1);
                     }
@@ -123,9 +128,10 @@ modbus.tcp.server({ debug: null }, (connection) => {
                         if (response)
                             pumpDataResponse.push(response);
                         // return resolve(response)
-                        if (j == detailsArray.length - 1) {
+                        if (j == detailsArray.details.length - 1) {
                             console.log('pumpDataResponse', pumpDataResponse)
-                            historyPumpData(siteId,historyPumpData);
+                            // await historyPumpData(siteId, pumpDataResponse);
+                            return resolve(pumpDataResponse);
                         }
                         forEachLoop(j + 1);
                     }
@@ -150,8 +156,9 @@ modbus.tcp.server({ debug: null }, (connection) => {
                         }
                         if (j == detailsArray.length - 1) {
                             console.log('flowDataResponse', flowDataResponse)
-                            historyFlowData(siteId, flowDataResponse);
-                            historylevelData(siteId, levelDataResponse)
+                            await historyFlowData(siteId, flowDataResponse);
+                            await historylevelData(siteId, levelDataResponse);
+                            return resolve(true);
                         }
                         forEachLoop(j + 1);
                     }
@@ -268,113 +275,170 @@ modbus.tcp.server({ debug: null }, (connection) => {
 
     async function historyMeterData(siteId, response) {
         // console.log("Log into history", siteId);
-        db.collection("site_datas").find({ site_id: ObjectId(siteId) }).sort({ date: -1 }).limit(1).toArray(async function (err, result) {
-            if (err) {
-                console.log(err);
-            } else {
-                if (result.length > 0) {
-                    console.log("New update record");
-                    if (!result[0].meterData) {
-                        db.collection("site_datas").updateOne({ "_id": result[0]._id }, { $set: { [`meterData`]: response } });
+        return new Promise(function (resolve) {
+            db.collection("site_datas").find({ site_id: ObjectId(siteId) }).sort({ _id: -1 }).limit(1).toArray(async function (err, result) {
+                if (err) {
+                    console.log(err);
+                    resolve(true);
+                } else {
+                    const date = moment().format("DD/MM/YYYY");
+                    const time = moment().format("HH:mm:ss");
+                    if (result.length > 0) {
+                        if(result[0].meterData && result[0].meterData.length > 0){
+                            console.log("Insert meter history record");
+                            let data = { site_id: siteId,  date: date, time: time, is_deleted: false, pumpData: [], meterData: response, levelData: [], flowData: [] };
+                            db.collection("site_datas").insertOne(data);
+                            resolve(true);
+                        }
+                        else if (JSON.stringify(result[0].meterData) !== JSON.stringify(response)) {
+                            console.log("Update meter history record");
+                            db.collection('site_datas').updateOne({ "_id": ObjectId(result[0]._id) }, { $set: { "meterData": response, "date": date, "time": time } })
+                            .then((obj) => {
+                                resolve(true);
+                            })
+                            .catch((err) => {
+                                console.log('Error: ' + err);
+                                resolve(true);
+                            })
+                        }
+                       
                     }
-                    else if (JSON.stringify(result[0].meterData) !== JSON.stringify(response)) {
-                        let data = { site_id: siteId, date: new Date(), is_deleted: false, pumpData: [], meterData: response, levelData: [], flowData: [] };
+                    else {
+                        console.log("Insert meter history record");
+                        let data = { site_id: siteId, date: date, time: time, is_deleted: false, pumpData: [], meterData: response, levelData: [], flowData: [] };
                         console.log(data);
                         db.collection("site_datas").insertOne(data);
+                        resolve(true);
                     }
                 }
-                else {
-                    console.log("No record");
-                    // insert new record
-                    let data = { site_id: siteId, date: new Date(), is_deleted: false, pumpData: [], meterData: response, levelData: [], flowData: [] };
-                    console.log(data);
-                    db.collection("site_datas").insertOne(data);
+            });
+        });
+    }
+
+    async function historyPumpData(siteId, response) {
+        // console.log("Log into history", response);
+        return new Promise(function (resolve) {
+            db.collection("site_datas").find({ site_id: ObjectId(siteId) }).sort({ _id: -1 }).limit(1).toArray(async function (err, result) {
+                if (err) {
+                    console.log(err);
+                    resolve(true);
+                } else {
+                    const date = moment().format("DD/MM/YYYY");
+                    const time = moment().format("HH:mm:ss");
+                    if (result.length > 0) {
+                        if(result[0].pumpData && result[0].pumpData.length > 0)
+                        {
+                            console.log("Insert pump data history record");
+                            let data = { site_id: siteId,  date: date, time: time, is_deleted: false, pumpData: response, meterData: [], levelData: [], flowData: [] };
+                            db.collection("site_datas").insertOne(data);
+                            resolve(true);
+                        }
+                        else{
+                            console.log("Update pump data history record",result[0]._id);
+                            db.collection('site_datas').updateOne({ "_id": ObjectId(result[0]._id) }, { $set: { "pumpData": response, "date": date, "time": time } })
+                            .then((obj) => {
+                                resolve(true);
+                            })
+                            .catch((err) => {
+                                console.log('Error: ' + err);
+                                resolve(true);
+                            })
+                        }
+                       
+                    }
+                    else {
+                        console.log("Insert pump data history record");
+                        let data = { site_id: siteId, date: date, time: time, is_deleted: false, pumpData: response, meterData: [], levelData: [], flowData: [] };
+                        // console.log(data);
+                        db.collection("site_datas").insertOne(data);
+                        resolve(true);
+                    }
                 }
-            }
+            });
         });
     }
 
     async function historyFlowData(siteId, response) {
         // console.log("Log into history", siteId);
-        db.collection("site_datas").find({ site_id: ObjectId(siteId) }).sort({ date: -1 }).limit(1).toArray(async function (err, result) {
-            if (err) {
-                console.log(err);
-            } else {
-                if (result.length > 0) {
-                    console.log("New update record");
-                    if (!result[0].flowData) {
-                        db.collection("site_datas").updateOne({ "_id": result[0]._id }, { $set: { [`flowData`]: response } });
+        return new Promise(function (resolve) {
+            db.collection("site_datas").find({ site_id: ObjectId(siteId) }).sort({ _id: -1 }).limit(1).toArray(async function (err, result) {
+                if (err) {
+                    console.log(err);
+                    resolve(true);
+                } else {
+                    const date = moment().format("DD/MM/YYYY");
+                    const time = moment().format("HH:mm:ss");
+                    if (result.length > 0) {
+                        if(result[0].flowData && result[0].flowData.length > 0){
+                            console.log("Insert flowData history record");
+                            let data = { site_id: siteId,  date: date, time: time, is_deleted: false, pumpData: [], meterData: [], levelData: [], flowData: response };
+                            db.collection("site_datas").insertOne(data);
+                            resolve(true);
+                        }
+                        else if (JSON.stringify(result[0].flowData) !== JSON.stringify(response)) {
+                            console.log("Update flowData history record");
+                            db.collection('site_datas').updateOne({ "_id": ObjectId(result[0]._id) }, { $set: { "flowData": response, "date": date, "time": time } })
+                            .then((obj) => {
+                                resolve(true);
+                            })
+                            .catch((err) => {
+                                console.log('Error: ' + err);
+                                resolve(true);
+                            })
+                        }
+                       
                     }
-                    else if (JSON.stringify(result[0].flowData) !== JSON.stringify(response)) {
-                        let data = { site_id: siteId, date: new Date(), is_deleted: false, pumpData: [], meterData: [], levelData: [], flowData: response };
-                        console.log(data);
+                    else {
+                        console.log("Insert flowData history record");
+                        let data = { site_id: siteId, date: date, time: time, is_deleted: false, pumpData: [], meterData: [], levelData: [], flowData: response };
+                        // console.log(data);
                         db.collection("site_datas").insertOne(data);
+                        resolve(true);
                     }
                 }
-                else {
-                    console.log("No record");
-                    // insert new record
-                    let data = { site_id: siteId, date: new Date(), is_deleted: false, pumpData: [], meterData: [], levelData: [], flowData: response };
-                    console.log(data);
-                    db.collection("site_datas").insertOne(data);
-                }
-            }
+            });
         });
     }
 
     async function historylevelData(siteId, response) {
         // console.log("Log into history", siteId);
-        db.collection("site_datas").find({ site_id: ObjectId(siteId) }).sort({ date: -1 }).limit(1).toArray(async function (err, result) {
-            if (err) {
-                console.log(err);
-            } else {
-                if (result.length > 0) {
-                    console.log("New update record");
-                    if (!result[0].levelData) {
-                        let data = { site_id: siteId, date: new Date(), is_deleted: false, levelData: response };
-                        db.collection("site_datas").updateOne({ "_id": result[0]._id }, { $set: { [`levelData`]: response } });
+        return new Promise(function (resolve) {
+            db.collection("site_datas").find({ site_id: ObjectId(siteId) }).sort({ _id: -1 }).limit(1).toArray(async function (err, result) {
+                if (err) {
+                    console.log(err);
+                    resolve(true);
+                } else {
+                    const date = moment().format("DD/MM/YYYY");
+                    const time = moment().format("HH:mm:ss");
+                    if (result.length > 0) {
+                        if(result[0].levelData && result[0].levelData.length > 0){
+                            console.log("Insert levelData history record");
+                            let data = { site_id: siteId,  date: date, time: time, is_deleted: false, pumpData: [], meterData: [], flowData: [], levelData: response };
+                            db.collection("site_datas").insertOne(data);
+                            resolve(true);
+                        }
+                        else if (JSON.stringify(result[0].levelData) !== JSON.stringify(response)) {
+                            console.log("Update levelData history record");
+                            db.collection('site_datas').updateOne({ "_id": ObjectId(result[0]._id) }, { $set: { "levelData": response, "date": date, "time": time } })
+                            .then((obj) => {
+                                resolve(true);
+                            })
+                            .catch((err) => {
+                                console.log('Error: ' + err);
+                                resolve(true);
+                            })
+                        }
+                       
                     }
-                    else if (JSON.stringify(result[0].levelData) !== JSON.stringify(response)) {
-                        let data = { site_id: siteId, date: new Date(), is_deleted: false, pumpData: [], meterData: [], levelData: response, flowData: [] };
+                    else {
+                        console.log("Insert levelData history record");
+                        let data = { site_id: siteId, date: date, time: time, is_deleted: false, pumpData: [], meterData: [], levelData: response, flowData: [] };
+                        // console.log(data);
                         db.collection("site_datas").insertOne(data);
+                        resolve(true);
                     }
                 }
-                else {
-                    console.log("No record");
-                    // insert new record
-                    let data = { site_id: siteId, date: new Date(), is_deleted: false, pumpData: [], meterData: [], levelData: response, flowData: [] };
-                    console.log(data);
-                    db.collection("site_datas").insertOne(data);
-                }
-            }
-        });
-    }
-
-    async function historyPumpData(siteId, response) {
-        // console.log("Log into history", siteId);
-        db.collection("site_datas").find({ site_id: ObjectId(siteId) }).sort({ date: -1 }).limit(1).toArray(async function (err, result) {
-            if (err) {
-                console.log(err);
-            } else {
-                if (result.length > 0) {
-                   console.log("New update record");
-                    if (!result[0].pumpData) {
-                        let data = { site_id: siteId, date: new Date(), is_deleted: false, pumpData: response };
-                        db.collection("site_datas").updateOne({ "_id": result[0]._id }, { $set: { [`pumpData`]: response } });
-                    }
-                    else if (JSON.stringify(result[0].pumpData) !== JSON.stringify(response)) {
-                        let data = { site_id: siteId, date: new Date(), is_deleted: false, pumpData: response, meterData: [], levelData: [], flowData: [] };
-                        db.collection("site_datas").insertOne(data);
-                    }
-                }
-                else {
-                    console.log("No record");
-                    // insert new record
-                    let data = { site_id: siteId, date: new Date(), is_deleted: false, pumpData: response, meterData: [], levelData: [], flowData: [] };
-                    console.log(data);
-                    db.collection("site_datas").insertOne(data);
-                }
-            }
+            });
         });
     }
     function readInteger(info) {

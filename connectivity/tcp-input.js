@@ -18,21 +18,21 @@ modbus.tcp.server({ debug: null }, (connection) => {
         //         console.log("value: ",info.response.data);
         //     }
         // });
-        // connection.readHoldingRegisters({ address: 6327, quantity: 1, extra: { unitId: 5, retry: 3000 } }, function (err, info) {
-        //     console.log("holding register");
-        //     if (err != null) {
-        //         console.log(err);
-        //     } else if (info != null) {
-        //         // console.log(info.response);
-        //         console.log("value: ", info.response.data[0]);
-        //         readfloat(info).then(
-        //             function (value) {
-        //                 console.log("Value ", value);
-        //             },
-        //             function (error) { console.log("Error ", error); }
-        //         );
-        //     }
-        // });
+        connection.readHoldingRegisters({ address: 6327, quantity: 1, extra: { unitId: 5, retry: 3000 } }, function (err, info) {
+            console.log("holding register");
+            if (err != null) {
+                console.log(err);
+            } else if (info != null) {
+                // console.log(info.response);
+                console.log("value: ", info.response.data[0]);
+                readfloat(info).then(
+                    function (value) {
+                        console.log("Value ", value);
+                    },
+                    function (error) { console.log("Error ", error); }
+                );
+            }
+        });
     }
     async function readfloat(info) {
         //read float value

@@ -550,11 +550,11 @@ obj.getAllCumulative = (data) => {
     return new Promise((resolve, reject) => {
         let aggregateQuery = [];
         let query = { is_deleted: false, site_id: ObjectId(data.selectedSite) };
-        if (data.options && data.options.date) {
+        if (data.options && data.options.fromDate) {
             let dateQuery = {
                 date: {
-                    $gte: new Date(data.options.fromDate),
-                    $lt: new Date(data.options.toDate)
+                    $gte: data.options.fromDate,
+                    $lte: data.options.toDate
                 }
             };
             query = { $and: [query, dateQuery] };
@@ -578,12 +578,16 @@ obj.getAllCumulative = (data) => {
             let sortOrder = Number(data.options.order);
             aggregateQuery.push({ $sort: { sortField: sortOrder } });
         } else {
-            aggregateQuery.push({ $sort: { date: -1 } });
+            // aggregateQuery.push({ $sort: { _id: -1 } });
         }
         if (data.options && data.options.offSet && data.options.limit) {
             let offSet = Number(data.options.offSet);
             let skip = (Number(offSet) - 1) * data.options.limit;
             aggregateQuery.push({ $skip: skip }, { $limit: data.options.limit });
+        }
+        else
+        {
+            aggregateQuery.push({ $limit: 100 }); 
         }
         siteData.aggregate(aggregateQuery).then(async result => {
             resolve(result);
@@ -602,11 +606,11 @@ obj.getAllSummary = (data) => {
     return new Promise((resolve, reject) => {
         let aggregateQuery = [];
         let query = { is_deleted: false, site_id: ObjectId(data.selectedSite) };
-        if (data.options && data.options.date) {
+        if (data.options && data.options.fromDate) {
             let dateQuery = {
                 date: {
-                    $gte: new Date(data.options.fromDate),
-                    $lt: new Date(data.options.toDate)
+                    $gte: data.options.fromDate,
+                    $lte: data.options.toDate
                 }
             };
             query = { $and: [query, dateQuery] };
@@ -621,7 +625,7 @@ obj.getAllSummary = (data) => {
             let sortOrder = Number(data.options.order);
             aggregateQuery.push({ $sort: { sortField: sortOrder } });
         } else {
-            aggregateQuery.push({ $sort: { date: -1 } });
+            aggregateQuery.push({ $sort: { _id: -1 } });
         }
         if (data.options && data.options.offSet && data.options.limit) {
             let offSet = Number(data.options.offSet);

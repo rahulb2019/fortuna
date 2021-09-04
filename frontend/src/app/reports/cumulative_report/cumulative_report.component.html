@@ -130,12 +130,12 @@
                                   </tr>
                                   <tr>
                                     <th width="10%">DATE-TIME</th>
-                                    <th width="60%" class="text-center"
+                                    <th class="text-center"
                                       *ngFor='let pmpTh of dataArr[0].pumpData; let pumpInd = index;'
                                       [attr.colspan]="getPumpDataLength(dataArr[0].pumpData[pumpInd])">
                                       PUMP {{ pumpInd + 1}}
                                     </th>
-                                    <th width="20%" class="text-center"
+                                    <th class="text-center"
                                       *ngFor='let meterTh of dataArr[0].meterData; let meterInd = index;'
                                       [attr.colspan]="getMeterDataLength(dataArr[0].meterData[meterInd])">
                                       DATA METER {{ meterInd + 1}}
@@ -145,38 +145,85 @@
                                   </tr>
                                   <tr>
                                     <th width="10%"></th>
-                                    <ng-container *ngFor='let key of dataArr[0].pumpData'>
-                                      <th *ngFor='let subheader of key | keyvalue'>
-                                        {{subheader.key | uppercase}}
-                                      </th>
+                                    <ng-container *ngFor='let innerData of dataArr[0].pumpData'>
+                                      <ng-container *ngFor='let data of innerData'>
+                                          <th *ngFor='let subheader of data | keyvalue'>
+                                            {{subheader.key | uppercase}}
+                                          </th>
+                                        </ng-container>
                                     </ng-container>
                                     <ng-container *ngFor='let mtkey of dataArr[0].meterData'>
                                       <th *ngFor='let subheaderMt of mtkey | keyvalue'>
                                         {{subheaderMt.key | uppercase}}
                                       </th>
                                     </ng-container>
-                                    <th></th>
-                                    <th></th>
+                                    <th *ngIf="dataArr[0].flowData.length > 0"></th>
+                                    <th *ngIf="dataArr[0].levelData.length > 0"></th>
                                   </tr>
                                 </thead>
                                 <tbody *ngIf="dataArr && dataArr.length > 0">
                                   <tr
-                                    *ngFor="let dataEle of dataArr">
-                                    <td>{{ dataEle.date | date: 'MMMM d, y, h:mm:ss a' }}</td>
-                                    <ng-container *ngFor='let pEle of dataEle.pumpData'>
-                                      <th *ngFor='let subheaderPmp of pEle | keyvalue'>
-                                        {{subheaderPmp.value}}
-                                      </th>
+                                    *ngFor="let dataEle of dataArr; let dataEleIndex = index">
+                                    <td>{{ dataEle.date + ' '+ dataEle.time }}</td>
+
+                                    <!-- <ng-container *ngFor='let innerData of dataArr[0].pumpData'>
+                                      <ng-container *ngFor='let data of innerData'>
+                                          <th *ngFor='let subheader of data | keyvalue'>
+                                            {{subheader.key | uppercase}}
+                                          </th>
+                                        </ng-container>
+                                    </ng-container> -->
+                                    <ng-container *ngFor='let pEle of dataEle.pumpData; let pumpInd = index;'>
+                                      <ng-container *ngFor='let data of pEle'>
+                                        <th *ngFor='let subheaderPmp of data | keyvalue'>
+                                          <span *ngIf="(pumpInd == 0 || pumpInd == 1 || pumpInd == 2 || pumpInd == 3) && subheaderPmp.value">{{subheaderPmp.value.substr(subheaderPmp.value.indexOf(' ')+1)}}</span>
+                                          <span *ngIf="pumpInd == 0 && !subheaderPmp.value">OFF</span>
+                                          <span *ngIf="pumpInd == 1 && !subheaderPmp.value">MANUAL</span>
+                                          <span *ngIf="pumpInd == 2 && !subheaderPmp.value">CLOSE</span>
+                                          <span *ngIf="pumpInd == 3 && !subheaderPmp.value">NORMAL</span>
+                                          <span *ngIf="!(pumpInd == 0 || pumpInd == 1 || pumpInd == 2 || pumpInd == 3) && subheaderPmp.value">{{subheaderPmp.value}}</span>
+                                        </th>
+                                      </ng-container>
                                     </ng-container>
+                                    <ng-container *ngIf='dataEle.pumpData.length == 0'>
+                                      <ng-container *ngFor='let pmpTh of dataArr[0].pumpData;'>
+                                        <th *ngFor='let subheader of pmpTh'>
+                                          -
+                                        </th>
+                                      </ng-container>
+                                    </ng-container>
+                                    
                                     <ng-container *ngFor='let mEle of dataEle.meterData'>
                                       <th *ngFor='let subheaderMt of mEle | keyvalue'>
                                         {{subheaderMt.value}}
                                       </th>
                                     </ng-container>
-                                    <td class="text-center">
-                                      {{dataEle.flowData[0]}}</td>
-                                    <td class="text-center">
-                                      {{dataEle.levelData[0]}}</td>
+                                    <th class="text-center"
+                                      *ngFor='let in of counter(dataArr[0].meterData.length - dataEle.meterData.length)'
+                                      >
+                                      -
+                                    </th>
+                                    <ng-container *ngIf='dataEle.meterData.length == 0'>
+                                      <th class="text-center"
+                                      *ngFor='let meterTh of dataArr[0].meterData'
+                                      >
+                                      -
+                                    </th>
+                                    </ng-container>
+                                    <ng-container *ngFor='let fEle of dataEle.flowData'>
+                                      <th *ngFor='let subheaderFlow of fEle | keyvalue'>
+                                        {{subheaderFlow.value}}
+                                      </th>
+                                    </ng-container>
+                                    <ng-container *ngFor='let lEle of dataEle.levelData'>
+                                      <th *ngFor='let subheaderLevel of lEle | keyvalue'>
+                                        {{subheaderLevel.value}}
+                                      </th>
+                                    </ng-container>
+                                    <td class="text-center" *ngIf="dataEle.flowData.length == 0">
+                                      - </td>
+                                    <td class="text-center" *ngIf="dataEle.levelData.length == 0">
+                                      - </td>
                                   </tr>
                                 </tbody>
                               </table>
