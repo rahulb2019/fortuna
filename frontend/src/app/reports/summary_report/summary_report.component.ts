@@ -9,6 +9,7 @@ import { ExportAsService, ExportAsConfig, SupportedExtensions } from 'ngx-export
 import { MimicService } from "../../services/mimic/mimic.service";
 
 import * as moment from 'moment';
+import * as $ from 'jquery';
 const DATE_FORMATE = 'DD/MM/YYYY';
 
 @Component({
@@ -63,7 +64,8 @@ export class SummaryReportComponent implements OnInit {
         this.sitesArr = res.result;
         this.selectedSiteId = res.result[0]._id;
         this.setSelectedSiteFnc(this.selectedSiteId, this.sitesArr);
-        this.fetchSummaryData(this.selectedSiteId);
+        // this.fetchSummaryData(this.selectedSiteId);
+        $('#mytable').hide();
       }
       else {
         this.toastr.error(res.message);
@@ -74,7 +76,8 @@ export class SummaryReportComponent implements OnInit {
   changeSiteSelection(event) {
     this.selectedSiteId = event.target.value
     this.setSelectedSiteFnc(this.selectedSiteId, this.sitesArr);
-    this.fetchSummaryData(this.selectedSiteId);
+    // this.fetchSummaryData(this.selectedSiteId);
+    $('#mytable').hide();
   }
   
 
@@ -125,8 +128,7 @@ export class SummaryReportComponent implements OnInit {
   }
 
   fetchSummaryData(selectedSiteIdVal) {
-    console.log("selectedSiteIdVal......", selectedSiteIdVal, this.options);
-    return;
+    $('#mytable').show();
     let dataObj = {
       options: this.options,
       selectedSite: selectedSiteIdVal
@@ -158,13 +160,35 @@ export class SummaryReportComponent implements OnInit {
   }
 
   getTotalHours(hoursArray) {
-    let total = 0;
-  
+    let totalHours = 0;
+    let totalMinutes = 0;
     hoursArray.forEach((item) => {
-      total += Number(item.runningHours);
+      totalHours += Number(item.runningHours);
+      totalMinutes += Number(item.runningMinutes);
     });
+    if(totalMinutes > 60 && totalMinutes < 120) {
+      totalHours = totalHours + 1;
+      totalMinutes = totalMinutes - 60;
+    } else if(totalMinutes > 120 && totalMinutes < 180){
+      totalHours = totalHours + 2;
+      totalMinutes = totalMinutes - 120;
+    } else if(totalMinutes > 180 && totalMinutes < 240){
+      totalHours = totalHours + 3;
+      totalMinutes = totalMinutes - 180;
+    } else if(totalMinutes > 240 && totalMinutes < 300){
+      totalHours = totalHours + 4;
+      totalMinutes = totalMinutes - 240;
+    } else if(totalMinutes > 300 && totalMinutes < 360){
+      totalHours = totalHours + 5;
+      totalMinutes = totalMinutes - 300;
+    } else if(totalMinutes > 360 && totalMinutes < 420){
+      totalHours = totalHours + 6;
+      totalMinutes = totalMinutes - 360;
+    }
+    console.log('hoursArray',totalHours,totalMinutes )
+    console.log(totalHours +"."+totalMinutes);
   
-    return total;
+    return (totalHours +"."+totalMinutes).toString();
   }
 
   // getDateRangeVal(optionsObj) {

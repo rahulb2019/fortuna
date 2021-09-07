@@ -58,9 +58,13 @@ modbus.tcp.server({ debug: null }, (connection) => {
                                     let mimicsData = data.site.mimic_data;
                                     let meterData = data.site.meter_data;
                                     let siteBlocks = data.site.site_blocks;
-                                    let externalResponseMeter = await internalFnc(data.site._id, meterData, connection, 0);
-                                    let externalResponseBlock = await externalfnc(data.site._id, siteBlocks, connection, 1);
-                                    let externalResponseMimic = await internalFnc(data.site._id, mimicsData, connection, 2);
+                                    let emptyMeterData = [];
+                                    meterData.map((item) =>  emptyMeterData.push('-'));
+                                    let emptyBlockData = [];
+                                    siteBlocks.map((item) =>  emptyBlockData.push([]));
+                                    let externalResponseMeter = await internalFnc(data.site._id, meterData, connection, emptyMeterData, emptyBlockData, 0);
+                                    let externalResponseBlock = await externalfnc(data.site._id, siteBlocks, connection, emptyMeterData, emptyBlockData, 1);
+                                    let externalResponseMimic = await internalFnc(data.site._id, mimicsData, connection, emptyMeterData, emptyBlockData, 2);
                                 });
                                 forked.send({ idx, site: result[idx], connection: myFunc.toString() });
                                 // const worker = new Worker('./client.js', { workerData: { idx, site: result[idx] } });
@@ -92,25 +96,24 @@ modbus.tcp.server({ debug: null }, (connection) => {
         });
     }
     
-    function externalfnc(siteId, resultDetails, connection, db, type) {
+    function externalfnc(siteId, resultDetails, connection, emptyMeterData, emptyBlockData, type) {
         return new Promise(function (resolve, reject) {
             let extArr = [];
             async function forEachLoop(i) {
                 if (i < resultDetails.length) {
                     var detailsArray = resultDetails[i];
-                    let internalResponse = await internalFnc(siteId, detailsArray, connection, db, type);
+                    let internalResponse = await internalFnc(siteId, detailsArray, connection, emptyMeterData, emptyBlockData, type,i);
                     extArr.push(internalResponse)
                     forEachLoop(i + 1);
                 } else {
-                    // console.log(extArr);
-                    historyPumpData(siteId,extArr)
+                    historyPumpData(siteId, extArr, emptyMeterData)
                     return resolve(extArr);
                 }
             }
             forEachLoop(0);
         });
     }
-    function internalFnc(siteId, detailsArray, connection, type) {
+    function internalFnc(siteId, detailsArray, connection, emptyMeterData, emptyBlockData, type, i=0) {
         return new Promise(function (resolve, reject) {
             let intArr = [];
             let meterDataResponse = [];
@@ -125,7 +128,7 @@ modbus.tcp.server({ debug: null }, (connection) => {
                             meterDataResponse.push(response);
                         if (j == detailsArray.length - 1) {
                             //console.log('meterDataResponse', meterDataResponse)
-                            await historyMeterData(siteId, meterDataResponse);
+                            await historyMeterData(siteId, meterDataResponse, emptyBlockData);
                             return resolve(true);
                         }
                         forEachLoop(j + 1);
@@ -137,16 +140,17 @@ modbus.tcp.server({ debug: null }, (connection) => {
                     if (typeof detailsArray.details[j].register_address !== 'undefined' && detailsArray.details[j].register_address) {
                         let response ='';
                         if (detailsArray.details[j].register_type == '1') {
-                            response = await readDiscreteInputs(detailsArray.details[j], 1, detailsArray.details[j].slave_id, type, siteId, j,detailsArray._id);
+                            response = await readDiscreteInputs(detailsArray.details[j], 1, detailsArray.details[j].slave_id, type, siteId, j,detailsArray._id,i);
                         }
                         else {
-                            response = await readHoldingRegisters(detailsArray.details[j], 1, detailsArray.details[j].slave_id, detailsArray.details[j].data_type.toLowerCase().replace(/\s/g, ''), type, siteId, j,detailsArray._id);
+                            response = await readHoldingRegisters(detailsArray.details[j], 1, detailsArray.details[j].slave_id, detailsArray.details[j].data_type.toLowerCase().replace(/\s/g, ''), type, siteId, j,detailsArray._id,i);
                         }
+                        
                         if (response)
                             pumpDataResponse.push(response);
-                        // return resolve(response)
+                        else
+                            pumpDataResponse.push('-');
                         if (j == detailsArray.details.length - 1) {
-                            // console.log('pumpDataResponse', pumpDataResponse)
                             // await historyPumpData(siteId, pumpDataResponse);
                             return resolve(pumpDataResponse);
                         }
@@ -173,8 +177,8 @@ modbus.tcp.server({ debug: null }, (connection) => {
                         }
                         if (j == detailsArray.length - 1) {
                             //console.log('flowDataResponse', flowDataResponse)
-                            await historyFlowData(siteId, flowDataResponse);
-                            await historylevelData(siteId, levelDataResponse);
+                            await historyFlowData(siteId, flowDataResponse, emptyMeterData, emptyBlockData,);
+                            await historylevelData(siteId, levelDataResponse, emptyMeterData, emptyBlockData,);
                             return resolve(true);
                         }
                         forEachLoop(j + 1);
@@ -221,14 +225,17 @@ modbus.tcp.server({ debug: null }, (connection) => {
             forEachLoop(0);
         });
     }
-    function readHoldingRegisters(data, quantity, slaveId, dataType, blockType, siteId, index,blockId=null) {
+    function readHoldingRegisters(data, quantity, slaveId, dataType, blockType, siteId, index,blockId=null,j=0) {
+        const keyName = data.name.toLowerCase().replace(/\s/g, "");
         return new Promise(function (resolve) {
-            // setTimeout(function () {
             connection.readHoldingRegisters({ address: data.register_address, quantity: quantity, extra: { unitId: slaveId, retry: 500000 } }, (err, info) => {
-            // connection.readHoldingRegisters({ address: data.register_address, quantity: quantity, extra: { unitId: slaveId } }, (err, info) => {
                 if (err != null) {
                     console.log(err);
-                    resolve(null);
+                    // resolve(null);
+                    if (blockType == 1){
+                        insertSummaryData(j, keyName, value, siteId);
+                    }
+                    resolve({ [data.name]: '-' });
                 } else if (info != null) {
                     if (dataType != 'float') {
                         let value = readInteger(info);
@@ -238,8 +245,10 @@ modbus.tcp.server({ debug: null }, (connection) => {
                         console.log("Reading Integer " + slaveId +"::"+ data.register_address + " : ", value);
                         if (blockType == 0 && parseInt(value) >= 0)
                             db.collection("sites").updateOne({ "_id": ObjectId(siteId) }, { $set: { [`meter_data.${index}.value`]: value } });
-                        else if (blockType == 1 && parseInt(value) >= 0)
+                        else if (blockType == 1 && parseInt(value) >= 0){
                             db.collection("site_blocks").updateOne({ "_id": ObjectId(blockId) }, { $set: { [`details.${index}.value`]: value, [`updated_at`]: new Date() } });
+                            insertSummaryData(j, keyName, value, siteId);
+                        }
                         else if (blockType == 2 && parseInt(value) >= 0)
                             db.collection("sites").updateOne({ "_id": ObjectId(siteId) }, { $set: { [`mimic_data.${index}.value`]: value } });
                         let valueUnit = value + " " + data.unit;
@@ -254,8 +263,10 @@ modbus.tcp.server({ debug: null }, (connection) => {
                                 console.log("Reading float "+ slaveId +"::" + data.register_address + " : ", value);
                                 if (blockType == 0 && parseFloat(value) >= 0)
                                     db.collection("sites").updateOne({ "_id": siteId }, { $set: { [`meter_data.${index}.value`]: value } });
-                                else if (blockType == 1 && parseInt(value) >= 0)
+                                else if (blockType == 1 && parseInt(value) >= 0){
                                     db.collection("site_blocks").updateOne({ "_id": blockId }, { $set: { [`details.${index}.value`]: value, [`updated_at`]: new Date() } });
+                                    insertSummaryData(j, keyName, value, siteId);
+                                }
                                 else if (blockType == 2 && parseInt(value) >= 0)
                                     db.collection("sites").updateOne({ "_id": siteId }, { $set: { [`mimic_data.${index}.value`]: value } });
                                 let valueUnit = value + " " + data.unit;
@@ -266,7 +277,6 @@ modbus.tcp.server({ debug: null }, (connection) => {
                     }
                 }
             });
-            // }, 10);
         });
     }
     async function readDiscreteInputs(data, quantity, slaveId, blockType, siteId, index,blockId=null) {
@@ -275,7 +285,8 @@ modbus.tcp.server({ debug: null }, (connection) => {
             connection.readDiscreteInputs({ address: data.register_address, quantity: quantity, extra: {unitId: slaveId, retry: 500000}}, function (err, info) {
                if (err != null) {
                     console.log(err);
-                    resolve(null);
+                    // resolve(null);
+                    resolve({ [data.name]: value });
                 } else if (info != null) {
                     let value = '';
                     value = info.response.data[0];
@@ -284,14 +295,17 @@ modbus.tcp.server({ debug: null }, (connection) => {
                         db.collection("site_blocks").updateOne({ "_id": ObjectId(blockId) }, { $set: { [`details.${index}.value`]: value, [`updated_at`]: new Date() } });
                     else if (blockType == 2)
                         db.collection("sites").updateOne({ "_id": ObjectId(siteId) }, { $set: { [`mimic_data.${index}.value`]: value } });
-                    resolve({ [data.name]: value });
+                    let valueUnit = value;
+                    if(value)
+                        valueUnit = data.unit;
+                    resolve({ [data.name]: valueUnit });
                 }
             });
             // }, 10);
         });
     }
 
-    async function historyMeterData(siteId, response) {
+    async function historyMeterData(siteId, response, emptyBlockData) {
         // console.log("Log into history", siteId);
         return new Promise(function (resolve) {
             db.collection("site_datas").find({ site_id: ObjectId(siteId) }).sort({ _id: -1 }).limit(1).toArray(async function (err, result) {
@@ -333,8 +347,8 @@ modbus.tcp.server({ debug: null }, (connection) => {
         });
     }
 
-    async function historyPumpData(siteId, response) {
-        // console.log("Log into history", response);
+    async function historyPumpData(siteId, response, emptyMeterData) {
+        console.log("Log into history pump data", response);
         return new Promise(function (resolve) {
             db.collection("site_datas").find({ site_id: ObjectId(siteId) }).sort({ _id: -1 }).limit(1).toArray(async function (err, result) {
                 if (err) {
@@ -346,13 +360,20 @@ modbus.tcp.server({ debug: null }, (connection) => {
                     if (result.length > 0) {
                         if(result[0].pumpData && result[0].pumpData.length > 0)
                         {
-                            console.log("Insert pump data history record");
+                            console.log("Insert pump data history record In");
                             let data = { site_id: ObjectId(siteId),  date: date, time: time, is_deleted: false, pumpData: response, meterData: [], levelData: [], flowData: [] };
-                            console.log(data);
-                            db.collection("site_datas").insertOne(data);
-                            resolve(true);
+                            console.log('pumpData1',siteId,data.pumpData);
+                            console.log('response2',siteId,response)
+                            db.collection("site_datas").insertOne(data).then((obj) => {
+                                resolve(true);
+                            })
+                            .catch((err) => {
+                                console.log('Error: ' + err);
+                                resolve(true);
+                            })
                         }
-                        else{
+                        else if (JSON.stringify(result[0].pumpData) !== JSON.stringify(response)) {
+                        // else{
                             console.log("Update pump data history record",result[0]._id);
                             db.collection('site_datas').updateOne({ "_id": ObjectId(result[0]._id) }, { $set: { "pumpData": response, "date": date, "time": time } })
                             .then((obj) => {
@@ -366,18 +387,23 @@ modbus.tcp.server({ debug: null }, (connection) => {
                        
                     }
                     else {
-                        console.log("Insert pump data history record");
+                        console.log("Insert pump data history record Out");
                         let data = { site_id: ObjectId(siteId), date: date, time: time, is_deleted: false, pumpData: response, meterData: [], levelData: [], flowData: [] };
                         console.log(data);
-                        db.collection("site_datas").insertOne(data);
-                        resolve(true);
+                        db.collection("site_datas").insertOne(data).then((obj) => {
+                            resolve(true);
+                        })
+                        .catch((err) => {
+                            console.log('Error: ' + err);
+                            resolve(true);
+                        })
                     }
                 }
             });
         });
     }
 
-    async function historyFlowData(siteId, response) {
+    async function historyFlowData(siteId, response, emptyMeterData, emptyBlockData) {
         // console.log("Log into history", siteId);
         return new Promise(function (resolve) {
             db.collection("site_datas").find({ site_id: ObjectId(siteId) }).sort({ _id: -1 }).limit(1).toArray(async function (err, result) {
@@ -390,7 +416,7 @@ modbus.tcp.server({ debug: null }, (connection) => {
                     if (result.length > 0) {
                         if(result[0].flowData && result[0].flowData.length > 0){
                             console.log("Insert flowData history record");
-                            let data = { site_id: ObjectId(siteId),  date: date, time: time, is_deleted: false, pumpData: [], meterData: [], levelData: [], flowData: response };
+                            let data = { site_id: ObjectId(siteId),  date: date, time: time, is_deleted: false, pumpData: emptyBlockData, meterData: emptyMeterData, levelData: [], flowData: response };
                             db.collection("site_datas").insertOne(data);
                             resolve(true);
                         }
@@ -409,7 +435,7 @@ modbus.tcp.server({ debug: null }, (connection) => {
                     }
                     else {
                         console.log("Insert flowData history record");
-                        let data = { site_id: ObjectId(siteId), date: date, time: time, is_deleted: false, pumpData: [], meterData: [], levelData: [], flowData: response };
+                        let data = { site_id: ObjectId(siteId), date: date, time: time, is_deleted: false, pumpData: emptyBlockData, meterData: emptyMeterData,  levelData: [], flowData: response };
                         // console.log(data);
                         db.collection("site_datas").insertOne(data);
                         resolve(true);
@@ -419,7 +445,7 @@ modbus.tcp.server({ debug: null }, (connection) => {
         });
     }
 
-    async function historylevelData(siteId, response) {
+    async function historylevelData(siteId, response, emptyMeterData, emptyBlockData) {
         // console.log("Log into history", siteId);
         return new Promise(function (resolve) {
             db.collection("site_datas").find({ site_id: ObjectId(siteId) }).sort({ _id: -1 }).limit(1).toArray(async function (err, result) {
@@ -432,7 +458,7 @@ modbus.tcp.server({ debug: null }, (connection) => {
                     if (result.length > 0) {
                         if(result[0].levelData && result[0].levelData.length > 0){
                             console.log("Insert levelData history record");
-                            let data = { site_id: ObjectId(siteId),  date: date, time: time, is_deleted: false, pumpData: [], meterData: [], flowData: [], levelData: response };
+                            let data = { site_id: ObjectId(siteId),  date: date, time: time, is_deleted: false, pumpData: emptyBlockData, meterData: emptyMeterData, flowData: [], levelData: response };
                             db.collection("site_datas").insertOne(data);
                             resolve(true);
                         }
@@ -451,7 +477,7 @@ modbus.tcp.server({ debug: null }, (connection) => {
                     }
                     else {
                         console.log("Insert levelData history record");
-                        let data = { site_id: ObjectId(siteId), date: date, time: time, is_deleted: false, pumpData: [], meterData: [], levelData: response, flowData: [] };
+                        let data = { site_id: ObjectId(siteId), date: date, time: time, is_deleted: false, pumpData: emptyBlockData, meterData: emptyMeterData, levelData: response, flowData: [] };
                         // console.log(data);
                         db.collection("site_datas").insertOne(data);
                         resolve(true);
@@ -459,6 +485,56 @@ modbus.tcp.server({ debug: null }, (connection) => {
                 }
             });
         });
+    }
+    async function insertSummaryData(index,keyName, value, siteId) {
+        // Insert or UPDATE site summary 
+        let runningHours = 0, runningMinutes = 0, updatedData = {}, valid=false;
+        if (keyName == 'runhour') {
+            runningHours = value;
+            updatedData = { [`pumpData.${index}.runningHours`] : runningHours, "updated_at": new Date() };
+            valid = true;
+        }
+        if (keyName == 'runmin') {
+            runningMinutes = value;
+            updatedData = { [`pumpData.${index}.runningMinutes`] : runningMinutes, "updated_at": new Date()};
+            valid = true;
+        }
+        if (keyName == 'runninghours') {
+            const hourMin = value.toString().split('.');
+            if (hourMin.length > 0) {
+                runningHours = hourMin[0];
+                if(hourMin.length >1)
+                    runningMinutes = hourMin[1];
+                updatedData = { [`pumpData.${index}`] : {"runningHours": runningHours, "runningMinutes": runningMinutes}, "updated_at": new Date() };
+                valid = true;
+            }
+        }
+        // if(valid){
+        const date = moment().format("DD/MM/YYYY");
+        db.collection("site_summaries").find({ site_id: ObjectId(siteId), date: date }).sort({ _id: -1 }).limit(1).toArray(async function (err, result) {
+            if (err) {
+                console.log(err);
+            } else {
+                if (result.length > 0) {
+                    console.log("Update summary record");
+                    if(Object.keys(updatedData).length >0){
+                        db.collection('site_summaries').updateOne({ "_id": ObjectId(result[0]._id) }, { $set: updatedData })
+                            .then((obj) => {
+                            })
+                            .catch((err) => {
+                                console.log('Error: ' + err);
+                            })
+                    }
+                }
+                else {
+                    console.log("Insert summary record");
+                    let data = { site_id: ObjectId(siteId), date: date, pumpData:[{runningHours: runningHours, runningMinutes: runningMinutes}], is_deleted: false, created_at: new Date() };
+                    console.log(data);
+                    db.collection("site_summaries").insertOne(data);
+                }
+            }
+        });
+        // }
     }
     function readInteger(info) {
         // console.log("hexVal  ", info.response.data[0].toString("hex"));
@@ -500,6 +576,9 @@ modbus.tcp.server({ debug: null }, (connection) => {
         let value = await parseFloat(str);
         return value.toFixed(2);
     }
+
+   
+
 }).listen(1028, () => {
     console.log('server is running on 1028');
 });

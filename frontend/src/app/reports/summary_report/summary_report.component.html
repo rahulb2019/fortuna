@@ -82,9 +82,9 @@
                                 </thead>
                                 <tbody *ngIf="dataArr && dataArr.length > 0">
                                   <tr *ngFor="let dataEle of dataArr">
-                                    <td>{{ dataEle.date | date: 'MMMM d, y, h:mm:ss a' }}</td>
+                                    <td>{{dataEle.date | date: 'MMMM d y'}}</td>
                                     <td class="text-center" *ngFor="let pumhrEle of dataEle.pumpData">
-                                      {{pumhrEle.runningHours}}</td>
+                                      {{pumhrEle.runningHours}}.{{pumhrEle.runningMinutes}}</td>
                                     <td class="text-center">{{ getTotalHours(dataEle.pumpData) }}</td>
                                   </tr>
                                 </tbody>

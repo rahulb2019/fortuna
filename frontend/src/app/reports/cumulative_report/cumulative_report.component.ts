@@ -65,7 +65,8 @@ export class CumulativeReportComponent implements OnInit {
         this.sitesArr = res.result;
         this.selectedSiteId = res.result[0]._id;
         this.setSelectedSiteFnc(this.selectedSiteId, this.sitesArr);
-        this.fetchCumulativeData(this.selectedSiteId);
+        // this.fetchCumulativeData(this.selectedSiteId);
+        // $('#mytable').hide();
       }
       else {
         this.toastr.error(res.message);
@@ -76,7 +77,8 @@ export class CumulativeReportComponent implements OnInit {
   changeSiteSelection(event) {
     this.selectedSiteId = event.target.value
     this.setSelectedSiteFnc(this.selectedSiteId, this.sitesArr);
-    this.fetchCumulativeData(this.selectedSiteId);
+    // $('#mytable').hide();
+    // this.fetchCumulativeData(this.selectedSiteId);
   }
   
 
@@ -126,6 +128,7 @@ export class CumulativeReportComponent implements OnInit {
   }
 
   fetchCumulativeData(selectedSiteIdVal) {
+    $('#mytable').show();
     let dataObj = {
       options: this.options,
       selectedSite: selectedSiteIdVal
@@ -154,6 +157,7 @@ export class CumulativeReportComponent implements OnInit {
   }
 
   counter(i: number) {
+    console.log("i....", i)
     return new Array(i);
   }
 

@@ -1086,4 +1086,4 @@ agm-map {
 .meter_tooltip .meter_tooltiptext{background-color:#3cb371;width:200px;font-size:24px;} /*flow meter */
 .meter-block-lebel{width: 35%;} /* meter lebel width*/
 .meter-block-value{width: 65%;} /* meter value width*/
-.table-bordered td, .table-bordered th,.table-bordered thead td, .table-bordered thead th {text-align: center; } /*commulative report*/
+.table-bordered td, .table-bordered th,.table-bordered thead td, .table-bordered thead th {text-align: center; } /*commulative report*/ 

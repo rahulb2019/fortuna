@@ -120,11 +120,11 @@
                                 aria-describedby="user-list-page-info">
                                 <thead *ngIf="dataArr && dataArr.length > 0">
                                   <tr>
-                                    <th colspan="20" class="text-center">STATION NAME:
+                                    <th colspan="100" class="text-center">STATION NAME:
                                       {{selectedSiteData?.name}}</th>
                                   </tr>
                                   <tr>
-                                    <th colspan="20" class="text-center">DETAILED REPORT FOR THE PERIOD OF: {{dateFromVal}} To {{dateToVal}}
+                                    <th colspan="100" class="text-center">DETAILED REPORT FOR THE PERIOD OF: {{dateFromVal}} To {{dateToVal}}
                                       <span *ngIf="timeFromVal !== ''">{{timeFromVal}} To {{timeToVal}}</span>
                                     </th>
                                   </tr>
@@ -157,8 +157,8 @@
                                         {{subheaderMt.key | uppercase}}
                                       </th>
                                     </ng-container>
-                                    <th *ngIf="dataArr[0].flowData.length > 0"></th>
-                                    <th *ngIf="dataArr[0].levelData.length > 0"></th>
+                                    <th></th>
+                                    <th></th>
                                   </tr>
                                 </thead>
                                 <tbody *ngIf="dataArr && dataArr.length > 0">
@@ -174,42 +174,61 @@
                                         </ng-container>
                                     </ng-container> -->
                                     <ng-container *ngFor='let pEle of dataEle.pumpData; let pumpInd = index;'>
-                                      <ng-container *ngFor='let data of pEle'>
-                                        <th *ngFor='let subheaderPmp of data | keyvalue'>
-                                          <span *ngIf="(pumpInd == 0 || pumpInd == 1 || pumpInd == 2 || pumpInd == 3) && subheaderPmp.value">{{subheaderPmp.value.substr(subheaderPmp.value.indexOf(' ')+1)}}</span>
-                                          <span *ngIf="pumpInd == 0 && !subheaderPmp.value">OFF</span>
-                                          <span *ngIf="pumpInd == 1 && !subheaderPmp.value">MANUAL</span>
-                                          <span *ngIf="pumpInd == 2 && !subheaderPmp.value">CLOSE</span>
-                                          <span *ngIf="pumpInd == 3 && !subheaderPmp.value">NORMAL</span>
-                                          <span *ngIf="!(pumpInd == 0 || pumpInd == 1 || pumpInd == 2 || pumpInd == 3) && subheaderPmp.value">{{subheaderPmp.value}}</span>
-                                        </th>
-                                      </ng-container>
+                                     <ng-container *ngFor='let data of pEle; let pumpIndInner = index;'>
+                                         <th *ngFor='let subheaderPmp of data | keyvalue; let pumpKeyValueIndex = index;'>
+                                            <span *ngIf="pumpIndInner == 0 && !subheaderPmp.value">OFF</span>
+                                            <span *ngIf="pumpIndInner == 1 && !subheaderPmp.value">MANUAL</span>
+                                            <span *ngIf="pumpIndInner == 2 && !subheaderPmp.value">CLOSE</span>
+                                            <span *ngIf="pumpIndInner == 3 && !subheaderPmp.value">NORMAL</span>
+                                            <span *ngIf="subheaderPmp.value">{{subheaderPmp.value}}</span>
+                                          </th>
+                                        </ng-container>
+                                      
                                     </ng-container>
-                                    <ng-container *ngIf='dataEle.pumpData.length == 0'>
+                                    <ng-container *ngIf='dataEle.pumpData.length == 0 && dataArr[dataEleIndex-1] && dataArr[dataEleIndex-1].pumpData.length == 0'>
                                       <ng-container *ngFor='let pmpTh of dataArr[0].pumpData;'>
                                         <th *ngFor='let subheader of pmpTh'>
                                           -
                                         </th>
                                       </ng-container>
                                     </ng-container>
+                                    <ng-container *ngIf='dataEle.pumpData.length == 0 && dataArr[dataEleIndex-1] && dataArr[dataEleIndex-1].pumpData.length > 0'>
+                                      <ng-container *ngFor='let pEle of dataArr[dataEleIndex-1].pumpData; let pumpInd = index;'>
+                                        <ng-container *ngFor='let data of pEle; let pumpIndInner = index;'>
+                                            <th *ngFor='let subheaderPmp of data | keyvalue; let pumpKeyValueIndex = index;'>
+                                              <span *ngIf="pumpIndInner == 0 && !subheaderPmp.value">OFF</span>
+                                              <span *ngIf="pumpIndInner == 1 && !subheaderPmp.value">MANUAL</span>
+                                              <span *ngIf="pumpIndInner == 2 && !subheaderPmp.value">CLOSE</span>
+                                              <span *ngIf="pumpIndInner == 3 && !subheaderPmp.value">NORMAL</span>
+                                              <span *ngIf="subheaderPmp.value">{{subheaderPmp.value}}</span>
+                                            </th>
+                                          </ng-container>
+                                      </ng-container>
+                                    </ng-container>
                                     
-                                    <ng-container *ngFor='let mEle of dataEle.meterData'>
+                                    <ng-container *ngFor='let mEle of dataEle.meterData;let mtInd = index;'>
                                       <th *ngFor='let subheaderMt of mEle | keyvalue'>
-                                        {{subheaderMt.value}}
+                                        <ng-container *ngIf='subheaderMt.value == "-" && dataArr[dataEleIndex-1] && dataArr[dataEleIndex-1].meterData.length > 0'>
+                                          <span *ngFor='let subheaderMt of dataArr[dataEleIndex-1].meterData[mtInd] | keyvalue'>
+                                              {{subheaderMt.value}}
+                                          </span>
+                                        </ng-container>
+                                        <span *ngIf='subheaderMt.value != "-"'>{{subheaderMt.value}}</span>
                                       </th>
                                     </ng-container>
-                                    <th class="text-center"
+                                    
+                                    <!-- <th class="text-center"
                                       *ngFor='let in of counter(dataArr[0].meterData.length - dataEle.meterData.length)'
                                       >
                                       -
-                                    </th>
-                                    <ng-container *ngIf='dataEle.meterData.length == 0'>
+                                    </th> -->
+                                    <!-- <ng-container *ngIf='dataEle.meterData.length == 0'>
                                       <th class="text-center"
                                       *ngFor='let meterTh of dataArr[0].meterData'
                                       >
                                       -
                                     </th>
-                                    </ng-container>
+                                    </ng-container> -->
                                     <ng-container *ngFor='let fEle of dataEle.flowData'>
                                       <th *ngFor='let subheaderFlow of fEle | keyvalue'>
                                         {{subheaderFlow.value}}
