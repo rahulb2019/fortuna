@@ -644,4 +644,23 @@ obj.getAllSummary = (data) => {
     })
 }
 
+
+
+
+
+obj.getMimicsForUser = (data) => {
+    return new Promise((resolve, reject) => {
+
+        Mimic.find({is_deleted: false}, {name:1, _id:1}, ).then(async result => {
+            resolve(result);
+        }).catch(err => {
+            resolve({
+                status: "Failure",
+                code: 301
+            });
+        });
+
+    })
+}
+
 module.exports = obj;

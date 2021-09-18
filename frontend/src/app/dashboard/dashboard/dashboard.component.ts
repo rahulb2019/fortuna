@@ -45,7 +45,6 @@ export class DashboardComponent implements OnInit {
         let deactiveMimicsData = this.mimicsArr.filter(function(obj) {
           return obj.is_blocked === 1;
         });
-        console.log("this.mimicsArr-----", this.mimicsArr);
         this.activeMimics = activeMimicsData && activeMimicsData.length;
         this.deactiveMimics = deactiveMimicsData && deactiveMimicsData.length;
       }

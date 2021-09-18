@@ -62,7 +62,7 @@ const loginAdmin = async function (req, res) {
     try {
         const respData = await adminQueries.checkLogin(data);
         if (respData.status !== 200)
-            res.status(301).json({ code: 301, message: "Unregistered email id", result: respData });
+            res.status(200).json({ code: 301, message: "Invalid Credentials", result: respData });
         else {
             delete respData.status;
             res.status(200).json({ code: 200, message: "Login successfully", result: respData });
@@ -89,7 +89,6 @@ const accountSetting = async function (req, res) {
                 .toString("hex");
         }
         const respData = await adminQueries.updateAccount(data);
-        console.log(respData);
         if (respData.length == 0)
             res.status(400).json({ code: 301, message: "Unable to update data", result: respData });
         else {

@@ -18,16 +18,23 @@ export class SideBar1Component implements OnInit {
   listClass =  'iq-menu';
   display: false;
   setDefaultEvent: any;
+  userType: any;
 
   constructor(public apiService: ApiService, private router: Router,
     private toastr: ToastrService) { 
+      this.userType = JSON.parse(sessionStorage.getItem('admin_login')).admindata.user_type;
+      console.log("ele....", this.menuItems);
+      console.log("this.userType.........", this.userType);
+      if(this.userType == "1") {
+        this.menuItems = this.menuItems.filter(obj => obj.title !== 'Users');
+      }
   }
 
-  ngOnInit() {
+  ngOnInit() { 
     this.getMenuItems();
   }
 
-  getMenuItems() {
+  getMenuItems() {   
     if(this.setDefaultEvent) {
       this.menuItems.forEach(element => {
         if (element.title == "Schedule") {

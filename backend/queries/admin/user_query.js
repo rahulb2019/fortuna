@@ -1,10 +1,9 @@
 var mongoose = require("mongoose");
-var User = mongoose.model("users");
+var User = mongoose.model("admins");
 var crypto = require("crypto");
 
 
 exports.loginAdmin = function (req, res) {
-    // console.log('admin',data);
     var userData = data ? data : {};
     //'email_status': true
 
@@ -17,15 +16,12 @@ let obj = {}
 // Method to check login details of admin
 obj.checkLogin = (data) => {
     return new Promise((resolve, reject) => {
-        console.log(data.email);
         Admin.findOne(
             {
                 email: data.email,
                 is_deleted: false
             },
             function (err, user) {
-                console.log("====");
-                console.log(user);
                 if (err) {
                     reject(err);
                 }
@@ -81,7 +77,7 @@ obj.checkLogin = (data) => {
 obj.getAllUsers = (data) => {
     return new Promise((resolve, reject) => {
         let aggregateQuery = [];
-        let query = { is_deleted: false };
+        let query = { is_deleted: false, user_type: "1" };
         if (data.options && data.options.search) {
             let searchQuery = {
                 $or: [
@@ -157,7 +153,6 @@ obj.updateUserData = (data) => {
         delete updatedData.id;
         User.findByIdAndUpdate(data.id, updatedData)
             .then(function (response) {
-                console.log(response);
                 resolve(200);
             })
             .catch(function (error) {
@@ -169,7 +164,6 @@ obj.updateUserData = (data) => {
 // Method to check login details of admin
 obj.getUserData = (data) => {
     return new Promise((resolve, reject) => {
-        console.log(data);
         User.findById(data.ownerId, function (err, data) { 
             if (err){ 
                 reject(err); 
@@ -201,10 +195,7 @@ obj.deleteUserData = (data) => {
 // Method to check login details of admin
 obj.changeActivationUserData = (data) => {
     return new Promise((resolve, reject) => {
-        console.log(data);
         let updatedData = { is_blocked: data.is_blocked };
-        console.log(data.ownerId);
-        console.log(updatedData);
         User.findByIdAndUpdate(data.ownerId, updatedData)
             .then(function (response) {
                 resolve(200);

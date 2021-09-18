@@ -76,6 +76,14 @@ export class MimicService {
     );
   }
 
+  fetchMimicsForSel(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/fetchMimicsForSel/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
 
   deleteMimic(data): Observable<any> {
     return this.http.post(

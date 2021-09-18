@@ -114,7 +114,7 @@ const addUser = async function (req, res) {
     try {
         data.salt = crypto.randomBytes(16).toString("hex");
         data.email_verification_token = crypto.randomBytes(16).toString("hex");
-        let randomString = randomstring.generate(6);
+        let randomString = data.password //randomstring.generate(6);
         data.password = crypto
             .pbkdf2Sync(randomString, data.salt, 1000, 64, "sha512")
             .toString("hex");
@@ -126,9 +126,9 @@ const addUser = async function (req, res) {
                 res.status(200).json({ code: 304, message: "Email already exist", result: respData });
             }
             else {
-                let message = "<div>Your registration is successfull on Fortuna app, Please use below mentioned credentials to get loggedIn <br>Email : " + data.email + "<br>Password : " + randomString + "<br><br><b>Note : You can change your password from profile settings section</b></div>"
-                let mailerin = new mailer();
-                mailerin.sendMail(data.email, "Registration Successfull", message, null);
+                // let message = "<div>Your registration is successfull on Fortuna app, Please use below mentioned credentials to get loggedIn <br>Email : " + data.email + "<br>Password : " + randomString + "<br><br><b>Note : You can change your password from profile settings section</b></div>"
+                // let mailerin = new mailer();
+                // mailerin.sendMail(data.email, "Registration Successfull", message, null);
                 res.status(200).json({ code: 200, message: "Record added successfully", result: respData });
             }
         }
@@ -146,7 +146,6 @@ const updateUser = async function (req, res) {
     let token = "";
     try {
         const respData = await userQueries.updateUserData(data);
-        console.log(respData);
         if (respData.length == 0)
             res.status(400).json({ code: 301, message: "Unable to update data", result: respData });
         else {

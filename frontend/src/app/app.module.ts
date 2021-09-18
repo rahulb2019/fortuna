@@ -34,6 +34,7 @@ import { HttpResponseIntercepterService } from './services/http-response-interce
 import { AgmCoreModule } from '@agm/core';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
 const config: SocketIoConfig = { url: environment.apiEndpoint, options: {} };
 @NgModule({
   declarations: [

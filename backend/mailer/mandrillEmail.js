@@ -61,7 +61,6 @@ var mailer = function () {
 
         mandrill_client.messages.sendTemplate({ "template_name": template_name, "template_content": template_content, "message": message, "async": async }, function (result) {
 
-        console.log(result);
 
         }, function (e) {
             // Mandrill returns the error as an object with name and message keys
