@@ -32,18 +32,28 @@ export class MimicListComponent implements OnInit {
     title: false
   };
   selectedRecord: any = [];
+  storedSites: any;
+  permittedSitesArr: any;
+  userType: any;
 
   constructor(private router: Router, 
     private mimicService: MimicService,
     private fb: FormBuilder,
-    private toastr: ToastrService) {
-    //this.userDetails = JSON.parse(sessionStorage.admin_login).admindata; // fetching sessionStorage data of admin
-
+    private toastr: ToastrService) {    
+    this.storedSites = JSON.parse(sessionStorage.getItem('admin_login')).admindata.selectedSites;
+    this.userType = JSON.parse(sessionStorage.getItem('admin_login')).admindata.user_type;
+    this.permittedSitesFnc(this.storedSites);
     this.fetchMimics();
   }  
 
   ngOnInit() {}
   
+  permittedSitesFnc(sitesAvail){
+    this.permittedSitesArr = sitesAvail.map(function(value) {
+      return value._id;
+    });
+  }
+
   openConfirmationDialog() {
     if (confirm('Please confirm! Do you really want to delete the record(s) ?')) {
       this.deleteRecord()
@@ -119,7 +129,8 @@ export class MimicListComponent implements OnInit {
 
   fetchMimics() {
     let dataObj = {
-      options: this.options
+      options: this.options,
+      permittedSites: this.permittedSitesArr
     }
     this.mimicService.fetchMimicsData(dataObj).subscribe(res => {
       if (res.code === 200) {

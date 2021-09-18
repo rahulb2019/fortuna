@@ -1,5 +1,5 @@
 <app-breadcrumb1 [items]="breadCrumbItems"></app-breadcrumb1>
-<div class="row">
+<div class="row" *ngIf="userType != 1">
   <div class="col-md-6 col-lg-3">
     <app-iq-card cardClass="iq-card overflow-hidden" [isCardHeader]=false cardBodyClass="iq-card-body pb-0">
       <div class="rounded-circle iq-card-icon iq-bg-success"><i class="ri-bar-chart-grouped-line"></i></div>

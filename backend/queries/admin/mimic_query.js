@@ -15,7 +15,19 @@ let obj = {}
 obj.getAllMimics = (data) => {
     return new Promise((resolve, reject) => {
         let aggregateQuery = [];
-        let query = { is_deleted: false };
+        let query;
+        let siteIdsToFetched = [];
+        if(data && data.permittedSites && data.permittedSites.length > 0) {
+            for (l in data.permittedSites) {       // first build the search array
+                var o = data.permittedSites[l];
+                if (o) {
+                    siteIdsToFetched.push( new mongoose.Types.ObjectId( o ) );           // for the Mongo query
+                }
+            }
+            query = { is_deleted: false, _id: { $in : siteIdsToFetched } };
+        } else {
+            query = { is_deleted: false };
+        }
         if (data.options && data.options.search) {
             let searchQuery = {
                 $or: [
