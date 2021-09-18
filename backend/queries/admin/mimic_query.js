@@ -585,10 +585,6 @@ obj.getAllCumulative = (data) => {
             let skip = (Number(offSet) - 1) * data.options.limit;
             aggregateQuery.push({ $skip: skip }, { $limit: data.options.limit });
         }
-        else
-        {
-            aggregateQuery.push({ $limit: 100 }); 
-        }
         siteData.aggregate(aggregateQuery).then(async result => {
             resolve(result);
         }).catch(err => {

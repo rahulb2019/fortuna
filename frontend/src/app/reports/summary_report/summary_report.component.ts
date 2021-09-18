@@ -10,6 +10,7 @@ import { MimicService } from "../../services/mimic/mimic.service";
 
 import * as moment from 'moment';
 import * as $ from 'jquery';
+import { DatePipe } from '@angular/common';
 const DATE_FORMATE = 'DD/MM/YYYY';
 
 @Component({
@@ -185,10 +186,15 @@ export class SummaryReportComponent implements OnInit {
       totalHours = totalHours + 6;
       totalMinutes = totalMinutes - 360;
     }
-    console.log('hoursArray',totalHours,totalMinutes )
-    console.log(totalHours +"."+totalMinutes);
+    // console.log('hoursArray',totalHours,totalMinutes )
+    // console.log(totalHours +"."+totalMinutes);
   
     return (totalHours +"."+totalMinutes).toString();
+  }
+  getFormattedDate(date){
+    const newDate=date.split('/')[1]+'/'+date.split('/')[0]+'/'+date.split('/')[2];
+    const datePipe = new DatePipe('en-US');
+    return datePipe.transform(newDate, 'MMMM d y');
   }
 
   // getDateRangeVal(optionsObj) {

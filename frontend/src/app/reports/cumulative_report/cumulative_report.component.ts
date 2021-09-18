@@ -33,6 +33,7 @@ export class CumulativeReportComponent implements OnInit {
   dateToVal: any = "";
   timeFromVal: any = "";
   timeToVal: any = "";
+  tagsArr: any = [];
 
   config: ExportAsConfig = {
     type: 'pdf',
@@ -136,14 +137,38 @@ export class CumulativeReportComponent implements OnInit {
     this.mimicService.fetchCumulativeData(dataObj).subscribe(res => {
       if (res.code === 200) {
         this.dataArr = res.result;
-        console.log(this.dataArr);
+        console.log(this.dataArr[0]);
+        const currentEl = this;
+        this.dataArr[0].pumpData.map(function(val, index){
+          val.map(function(innerVal){
+            Object.keys(innerVal).forEach(function eachKey(keyName) { 
+              const name =`Pump ${index+1} - ${keyName}`;
+              currentEl.tagsArr.push({'id': currentEl.convertToSlug(name),name});
+            });
+          })
+        })
+        this.dataArr[0].meterData.map(function(val, index){
+          Object.keys(val).forEach(function eachKey(keyName) { 
+            const name =`Meter ${index+1} - ${keyName}`;
+            currentEl.tagsArr.push({'id': currentEl.convertToSlug(name),name});
+          });
+        })
+        currentEl.tagsArr.push({'id': currentEl.convertToSlug(`Flow Meter`),name:`Flow Meter`});
+        currentEl.tagsArr.push({'id': currentEl.convertToSlug(`Level Sensor`),name:`Level Sensor`});
       }
       else {
         this.toastr.error(res.message);
       }
     });
   }
-
+  convertToSlug(text) {
+    return text.toLowerCase().replace(/ /g, '').replace(/[^\w-]+/g, '');
+  }
+  changeTagSelection(event){
+    console.log(event);
+    const selectedTags = event.target.value;
+    console.log(selectedTags);
+  }
   
   setFilter(key, value): void {
     this.options[key] = value;
@@ -200,3 +225,4 @@ export class CumulativeReportComponent implements OnInit {
   }
   
 }
+

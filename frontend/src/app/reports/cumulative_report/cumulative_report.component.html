@@ -15,55 +15,6 @@
                   <div class="form-card text-left">
                     <div class="row">
                       <div class="col-md-12">
-                        <!-- <table id="mytable" class="table table-striped table-bordered table-sm row-border hover">
-                          <thead>
-                            <tr>
-                              <th>Country</th>
-                              <th>Population</th>
-                              <th>Date</th>
-                              <th>Age</th>
-                              <th>REMARKS</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>India</td>
-                              <td>1363480000</td>
-                              <td>March 24 2014</td>
-                              <td>19.1</td>
-                              <td>₹</td>
-                            </tr>
-                            <tr>
-                              <td>India</td>
-                              <td>1241900000</td>
-                              <td>March 24 2014</td>
-                              <td>17.4</td>
-                              <td>Remarks 2</td>
-                            </tr>
-                            <tr>
-                              <td>United States</td>
-                              <td>317746000</td>
-                              <td>March 24 2014</td>
-                              <td>4.44</td>
-                              <td>Remarks 3</td>
-                            </tr>
-                            <tr>
-                              <td>Indonesia</td>
-                              <td>249866000</td>
-                              <td>July 1 2013</td>
-                              <td>3.49</td>
-                              <td>Remarks 4</td>
-                            </tr>
-                            <tr>
-                              <td>Brazil</td>
-                              <td>201032714</td>
-                              <td>July 1 2013</td>
-                              <td>2.81</td>
-                              <td>Remarks 5</td>
-                            </tr>
-                          </tbody>
-                        </table> -->
-
                         <div class="table-responsive">
                           <div class="row justify-content-between">
                             <div class="col-md-12">
@@ -114,6 +65,16 @@
                               </div>
                             </div>
                           </div>
+                          <div class="row" *ngIf="dataArr && dataArr.length > 0">
+                            <div class="col-md-2">
+                              <div class="form-group">
+                                <label for="tagColumn">Select Tags/Columns</label>
+                                <select multiple class="form-control" id="tagColumn" name="tag_id[]" (change)="changeTagSelection($event)">
+                                  <option selected [attr.value]="col.id" *ngFor="let col of tagsArr">{{col.name}}</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
                           <div class="row justify-content-between">
                             <div class="col-md-12">
                               <table id="mytable" class="table table-striped table-bordered mt-4" role="grid"
@@ -137,23 +98,28 @@
                                     </th>
                                     <th class="text-center"
                                       *ngFor='let meterTh of dataArr[0].meterData; let meterInd = index;'
-                                      [attr.colspan]="getMeterDataLength(dataArr[0].meterData[meterInd])">
+                                      [attr.colspan]="getMeterDataLength(dataArr[0].meterData[meterInd])"
+                                      >
                                       DATA METER {{ meterInd + 1}}
                                     </th>
-                                    <th width="5%">FLOW RATE</th>
-                                    <th width="5%">LEVEL RATE</th>
+                                    <th width="5%" [attr.id]="convertToSlug('Flow Meter')">FLOW RATE</th>
+                                    <th width="5%" [attr.id]="convertToSlug('Level Sensor')">LEVEL RATE</th>
                                   </tr>
                                   <tr>
                                     <th width="10%"></th>
-                                    <ng-container *ngFor='let innerData of dataArr[0].pumpData'>
+                                    <ng-container *ngFor='let innerData of dataArr[0].pumpData; let pumpInd = index;'>
                                       <ng-container *ngFor='let data of innerData'>
-                                          <th *ngFor='let subheader of data | keyvalue'>
+                                          <th *ngFor='let subheader of data | keyvalue'
+                                          [attr.id]="convertToSlug('Pump '+(pumpInd+1)+' - '+subheader.key)"
+                                          >
                                             {{subheader.key | uppercase}}
                                           </th>
                                         </ng-container>
                                     </ng-container>
-                                    <ng-container *ngFor='let mtkey of dataArr[0].meterData'>
-                                      <th *ngFor='let subheaderMt of mtkey | keyvalue'>
+                                    <ng-container *ngFor='let mtkey of dataArr[0].meterData; let meterInd = index;'>
+                                      <th *ngFor='let subheaderMt of mtkey | keyvalue'
+                                      [attr.id]="convertToSlug('Meter '+(meterInd+1)+' - '+subheaderMt.key)"
+                                      >
                                         {{subheaderMt.key | uppercase}}
                                       </th>
                                     </ng-container>
