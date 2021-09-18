@@ -84,7 +84,6 @@ export class AddUserComponent implements OnInit {
       textField: 'name',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
       allowSearchFilter: true,
       maxHeight: 200
     };
