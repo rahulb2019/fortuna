@@ -48,6 +48,7 @@
     "mapbox-gl": "^1.10.0",
     "moment": "^2.22.1",
     "ng-apexcharts": "^1.1.2",
+    "ng-multiselect-dropdown": "^0.3.4",
     "ng-select2": "^1.2.2",
     "ngx-bootstrap": "^5.2.0",
     "ngx-cookie-service": "^3.0.4",

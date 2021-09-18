@@ -26,6 +26,7 @@ module.exports = function(app, route) {
   route.post("/deleteImage", mimicsCtrl.deleteImage);
   route.post("/fetchCumulativeData", mimicsCtrl.fetchCumulativeData);
   route.post("/fetchSummaryData", mimicsCtrl.fetchSummaryData);
+  route.post("/fetchMimicsForSel", mimicsCtrl.fetchMimicsForSel);
  
   app.use("/mimics", route);
 };

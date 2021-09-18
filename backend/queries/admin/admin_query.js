@@ -47,7 +47,9 @@ obj.checkLogin = (data) => {
                                 first_name: userlogin.first_name,
                                 last_name: userlogin.last_name,
                                 email: userlogin.email,
-                                phone: userlogin.phone
+                                phone: userlogin.phone,
+                                user_type: userlogin.user_type,
+                                selectedSites: userlogin.selectedSites
                             };
                             resolve({
                                 status: 200,

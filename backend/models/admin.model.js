@@ -58,21 +58,37 @@ var AdminSchema = new Schema(
     is_active: {
       type: Boolean,
       default: true
-    }
+    },
+    access_type: {
+      type: String,
+      enum: ["0", "1"],
+      default: "0"
+    },
+    is_blocked: {
+      type: String,
+      enum: ["0", "1"],
+      default: "0"
+    },
+    user_type:{
+      type: String,
+      enum: ["0", "1"],
+      default: "1"
+    },
+    selectedSites: []
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
 
-AdminSchema.pre("save", function(next) {
-  var user = this;
-  // generate a random salt for every user for security
-  user.salt = crypto.randomBytes(16).toString("hex");
-  user.email_verification_token = crypto.randomBytes(16).toString("hex");
-  user.password = crypto
-    .pbkdf2Sync(user.password, this.salt, 1000, 64, "sha512")
-    .toString("hex");
-  next();
-});
+// AdminSchema.pre("save", function(next) {
+//   var user = this;
+//   // generate a random salt for every user for security
+//   user.salt = crypto.randomBytes(16).toString("hex");
+//   user.email_verification_token = crypto.randomBytes(16).toString("hex");
+//   user.password = crypto
+//     .pbkdf2Sync(user.password, this.salt, 1000, 64, "sha512")
+//     .toString("hex");
+//   next();
+// });
 
 AdminSchema.methods.generateJwt = function() {
   return jwt.sign(
@@ -90,7 +106,6 @@ AdminSchema.methods.verifyToken = function(token, cb) {
     if (err) {
       cb(false);
     } else {
-      //console.log("dcode", dcode);
       cb(dcode);
     }
   });

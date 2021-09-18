@@ -98,7 +98,7 @@ export class SignInComponent implements OnInit {
             this.router.navigate(["/admin/dashboard/"]);
         }
         else {
-          this.toastr.error("Invalid credential!"); //alert error message
+          this.toastr.error("Invalid credentials!"); //alert error message
         }
       });
     }

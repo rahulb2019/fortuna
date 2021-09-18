@@ -20,6 +20,7 @@ import { EditUserComponent } from './edit_user/edit_user.component';
 import { UserListComponent } from './user_list/user_list.component';
 // import { AttendeeListComponent } from './attendee_list/attendee_list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 // import { ConfirmDialogComponent } from '../services/confirm-dialog/confirm-dialog.component';
 // import { ConfirmDialogService } from '../services/confirm-dialog/confirm-dialog.service';
@@ -50,7 +51,8 @@ export function playerFactory() {
     NgScrollbarModule,
     NgwWowModule,
     SlickCarouselModule,
-    NgbModule
+    NgbModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   exports: [
   ],

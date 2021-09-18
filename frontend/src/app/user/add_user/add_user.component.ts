@@ -9,6 +9,8 @@ import { Folder } from "../../config/constants";
 import { environment } from "../../../environments/environment";
 import { ToastrService } from "ngx-toastr";
 import { any } from '@amcharts/amcharts4/.internal/core/utils/Array';
+import { MimicService } from "../../services/mimic/mimic.service";
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 import * as $ from 'jquery';
 
@@ -18,7 +20,7 @@ import * as $ from 'jquery';
   styleUrls: []
 })
 export class AddUserComponent implements OnInit {
-
+  dropdownSettings:IDropdownSettings;
   userForm: FormGroup;
 
   isSubmitted: boolean;
@@ -36,6 +38,10 @@ export class AddUserComponent implements OnInit {
   imageError: any;
   userLogoData: any;
   accessType: any;
+  sitesArr: any = [];
+  selectedSiteIds: any;
+  dropdownList = [];
+  selectedSites = [];
   
   // breadCrumbItems = [
   //   {
@@ -56,7 +62,8 @@ export class AddUserComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private mimicService: MimicService) {
     
     //this.userDetails = JSON.parse(sessionStorage.admin_login).admindata;
 
@@ -70,6 +77,17 @@ export class AddUserComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.fetchMimics();
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: '_id',
+      textField: 'name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true,
+      maxHeight: 200
+    };
   }
 
   createuserFormFnc(){
@@ -78,48 +96,15 @@ export class AddUserComponent implements OnInit {
       first_name: ['', [Validators.required]],
       last_name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
       phone: ['', [Validators.required]],
-      address: ['', [Validators.required]],
-      city: ['', [Validators.required]],
-      zipcode: ['', [Validators.required]],
-      state: ['', [Validators.required]],
-      country: ['', [Validators.required]],
-      access_type: ['', [Validators.required]],
-      image: ['']
+      address: [''],
+      city: [''],
+      zipcode: [''],
+      state: [''],
+      country: [''],
+      selectedSites: ['', [Validators.required]]
     });
-  }
-  
-
-
-  onSelectUserLogo(event){
-    let acceptedTypes = ["image/jpg", "image/jpeg", "image/png"];
-    this.imageError = null;
-    this.userLogoData = null;
-    let image: File = event.target.files[0];
-    if (acceptedTypes.indexOf(image.type) < 0) {
-      this.imageError = "Only jpg/png files are supported";
-      return;
-    }
-    var imageReader: FileReader = new FileReader();
-    imageReader.readAsDataURL(image);
-    imageReader.onloadend = e => {
-      this.userLogoData = {};
-      this.userLogoData.image = imageReader.result;
-      this.userLogoData.imageType = image.type;
-      let _data = {
-        inputImage: this.userLogoData,
-        status: "user_image"
-      };
-      this.userService.uploadUserImage(_data).subscribe(res => {
-        if (res.code == 200) {
-          this.uploadedUserLogo = res.data;
-          this.userLogoImg = environment.apiEndpoint + Folder._userImageOriginal + res.data;
-          //this.toastr.success(res.message);
-        } else {
-          //this.toastr.error(res.message);
-        }
-      });
-    };
   }
 
   changeAccess(accessVal){
@@ -143,8 +128,8 @@ export class AddUserComponent implements OnInit {
       if(this.uploadedUserLogo) {
         this.userForm.value.image = this.uploadedUserLogo;
       }
-      this.userForm.value.access_type = this.accessType != undefined ? this.accessType : 0;
-      //console.log(".....---....", this.userForm.value); return false;
+      //this.userForm.value.access_type = this.accessType != undefined ? this.accessType : 0;
+      this.userForm.value.user_type = 1;
       this.userService.addUser(this.userForm.value).subscribe(res => {
         if (res.code == 200) {
               this.toastr.success(res.message);
@@ -155,4 +140,55 @@ export class AddUserComponent implements OnInit {
       });
     }
   }
+
+  fetchMimics() {
+    let dataObj = {}
+    this.mimicService.fetchMimicsForSel(dataObj).subscribe(res => {
+      if (res.code === 200) {
+        this.dropdownList = res.result;
+      }
+      else {
+        this.toastr.error(res.message);
+      }
+    });
+  } 
+
+  onItemSelect(item: any) {
+    
+  }
+  onSelectAll(items: any) {
+    
+  }
+
+
+  // onSelectUserLogo(event){
+  //   let acceptedTypes = ["image/jpg", "image/jpeg", "image/png"];
+  //   this.imageError = null;
+  //   this.userLogoData = null;
+  //   let image: File = event.target.files[0];
+  //   if (acceptedTypes.indexOf(image.type) < 0) {
+  //     this.imageError = "Only jpg/png files are supported";
+  //     return;
+  //   }
+  //   var imageReader: FileReader = new FileReader();
+  //   imageReader.readAsDataURL(image);
+  //   imageReader.onloadend = e => {
+  //     this.userLogoData = {};
+  //     this.userLogoData.image = imageReader.result;
+  //     this.userLogoData.imageType = image.type;
+  //     let _data = {
+  //       inputImage: this.userLogoData,
+  //       status: "user_image"
+  //     };
+  //     this.userService.uploadUserImage(_data).subscribe(res => {
+  //       if (res.code == 200) {
+  //         this.uploadedUserLogo = res.data;
+  //         this.userLogoImg = environment.apiEndpoint + Folder._userImageOriginal + res.data;
+  //         //this.toastr.success(res.message);
+  //       } else {
+  //         //this.toastr.error(res.message);
+  //       }
+  //     });
+  //   };
+  // }
 }

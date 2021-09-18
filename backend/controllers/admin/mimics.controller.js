@@ -393,6 +393,19 @@ const fetchSummaryData = async function (req, res) {
 
 
 
+const fetchMimicsForSel = async function (req, res) {
+    let data = req.body ? req.body : {};
+    // let searchVal = req.body.options && req.body.options.search ? req.body.options.search : "";
+    try {
+        const respData = await mimicQueries.getMimicsForUser(data);
+        res.status(200).json({ code: 200, message: "Records fetched successfully", result: respData });
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Records not fetched", result: error.sqlMessage })
+    }
+};
+
+
+
 exports.fetchMimicsData = fetchMimicsData;
 exports.addMimic = addMimic;
 exports.updateMimic = updateMimic;
@@ -415,3 +428,4 @@ exports.addDataMeterBlock = addDataMeterBlock;
 exports.deleteImage = deleteImage;
 exports.fetchCumulativeData = fetchCumulativeData;
 exports.fetchSummaryData = fetchSummaryData;
+exports.fetchMimicsForSel = fetchMimicsForSel;
