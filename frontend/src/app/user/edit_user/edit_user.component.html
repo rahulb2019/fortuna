@@ -20,6 +20,24 @@
                 <form id="form-wizard3" class="text-center" [formGroup]="userForm" (submit)="updateUser()">
                   <div class="form-card text-left">
                     <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group {{ errorField }}">
+                          <label for="exampleInputSite">Select Site</label>
+                          <ng-multiselect-dropdown
+                            [placeholder]="'select site'"
+                            [settings]="dropdownSettings"
+                            [data]="dropdownList"
+                            formControlName="selectedSites"
+                            (onSelect)="onItemSelect($event)"
+                            (onSelectAll)="onSelectAll($event)"
+                          >
+                          </ng-multiselect-dropdown>
+                          <p *ngIf="userForm.controls['selectedSites'].hasError('required') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Site selection is required.
+                          </p>
+                        </div>
+                      </div>
+                      <hr/>
                       <div class="col-md-6">
                         <div class="form-group {{ errorField }}">
                           <label for="first_name">First Name: *</label>
@@ -48,6 +66,19 @@
                       </div>
                       <div class="col-md-6">
                         <div class="form-group {{ errorField }}">
+                          <label for="email"><strong style="color: green;">Email:</strong> *</label>
+                          <input formControlName="email" type="email" class="form-control" name="email" autocomplete="off" />
+                          <p *ngIf="userForm.controls['email'].hasError('required') && isSubmitted"
+                            class="error-msg">
+                            <i class="fa fa-exclamation"></i> Email is required.
+                          </p>
+                          <p *ngIf="userForm.controls['email'].hasError('email') && isSubmitted" class="error-msg">
+                            <i class="fa fa-exclamation"></i> Email is not valid.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group {{ errorField }}">
                           <label for="phone">Phone: *</label>
                           <input formControlName="phone" type="text" class="form-control" name="phone" />
                           <p *ngIf="userForm.controls['phone'].hasError('required') && isSubmitted" class="error-msg">
@@ -57,22 +88,6 @@
                             class="error-msg">
                             <i class="fa fa-exclamation"></i> Last name should be atleast 10 digits long
                           </p>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group {{ errorField }}">
-                          <label for="email">Email: *</label>
-                          <input formControlName="email" type="email" class="form-control" name="email" />
-                          <p *ngIf="userForm.controls['email'].hasError('required') && isSubmitted"
-                            class="error-msg">
-                            <i class="fa fa-exclamation"></i> Email is required.
-                          </p>
-                          <p *ngIf="userForm.controls['email'].hasError('email') && isSubmitted" class="error-msg">
-                            <i class="fa fa-exclamation"></i> Email is not valid.
-                          </p>
-                        </div>
-                        <div class="form-group">
-                          <span><i>Emails and urls are not allowed to avoid SPAM filters from servers</i></span>
                         </div>
                       </div>
                       <div class="col-md-6">
@@ -102,7 +117,7 @@
                           </p>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <!-- <div class="col-md-6">
                         <div class="form-group {{ errorField }}">
                           <label for="state">State/Province: *</label>
                           <input formControlName="state" type="text" class="form-control" name="state" />
@@ -119,33 +134,23 @@
                             <i class="fa fa-exclamation"></i> Country is required.
                           </p>
                         </div>
-                      </div>
+                      </div> -->
                       <div class="col-md-6">
+                        &nbsp;
+                      </div>
+                      <!-- <div class="col-md-6">
                         <div class="form-group">
                           <label for="pic-2">Image:</label>
                           <div class="user-img" style="width:200px;">
-                            <!-- src="assets/images/user/logo.png"  -->
                             <img src="{{ userLogoImg }}" alt="userimg" class="avatar-35 img-fluid">
                           </div>
                           <div class="custom-file mt-2">
-                            <input type="file" class="form-control-file"
+                            <input formControlName="image" type="file" class="form-control-file"
                               id="exampleFormControlFile1" (change)="onSelectUserLogo($event)">
                             <br />
-                            <!--span><i>Logo size: xxxxx</i></span-->
                           </div>
                         </div>
-                      </div>
-                      <div class="form-group {{ errorField }}">
-                        <label class="d-block">Access Type: *</label> 
-                        <div class="custom-control custom-radio custom-control-inline">
-                          <input class="custom-control-input" type="radio" formControlName="access_type" value="0" (change)="changeAccess('read')" id="customRadio6">
-                          <label class="custom-control-label" for="customRadio6"> Read </label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                          <input class="custom-control-input" type="radio" formControlName="access_type" value="1" (change)="changeAccess('write')" id="customRadio7"> 
-                          <label class="custom-control-label" for="customRadio7"> Write </label>
-                        </div>
-                      </div>
+                      </div> -->
                     </div>
                     <button id="submit" type="submit" class="btn btn-success rounded-pill float-right  mb-3"
                       value="Submit">Save Information</button>

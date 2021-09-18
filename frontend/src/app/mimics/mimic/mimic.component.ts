@@ -22,7 +22,6 @@ export class MimicComponent implements OnInit {
     private activatedRoute: ActivatedRoute) {
     this.activatedRoute.params.subscribe(params => {
       this.mimicId = params.id;
-      console.log("..this.mimicId..", this.mimicId);
     });
   }
 
@@ -46,7 +45,6 @@ export class MimicComponent implements OnInit {
         var item = $(ui.draggable);
         var origPos;
         var ctPos = ct.offset();
-  console.log("item.....", item);
         if (item.is('.tapad')) {
           origPos = item.offset();
           ct.append(item);

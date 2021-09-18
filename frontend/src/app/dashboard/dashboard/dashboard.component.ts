@@ -23,8 +23,10 @@ export class DashboardComponent implements OnInit {
   deactiveMimics: Number = 0;
   readUsers: Number = 0;
   writeUsers: Number = 0;
+  userType: any;
 
   constructor(public apiService: ApiService, private mimicService: MimicService, private userService: UserService) {
+    this.userType = JSON.parse(sessionStorage.getItem('admin_login')).admindata.user_type;
     this.usersData = [];
     this.fetchMimicsAndUsers();
   }
