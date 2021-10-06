@@ -32,6 +32,8 @@ export class SummaryReportComponent implements OnInit {
   selectedSiteData: any = {};
   dateFromVal: any = "";
   dateToVal: any = "";
+  storedSites: any;
+  permittedSitesArr: any;
 
   config: ExportAsConfig = {
     type: 'pdf',
@@ -52,14 +54,22 @@ export class SummaryReportComponent implements OnInit {
     private toastr: ToastrService,
     private exportAsService: ExportAsService,
     private mimicService: MimicService) {
+      this.storedSites = JSON.parse(sessionStorage.getItem('admin_login')).admindata.selectedSites;
+      this.permittedSitesFnc(this.storedSites);
       this.fetchMimics();
   }
 
   ngOnInit() {
   }
+  
+  permittedSitesFnc(sitesAvail){
+    this.permittedSitesArr = sitesAvail.map(function(value) {
+      return value._id;
+    });
+  }
 
   fetchMimics() {
-    let dataObj = {}
+    let dataObj = {permittedSites: this.permittedSitesArr}
     this.mimicService.fetchMimicsData(dataObj).subscribe(res => {
       if (res.code === 200) {
         this.sitesArr = res.result;

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
@@ -18,6 +18,7 @@ import { Observable, Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { tick } from '@angular/core/testing';
 import { time } from 'highcharts';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-mimic',
@@ -45,6 +46,7 @@ export class RunComponent implements OnInit, OnDestroy {
   isValid: boolean = true;
   errorField: string;
   meterDataArray: any;
+  userType: any;
 
   document: any=[];
   private _docSub: Subscription;
@@ -55,6 +57,7 @@ export class RunComponent implements OnInit, OnDestroy {
     private mimicService: MimicService,
     private activatedRoute: ActivatedRoute, private modalService: BsModalService,
     private toastr: ToastrService) {
+    this.userType = JSON.parse(sessionStorage.getItem('admin_login')).admindata.user_type;
     this.activatedRoute.params.subscribe(params => {
       this.mimicId = params.id;
       this.getMimicDataById();
@@ -165,7 +168,7 @@ export class RunComponent implements OnInit, OnDestroy {
           }
         });
       }
-      
+      this.imgUrlReplace();
     });
     this.mimicService.getDocument(this.mimicId);
   }
@@ -256,6 +259,15 @@ export class RunComponent implements OnInit, OnDestroy {
       index++;     
     });
     $('#droppable').html(html);
+    this.imgUrlReplace();
+  }
+  imgUrlReplace(){
+    $(document).find('img').each(function(){
+      // console.log($(this));
+      const oldUrl=$(this).attr('src');
+      const newUrl=oldUrl.replace("localhost", environment.staticIP);
+      $(this).attr('src',newUrl);
+    })
   }
 
   listMimics(){

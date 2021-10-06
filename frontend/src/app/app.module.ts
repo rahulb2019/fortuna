@@ -74,7 +74,7 @@ const config: SocketIoConfig = { url: environment.apiEndpoint, options: {} };
     ToastrModule.forRoot({progressBar: true}),
     SocketIoModule.forRoot(config),
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyD4nGs5ParwXfOv_IH1JEEuDMX-mkmdh0Q'
+      apiKey: 'AIzaSyDivlT86_9eNYfVJ_JaA_NK_KonpEIPBvk'
     })
   ],
   exports: [

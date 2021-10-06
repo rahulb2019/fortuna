@@ -18,6 +18,7 @@ import { CumulativeReportComponent } from './cumulative_report/cumulative_report
 import { SummaryReportComponent } from './summary_report/summary_report.component';
 import { ExportAsModule } from 'ngx-export-as';
 import { DatepickerRangeComponent } from './datepicker-range/datepicker-range.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 export function playerFactory() {
   return player;
@@ -43,7 +44,8 @@ export function playerFactory() {
     NgwWowModule,
     SlickCarouselModule,
     NgbModule,
-    ExportAsModule
+    ExportAsModule,
+    NgMultiSelectDropDownModule.forRoot(),
   ],
   exports: [
   ]

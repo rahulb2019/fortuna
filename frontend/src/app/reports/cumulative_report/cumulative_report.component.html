@@ -66,82 +66,87 @@
                             </div>
                           </div>
                           <div class="row" *ngIf="dataArr && dataArr.length > 0">
-                            <div class="col-md-2">
+                            <div class="col-md-10">
                               <div class="form-group">
                                 <label for="tagColumn">Select Tags/Columns</label>
-                                <select multiple class="form-control" id="tagColumn" name="tag_id[]" (change)="changeTagSelection($event)">
+                                <ng-multiselect-dropdown
+                                  [placeholder]="'Select Tags/Columns'"
+                                  [settings]="dropdownSettings"
+                                  [data]="tagsArr"
+                                  [(ngModel)]="selectedTags"
+                                  (onSelect)="onChangeTag($event)"
+                                  (onSelectAll)="onChangeAllTag($event)"
+                                  (onDeSelect)="onChangeTag($event)"
+                                  (onDeSelectAll)="onChangeAllTag($event)"
+                                  name="selectedTags"
+                                >
+                                </ng-multiselect-dropdown>
+                                <!-- <select multiple class="form-control" id="tagColumn" name="tag_id[]" (change)="changeTagSelection($event)">
                                   <option selected [attr.value]="col.id" *ngFor="let col of tagsArr">{{col.name}}</option>
-                                </select>
+                                </select> -->
                               </div>
                             </div>
                           </div>
                           <div class="row justify-content-between">
                             <div class="col-md-12">
-                              <table id="mytable" class="table table-striped table-bordered mt-4" role="grid"
+                              <table id="mytable" class="table table-striped table-bordered mt-4 cumulative-reports" role="grid"
                                 aria-describedby="user-list-page-info">
                                 <thead *ngIf="dataArr && dataArr.length > 0">
-                                  <tr>
-                                    <th colspan="100" class="text-center">STATION NAME:
+                                  <tr class="header-outer">
+                                    <th colspan="100" class="text-left">STATION NAME:
                                       {{selectedSiteData?.name}}</th>
                                   </tr>
-                                  <tr>
-                                    <th colspan="100" class="text-center">DETAILED REPORT FOR THE PERIOD OF: {{dateFromVal}} To {{dateToVal}}
+                                  <tr class="header-outer">
+                                    <th colspan="100" class="text-left">DETAILED REPORT FOR THE PERIOD OF: {{dateFromVal}} To {{dateToVal}}
                                       <span *ngIf="timeFromVal !== ''">{{timeFromVal}} To {{timeToVal}}</span>
                                     </th>
                                   </tr>
-                                  <tr>
+                                  <tr style="display: none;">
                                     <th width="10%">DATE-TIME</th>
                                     <th class="text-center"
                                       *ngFor='let pmpTh of dataArr[0].pumpData; let pumpInd = index;'
                                       [attr.colspan]="getPumpDataLength(dataArr[0].pumpData[pumpInd])">
                                       PUMP {{ pumpInd + 1}}
                                     </th>
+
                                     <th class="text-center"
                                       *ngFor='let meterTh of dataArr[0].meterData; let meterInd = index;'
                                       [attr.colspan]="getMeterDataLength(dataArr[0].meterData[meterInd])"
                                       >
                                       DATA METER {{ meterInd + 1}}
                                     </th>
-                                    <th width="5%" [attr.id]="convertToSlug('Flow Meter')">FLOW RATE</th>
-                                    <th width="5%" [attr.id]="convertToSlug('Level Sensor')">LEVEL RATE</th>
+                                    <th width="5%" [attr.class]="convertToSlug('Flow Meter')">FLOW RATE</th>
+                                    <th width="5%" [attr.class]="convertToSlug('Level Sensor')">LEVEL RATE</th>
                                   </tr>
-                                  <tr>
-                                    <th width="10%"></th>
+                                  <tr class="header">
+                                    <th width="10%">DATE-TIME</th>
                                     <ng-container *ngFor='let innerData of dataArr[0].pumpData; let pumpInd = index;'>
                                       <ng-container *ngFor='let data of innerData'>
                                           <th *ngFor='let subheader of data | keyvalue'
-                                          [attr.id]="convertToSlug('Pump '+(pumpInd+1)+' - '+subheader.key)"
-                                          >
-                                            {{subheader.key | uppercase}}
+                                          [attr.class]="convertToSlug('Pump '+(pumpInd+1)+' - '+subheader.key)">
+                                            PUMP {{ pumpInd + 1}} <br/>({{subheader.key | uppercase}})
                                           </th>
                                         </ng-container>
                                     </ng-container>
                                     <ng-container *ngFor='let mtkey of dataArr[0].meterData; let meterInd = index;'>
                                       <th *ngFor='let subheaderMt of mtkey | keyvalue'
-                                      [attr.id]="convertToSlug('Meter '+(meterInd+1)+' - '+subheaderMt.key)"
-                                      >
-                                        {{subheaderMt.key | uppercase}}
+                                      [attr.class]="convertToSlug('Meter '+(meterInd+1)+' - '+subheaderMt.key)">
+                                        DATA METER <br/>({{subheaderMt.key | uppercase}})
                                       </th>
                                     </ng-container>
-                                    <th></th>
-                                    <th></th>
+                                    <th width="5%" [attr.class]="convertToSlug('Flow Meter')">FLOW RATE</th>
+                                    <th width="5%" [attr.class]="convertToSlug('Level Sensor')">LEVEL RATE</th>
                                   </tr>
                                 </thead>
                                 <tbody *ngIf="dataArr && dataArr.length > 0">
                                   <tr
                                     *ngFor="let dataEle of dataArr; let dataEleIndex = index">
                                     <td>{{ dataEle.date + ' '+ dataEle.time }}</td>
-
-                                    <!-- <ng-container *ngFor='let innerData of dataArr[0].pumpData'>
-                                      <ng-container *ngFor='let data of innerData'>
-                                          <th *ngFor='let subheader of data | keyvalue'>
-                                            {{subheader.key | uppercase}}
-                                          </th>
-                                        </ng-container>
-                                    </ng-container> -->
                                     <ng-container *ngFor='let pEle of dataEle.pumpData; let pumpInd = index;'>
                                      <ng-container *ngFor='let data of pEle; let pumpIndInner = index;'>
-                                         <th *ngFor='let subheaderPmp of data | keyvalue; let pumpKeyValueIndex = index;'>
+                                         <th *ngFor='let subheaderPmp of data | keyvalue; let pumpKeyValueIndex = index;'
+                                         [attr.class]="convertToSlug('Pump '+(pumpInd+1)+' - '+subheaderPmp.key)"
+                                          >
                                             <span *ngIf="pumpIndInner == 0 && !subheaderPmp.value">OFF</span>
                                             <span *ngIf="pumpIndInner == 1 && !subheaderPmp.value">MANUAL</span>
                                             <span *ngIf="pumpIndInner == 2 && !subheaderPmp.value">CLOSE</span>
@@ -152,16 +157,24 @@
                                       
                                     </ng-container>
                                     <ng-container *ngIf='dataEle.pumpData.length == 0 && dataArr[dataEleIndex-1] && dataArr[dataEleIndex-1].pumpData.length == 0'>
-                                      <ng-container *ngFor='let pmpTh of dataArr[0].pumpData;'>
-                                        <th *ngFor='let subheader of pmpTh'>
-                                          -
-                                        </th>
+                                      <ng-container *ngFor='let pmpTh of dataArr[0].pumpData; let pumpInd = index;'>
+                                        <ng-container *ngFor='let data of pmpTh; let pumpIndInner = index;'>
+                                          <th *ngFor='let subheaderPmp of data | keyvalue; let 
+                                          pumpKeyValueIndex = index;'
+                                          [attr.class]="convertToSlug('Pump '+(pumpInd+1)+' - '+subheaderPmp.key)"
+                                          >
+                                           -
+                                          </th>
+                                        </ng-container>
                                       </ng-container>
                                     </ng-container>
                                     <ng-container *ngIf='dataEle.pumpData.length == 0 && dataArr[dataEleIndex-1] && dataArr[dataEleIndex-1].pumpData.length > 0'>
                                       <ng-container *ngFor='let pEle of dataArr[dataEleIndex-1].pumpData; let pumpInd = index;'>
                                         <ng-container *ngFor='let data of pEle; let pumpIndInner = index;'>
-                                            <th *ngFor='let subheaderPmp of data | keyvalue; let pumpKeyValueIndex = index;'>
+                                            <th *ngFor='let subheaderPmp of data | keyvalue; let 
+                                            pumpKeyValueIndex = index;'
+                                            [attr.class]="convertToSlug('Pump '+(pumpInd+1)+' - '+subheaderPmp.key)"
+                                            >
                                               <span *ngIf="pumpIndInner == 0 && !subheaderPmp.value">OFF</span>
                                               <span *ngIf="pumpIndInner == 1 && !subheaderPmp.value">MANUAL</span>
                                               <span *ngIf="pumpIndInner == 2 && !subheaderPmp.value">CLOSE</span>
@@ -173,7 +186,9 @@
                                     </ng-container>
                                     
                                     <ng-container *ngFor='let mEle of dataEle.meterData;let mtInd = index;'>
-                                      <th *ngFor='let subheaderMt of mEle | keyvalue'>
+                                      <th *ngFor='let subheaderMt of mEle | keyvalue'
+                                      [attr.class]="convertToSlug('Meter '+(mtInd+1)+' - '+subheaderMt.key)"
+                                      >
                                         <ng-container *ngIf='subheaderMt.value == "-" && dataArr[dataEleIndex-1] && dataArr[dataEleIndex-1].meterData.length > 0'>
                                           <span *ngFor='let subheaderMt of dataArr[dataEleIndex-1].meterData[mtInd] | keyvalue'>
                                               {{subheaderMt.value}}
@@ -182,32 +197,19 @@
                                         <span *ngIf='subheaderMt.value != "-"'>{{subheaderMt.value}}</span>
                                       </th>
                                     </ng-container>
-                                    
-                                    <!-- <th class="text-center"
-                                      *ngFor='let in of counter(dataArr[0].meterData.length - dataEle.meterData.length)'
-                                      >
-                                      -
-                                    </th> -->
-                                    <!-- <ng-container *ngIf='dataEle.meterData.length == 0'>
-                                      <th class="text-center"
-                                      *ngFor='let meterTh of dataArr[0].meterData'
-                                      >
-                                      -
-                                    </th>
-                                    </ng-container> -->
-                                    <ng-container *ngFor='let fEle of dataEle.flowData'>
+                                    <ng-container [attr.class]="convertToSlug('Flow Meter')" *ngFor='let fEle of dataEle.flowData'>
                                       <th *ngFor='let subheaderFlow of fEle | keyvalue'>
                                         {{subheaderFlow.value}}
                                       </th>
                                     </ng-container>
-                                    <ng-container *ngFor='let lEle of dataEle.levelData'>
+                                    <ng-container  [attr.class]="convertToSlug('Level Sensor')" *ngFor='let lEle of dataEle.levelData'>
                                       <th *ngFor='let subheaderLevel of lEle | keyvalue'>
                                         {{subheaderLevel.value}}
                                       </th>
                                     </ng-container>
-                                    <td class="text-center" *ngIf="dataEle.flowData.length == 0">
+                                    <td [attr.class]="convertToSlug('Flow Meter')" *ngIf="dataEle.flowData.length == 0">
                                       - </td>
-                                    <td class="text-center" *ngIf="dataEle.levelData.length == 0">
+                                    <td [attr.class]="convertToSlug('Level Sensor')" *ngIf="dataEle.levelData.length == 0">
                                       - </td>
                                   </tr>
                                 </tbody>

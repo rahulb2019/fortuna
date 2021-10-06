@@ -182,7 +182,12 @@ th { font-weight: 600; }
 /*---------------------------------------------------------------------
                                Sign In
 -----------------------------------------------------------------------*/
-.sign-in-page { height: 100vh; }
+.sign-in-page { 
+  height: 100vh;
+  background: url(/assets/login-banner.gif);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 .sign-in-detail { padding: 100px; height: 100vh; }
 .sign-in-logo { display: inline-block; width: 100%; }
 .sign-in-logo img { height: 50px; }
@@ -1087,3 +1092,7 @@ agm-map {
 .meter-block-lebel{width: 35%;} /* meter lebel width*/
 .meter-block-value{width: 65%;} /* meter value width*/
 .table-bordered td, .table-bordered th,.table-bordered thead td, .table-bordered thead th {text-align: center; } /*commulative report*/ 
+.cumulative-reports th,.cumulative-reports td {min-width: 150px;} /*cumulative-reports column width */
+.cumulative-reports .header th {font-weight: bold; font-size: 13px;} /*cumulative-reports header column */
+.cumulative-reports .header-outer {font-weight: bold; font-size: 15px;}
+.form-control{font-size: 16px;} /* font-size of input box */

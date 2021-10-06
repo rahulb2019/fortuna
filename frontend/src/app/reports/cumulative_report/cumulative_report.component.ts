@@ -7,6 +7,7 @@ import {
 import { ToastrService } from "ngx-toastr";
 import * as $ from 'jquery';
 import { ExportAsService, ExportAsConfig, SupportedExtensions } from 'ngx-export-as';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { MimicService } from "../../services/mimic/mimic.service";
 
 import * as moment from 'moment';
@@ -19,6 +20,7 @@ const DATE_FORMATE = 'DD/MM/YYYY';
 })
 export class CumulativeReportComponent implements OnInit {
 
+  dropdownSettings:IDropdownSettings;
   userDetails: any;
   dataArr: any = [];
   sitesArr: any = [];
@@ -34,6 +36,9 @@ export class CumulativeReportComponent implements OnInit {
   timeFromVal: any = "";
   timeToVal: any = "";
   tagsArr: any = [];
+  selectedTags = [];
+  storedSites: any;
+  permittedSitesArr: any;
 
   config: ExportAsConfig = {
     type: 'pdf',
@@ -53,14 +58,31 @@ export class CumulativeReportComponent implements OnInit {
     private toastr: ToastrService,
     private exportAsService: ExportAsService,
     private mimicService: MimicService) {
+      this.storedSites = JSON.parse(sessionStorage.getItem('admin_login')).admindata.selectedSites;
+      this.permittedSitesFnc(this.storedSites);
       this.fetchMimics();
   }
 
   ngOnInit() {
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      allowSearchFilter: true,
+      maxHeight: 200
+    };
+  }
+  
+  permittedSitesFnc(sitesAvail){
+    this.permittedSitesArr = sitesAvail.map(function(value) {
+      return value._id;
+    });
   }
 
   fetchMimics() {
-    let dataObj = {}
+    let dataObj = {permittedSites: this.permittedSitesArr}
     this.mimicService.fetchMimicsData(dataObj).subscribe(res => {
       if (res.code === 200) {
         this.sitesArr = res.result;
@@ -155,6 +177,7 @@ export class CumulativeReportComponent implements OnInit {
         })
         currentEl.tagsArr.push({'id': currentEl.convertToSlug(`Flow Meter`),name:`Flow Meter`});
         currentEl.tagsArr.push({'id': currentEl.convertToSlug(`Level Sensor`),name:`Level Sensor`});
+        currentEl.selectedTags=currentEl.tagsArr;
       }
       else {
         this.toastr.error(res.message);
@@ -222,6 +245,23 @@ export class CumulativeReportComponent implements OnInit {
   selectTimeTo(event){
     this.timeToVal = event.target.value;
     this.options["toTime"] = this.timeToVal;
+  }
+  onChangeTag(item: any) {
+    this.hideShowColumn();
+  }
+  onChangeAllTag(items: any) {
+    this.selectedTags = items;
+    this.hideShowColumn();
+  }
+  hideShowColumn(){
+    console.log(this.tagsArr);
+    console.log(this.selectedTags);
+    this.tagsArr.map(function(val){
+      $('.'+val.id).hide();
+    });
+    this.selectedTags.map(function(val){
+      $('.'+val.id).show();
+    })
   }
   
 }

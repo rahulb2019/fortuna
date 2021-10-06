@@ -11,13 +11,13 @@
                         </span>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                            <a class="dropdown-item text-primary" href="javascript:void(0)" (click)="listMimics()"><i class="fa fa-list mr-2"></i>List</a>
-                           <a class="dropdown-item text-primary" href="javascript:void(0)" (click)="editMimicDetails(mimic._id)"><i class="fa fa-pencil mr-2"></i>Edit</a>
-                           <a class="dropdown-item text-primary" href="javascript:void(0)" (click)="mimicSettings(mimic._id)"><i class="fa fa-gear mr-2"></i>Settings</a>
-                           <a *ngIf="mimic && mimic.mimic_data && mimic.mimic_data.length < 1" class="dropdown-item text-primary" href="javascript:void(0)" (click)="manageMimicDetails(mimic._id)"><i class="fa fa-pencil mr-2"></i>Create Mimic</a>
-                           <a *ngIf="mimic && mimic.mimic_data && mimic.mimic_data.length > 0" class="dropdown-item text-primary" href="javascript:void(0)" (click)="manageMimicSchedule(mimic._id)"><i class="fa fa-pencil mr-2"></i>Manage Schedule</a>
-                           <a *ngIf="mimic && mimic.mimic_data && mimic.mimic_data.length > 0" class="dropdown-item text-primary" href="javascript:void(0)" (click)="manageMimicDetails(mimic._id)"><i class="fa fa-pencil mr-2"></i>Update Mimic</a>
-                           <a *ngIf="mimic && mimic.mimic_data && mimic.mimic_data.length > 0" class="dropdown-item text-primary" href="javascript:void(0)" (click)="previewMimicDetails(mimic._id)"><i class="fa fa-tag mr-2"></i>Mimic Tagging</a>
-                           <a *ngIf="mimic && mimic.mimic_data && mimic.mimic_data.length > 0" class="dropdown-item text-primary" href="javascript:void(0)" (click)="manageMeterData(mimic._id)"><i class="fa fa-pencil mr-2"></i>Manage Meter Data</a>
+                           <a *ngIf="userType != 1" class="dropdown-item text-primary" href="javascript:void(0)" (click)="editMimicDetails(mimic._id)"><i class="fa fa-pencil mr-2"></i>Edit</a>
+                           <a *ngIf="userType != 1" class="dropdown-item text-primary" href="javascript:void(0)" (click)="mimicSettings(mimic._id)"><i class="fa fa-gear mr-2"></i>Settings</a>
+                           <a *ngIf="mimic && mimic.mimic_data && mimic.mimic_data.length < 1 && userType != 1" class="dropdown-item text-primary" href="javascript:void(0)" (click)="manageMimicDetails(mimic._id)"><i class="fa fa-pencil mr-2"></i>Create Mimic</a>
+                           <a *ngIf="mimic && mimic.mimic_data && mimic.mimic_data.length > 0 && userType != 1" class="dropdown-item text-primary" href="javascript:void(0)" (click)="manageMimicSchedule(mimic._id)"><i class="fa fa-pencil mr-2"></i>Manage Schedule</a>
+                           <a *ngIf="mimic && mimic.mimic_data && mimic.mimic_data.length > 0 && userType != 1" class="dropdown-item text-primary" href="javascript:void(0)" (click)="manageMimicDetails(mimic._id)"><i class="fa fa-pencil mr-2"></i>Update Mimic</a>
+                           <a *ngIf="mimic && mimic.mimic_data && mimic.mimic_data.length > 0 && userType != 1" class="dropdown-item text-primary" href="javascript:void(0)" (click)="previewMimicDetails(mimic._id)"><i class="fa fa-tag mr-2"></i>Mimic Tagging</a>
+                           <a *ngIf="mimic && mimic.mimic_data && mimic.mimic_data.length > 0 && userType != 1" class="dropdown-item text-primary" href="javascript:void(0)" (click)="manageMeterData(mimic._id)"><i class="fa fa-pencil mr-2"></i>Manage Meter Data</a>
                         </div>
                     </div>
                 </div>
