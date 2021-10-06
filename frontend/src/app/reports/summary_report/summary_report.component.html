@@ -36,19 +36,33 @@
                                 </select>
                               </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                               <div class="form-group">
                                 <label for="exampleInputdateFrom">From Date</label>
                                 <input type="date" class="form-control" id="exampleInputdateFrom" (change)="selectDateFrom($event)">
                               </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                               <div class="form-group">
                                 <label for="exampleInputdateTo">To Date</label>
                                 <input type="date" class="form-control" id="exampleInputdateTo" (change)="selectDateTo($event)">
                               </div>
                             </div>
                             <div class="col-md-3">
+                              <!-- <app-datepicker-range 
+                              (dateSelection)="setFilter('date', $event)"></app-datepicker-range> -->
+                              <div class="form-group">
+                                <label for="exampleInputInterval">Select Interval</label>
+                                <select class="form-control" id="exampleInputInterval" name="site_id" (change)="changeIntervalSelection($event)">
+                                  <option value="">-Select-</option>
+                                  <option value="15">15 minutes</option>
+                                  <option value="30">30 minutes</option>
+                                  <option value="60">1 hour</option>
+                                  <option value="120">2 hours</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col-md-2">
                               <div class="form-group" style="margin-top: 35px;">
                                 <label>&nbsp;</label>
                                 <button type="button" class="btn btn-primary" value="Submit" (click)="fetchSummaryData(selectedSiteId)">Apply Search</button>

@@ -39,6 +39,7 @@ export class CumulativeReportComponent implements OnInit {
   selectedTags = [];
   storedSites: any;
   permittedSitesArr: any;
+  selectedTimeInterval: any = "";
 
   config: ExportAsConfig = {
     type: 'pdf',
@@ -103,6 +104,16 @@ export class CumulativeReportComponent implements OnInit {
     // $('#mytable').hide();
     // this.fetchCumulativeData(this.selectedSiteId);
   }
+
+  changeIntervalSelection(event) {
+    if(event.target.value && event.target.value != "") {
+      this.selectedTimeInterval = event.target.value;
+    } else {
+      this.selectedTimeInterval = "";
+    }
+    this.fetchCumulativeData(this.selectedSiteId);
+    //$('#mytable').hide();
+  }
   
 
   changeMimicType(mimicVal){
@@ -154,7 +165,8 @@ export class CumulativeReportComponent implements OnInit {
     $('#mytable').show();
     let dataObj = {
       options: this.options,
-      selectedSite: selectedSiteIdVal
+      selectedSite: selectedSiteIdVal,
+      timeInterval: this.selectedTimeInterval
     }
     this.mimicService.fetchCumulativeData(dataObj).subscribe(res => {
       if (res.code === 200) {
