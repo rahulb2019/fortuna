@@ -5,3 +5,8 @@
 .iq-email-list .iq-email-ui li a{
   padding: .5rem 1rem !important;
 }
+.mapDiv label{
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 5px;
+}

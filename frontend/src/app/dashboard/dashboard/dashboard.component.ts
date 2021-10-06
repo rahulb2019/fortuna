@@ -49,6 +49,7 @@ export class DashboardComponent implements OnInit {
         });
         this.activeMimics = activeMimicsData && activeMimicsData.length;
         this.deactiveMimics = deactiveMimicsData && deactiveMimicsData.length;
+        console.log(".....this.mimicsArr", this.mimicsArr);
       }
     });
     // Fetching Users

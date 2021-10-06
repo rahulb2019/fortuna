@@ -54,7 +54,27 @@
       <!---Google Map to be rendered-->
       <div>
         <agm-map [latitude]="lat" [longitude]="lng">
-          <agm-marker *ngFor="let mimic of mimicsArr; let i = index" [latitude]="mimic.lattitude" [longitude]="mimic.longitude"></agm-marker>
+          <agm-marker *ngFor="let mimic of mimicsArr; let i = index" [latitude]="mimic.lattitude" [longitude]="mimic.longitude">
+            <agm-info-window [disableAutoPan]="true">
+              <div class="mapDiv">
+                <label>Name : </label>
+                <a href="/admin/mimics/run/{{mimic._id}}">
+                  <strong>{{mimic.name}}</strong>
+                </a>
+              </div>
+              <div class="mapDiv">
+                <label>Site Type : </label>
+                <strong>
+                  <span *ngIf="mimic.mimic_type == 0">ZPS</span>
+                  <span *ngIf="mimic.mimic_type == 1">TubeWell</span>
+                </strong>
+              </div>
+              <div class="mapDiv">
+                <label>No. Of Pumps : </label>
+                <strong>{{mimic.no_of_pumps}}</strong>
+              </div>
+            </agm-info-window>
+          </agm-marker>
         </agm-map>
       </div>
     </app-iq-card>
