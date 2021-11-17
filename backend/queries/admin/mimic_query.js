@@ -562,6 +562,7 @@ obj.getAllCumulative = (data) => {
     return new Promise((resolve, reject) => {
         let aggregateQuery = [];
         let query = { is_deleted: false, site_id: ObjectId(data.selectedSite) };
+        console.log("dateQuery....", data.options);
         if (data.options && data.options.fromDate) {
             let dateQuery = {
                 date: {
@@ -569,6 +570,7 @@ obj.getAllCumulative = (data) => {
                     $lte: data.options.toDate
                 }
             };
+            console.log("dateQuery....", dateQuery.date);
             query = { $and: [query, dateQuery] };
         }
         if (data.options && data.options.fromTime) {
@@ -598,6 +600,7 @@ obj.getAllCumulative = (data) => {
             aggregateQuery.push({ $skip: skip }, { $limit: data.options.limit });
         }
         siteData.aggregate(aggregateQuery).then(async result => {
+            console.log("result....", result);
             resolve(result);
         }).catch(err => {
             resolve({
@@ -617,13 +620,12 @@ obj.getAllSummary = (data) => {
         if (data.options && data.options.fromDate) {
             let dateQuery = {
                 date: {
-                    $gte: data.options.fromDate,
-                    $lte: data.options.toDate
+                    $gte: data.options.fromDate, //new Date(data.options.fromDate),
+                    $lte: data.options.toDate //new Date(data.options.toDate)
                 }
             };
             query = { $and: [query, dateQuery] };
         }
-
         aggregateQuery.push({ $match: query });
         if (data.options && data.options.sort) {
             let sortField = "$" + data.options.sort;

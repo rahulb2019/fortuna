@@ -10,7 +10,66 @@
                   <h4 class="card-title">Cumulative Report</h4>
                 </div>
               </div>
-              <div class="iq-card-body">
+              <div class="row iq-card-body p-0 d-flex">
+                <div class="col-md-6">
+                  <div id="apex-column-flow"></div>
+                  <div *ngIf="dataArr && dataArr.length > 0" style="text-align: center;text-decoration: underline;"><h3>Flow Rate</h3></div>
+                </div>
+                <div class="col-md-6">
+                  <div id="apex-column-level"></div>
+                  <div *ngIf="dataArr && dataArr.length > 0" style="text-align: center;text-decoration: underline;"><h3>Level Sensor</h3></div>
+                </div>
+              </div>
+              
+              <div class="iq-card-body p-0">
+                <div id="apex-column-meter"></div>
+                <div *ngIf="dataArr && dataArr.length > 0" style="text-align: center;text-decoration: underline;"><h3>Data Meters</h3></div>
+              </div>
+              
+              <div class="row iq-card-body p-0 d-flex">
+                <div class="col-md-6">
+                  <div id="apex-column-chlorine"></div>
+                  <div *ngIf="arrChlorineFinal && arrChlorineFinal?.data?.length > 0" style="text-align: center;text-decoration: underline;"><h3>Chlorine</h3></div>
+                </div>
+                <div class="col-md-6">
+                  <div id="apex-column-turbidity"></div>
+                  <div *ngIf="arrTurbidityFinal && arrTurbidityFinal?.data?.length > 0" style="text-align: center;text-decoration: underline;"><h3>Turbidity</h3></div>
+                </div>
+              </div>
+              
+              <div class="row iq-card-body p-0 d-flex">
+                <div class="col-md-6">
+                  <div id="apex-column-tds"></div>
+                  <div *ngIf="arrTDSFinal && arrTDSFinal?.data?.length > 0" style="text-align: center;text-decoration: underline;"><h3>TDS</h3></div>
+                </div>
+                <div class="col-md-6">
+                  <div id="apex-column-ph"></div>
+                  <div *ngIf="arrPHFinal && arrPHFinal?.data?.length > 0" style="text-align: center;text-decoration: underline;"><h3>PH</h3></div>
+                </div>
+              </div>
+              
+              <div class="row iq-card-body p-0 d-flex">
+                <div class="col-md-6">
+                  <div id="apex-column-press-transmeter"></div>
+                  <div *ngIf="arrPTFinal && arrPTFinal?.data?.length > 0" style="text-align: center;text-decoration: underline;"><h3>Pressure Transmeter</h3></div>
+                </div>
+                <div class="col-md-6">
+                  <div id="apex-column-depth"></div>
+                  <div *ngIf="arrDepthFinal && arrDepthFinal?.data?.length > 0" style="text-align: center;text-decoration: underline;"><h3>Depth</h3></div>
+                </div>
+              </div>
+              
+              <div class="row iq-card-body p-0 d-flex">
+                <div class="col-md-6">
+                  <div id="apex-column-vibration"></div>
+                  <div *ngIf="arrVibrationFinal && arrVibrationFinal?.data?.length > 0" style="text-align: center;text-decoration: underline;"><h3>Vibration</h3></div>
+                </div>
+                <div class="col-md-6">
+                  <div id="apex-column-temp"></div>
+                  <div *ngIf="arrTemperatureFinal && arrTemperatureFinal?.data?.length > 0" style="text-align: center;text-decoration: underline;"><h3>Temperature</h3></div>
+                </div>
+              </div>
+              <div class="iq-card-body mt-3">
                 <form id="form-wizard3" class="text-center">
                   <div class="form-card text-left">
                     <div class="row">
@@ -24,8 +83,6 @@
                           </div>
                           <div class="row">
                             <div class="col-md-2">
-                              <!-- <app-datepicker-range 
-                              (dateSelection)="setFilter('date', $event)"></app-datepicker-range> -->
                               <div class="form-group">
                                 <label for="exampleInputSite">Select Site</label>
                                 <select class="form-control" id="exampleInputSite" name="site_id" (change)="changeSiteSelection($event)"
@@ -59,8 +116,6 @@
                               </div>
                             </div>
                             <div class="col-md-2">
-                              <!-- <app-datepicker-range 
-                              (dateSelection)="setFilter('date', $event)"></app-datepicker-range> -->
                               <div class="form-group">
                                 <label for="exampleInputInterval">Select Interval</label>
                                 <select class="form-control" id="exampleInputInterval" name="site_id" (change)="changeIntervalSelection($event)">
@@ -95,9 +150,6 @@
                                   name="selectedTags"
                                 >
                                 </ng-multiselect-dropdown>
-                                <!-- <select multiple class="form-control" id="tagColumn" name="tag_id[]" (change)="changeTagSelection($event)">
-                                  <option selected [attr.value]="col.id" *ngFor="let col of tagsArr">{{col.name}}</option>
-                                </select> -->
                               </div>
                             </div>
                           </div>
@@ -230,12 +282,6 @@
                               </table>
                             </div>
                           </div>
-                          <!-- <div class="row justify-content-between mt-3 mb-3">
-                            <div class="col-md-12">
-                              <ngb-pagination [collectionSize]="dataArr.length" [(page)]="page" [maxSize]="5"
-                                [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
-                            </div>
-                          </div> -->
                         </div>
                       </div>
                     </div>

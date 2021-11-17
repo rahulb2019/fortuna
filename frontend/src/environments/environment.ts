@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   staticIP:'103.84.239.4',
   apiEndpoint: 'http://103.84.239.4:3001', //'http://localhost:3001',
-  // apiEndpoint: 'http://localhost:3001',
+  //apiEndpoint: 'http://localhost:3001',
   mapbox: {
     accessToken: 'pk.eyJ1IjoiZ29sZGVubWFjZWRldiIsImEiOiJjazBnYnFxb3AwNWdqM2JuNWRwazZxMWY0In0._I3zpcM9QTHNqcXWjWpD6Q',
     mapStyle: 'mapbox://styles/goldenmacedev/ck49vpeap08b61cnubglcag7l'
