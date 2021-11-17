@@ -330,7 +330,7 @@ export class CumulativeReportComponent implements OnInit {
         }
       }
     });
-
+//console.log(this.arrFlowFinal,this.arrLevelFinal,this.arrMeterFinal);
     this.plotFlowChart(this.arrFlowFinal, xaxisCatArr);
     this.plotLevelChart(this.arrLevelFinal, xaxisCatArr);
     this.plotMeterChart(this.arrMeterFinal, xCatArrayMeter);
@@ -392,7 +392,7 @@ export class CumulativeReportComponent implements OnInit {
         this.chartFlow
       );
       chart_flow.render();
-      this.chartDraw = true;
+      
     } else {
       ApexCharts.exec("apex-column-flow", "updateOptions", {
         series: seriesArr,
@@ -403,7 +403,7 @@ export class CumulativeReportComponent implements OnInit {
     }
   }
 
-  plotLevelChart(seriesArr, xCategoriesArr) {
+  plotLevelChart(seriesArrLevel, xCategoriesArr) {
     this.chartLevel = {
       chart: {
         id: "chart_level",
@@ -426,7 +426,7 @@ export class CumulativeReportComponent implements OnInit {
         colors: ['transparent']
       },
       colors: ['#0084ff'],
-      series: [seriesArr],
+      series: [seriesArrLevel],
       xaxis: {
         categories: xCategoriesArr,
       },
@@ -451,10 +451,10 @@ export class CumulativeReportComponent implements OnInit {
         this.chartLevel
       );
       chart_level.render();
-      this.chartDraw = true;
+      
     } else {
       ApexCharts.exec("apex-column-level", "updateOptions", {
-        series: seriesArr,
+        series: seriesArrLevel,
         xaxis: {
           categories: xCategoriesArr
         }
@@ -462,7 +462,7 @@ export class CumulativeReportComponent implements OnInit {
     }
   }
 
-  plotMeterChart(seriesArr, xCategoriesArr) {
+  plotMeterChart(seriesArrMeter, xCategoriesArr) {
     this.chartMeter = {
       chart: {
         id: "chart_meter",
@@ -492,7 +492,7 @@ export class CumulativeReportComponent implements OnInit {
           sizeOffset: 6
         }
       },
-      series: seriesArr,
+      series: seriesArrMeter,
       xaxis: {
         categories: xCategoriesArr,
       },
@@ -520,10 +520,10 @@ export class CumulativeReportComponent implements OnInit {
         this.chartMeter
       );
       chart_meter.render();
-      this.chartDraw = true;
+      
     } else {
       ApexCharts.exec("apex-column-meter", "updateOptions", {
-        series: seriesArr,
+        series: seriesArrMeter,
         xaxis: {
           categories: xCategoriesArr
         }
@@ -596,7 +596,7 @@ export class CumulativeReportComponent implements OnInit {
         this.chartChlorine
       );
       chart_chlorine.render();
-      this.chartDraw = true;
+      
     } else {
       ApexCharts.exec("apex-column-chlorine", "updateOptions", {
         series: [this.arrChlorineFinal],
@@ -672,7 +672,7 @@ export class CumulativeReportComponent implements OnInit {
         this.chartTurbidity
       );
       chart_turbidity.render();
-      this.chartDraw = true;
+      
     } else {
       ApexCharts.exec("apex-column-turbidity", "updateOptions", {
         series: [this.arrTurbidityFinal],
@@ -748,7 +748,7 @@ export class CumulativeReportComponent implements OnInit {
         this.chartTDS
       );
       chart_tds.render();
-      this.chartDraw = true;
+      
     } else {
       ApexCharts.exec("apex-column-tds", "updateOptions", {
         series: [this.arrTDSFinal],
@@ -832,7 +832,7 @@ export class CumulativeReportComponent implements OnInit {
         this.chartPH
       );
       chart_ph.render();
-      this.chartDraw = true;
+      
     } else {
       ApexCharts.exec("apex-column-ph", "updateOptions", {
         series: [this.arrPHFinal],
@@ -916,7 +916,7 @@ export class CumulativeReportComponent implements OnInit {
         this.chartPressureTransmeter
       );
       chart_press_transmeter.render();
-      this.chartDraw = true;
+      
     } else {
       ApexCharts.exec("apex-column-press-transmeter", "updateOptions", {
         series: [this.arrPTFinal],
@@ -1000,7 +1000,7 @@ export class CumulativeReportComponent implements OnInit {
         this.chartDepth
       );
       chart_depth.render();
-      this.chartDraw = true;
+      
     } else {
       ApexCharts.exec("apex-column-depth", "updateOptions", {
         series: [this.arrDepthFinal],
@@ -1084,7 +1084,7 @@ export class CumulativeReportComponent implements OnInit {
         this.chartVibration
       );
       chart_vibration.render();
-      this.chartDraw = true;
+      
     } else {
       ApexCharts.exec("apex-column-vibration", "updateOptions", {
         series: [this.arrVibrationFinal],
@@ -1168,7 +1168,7 @@ export class CumulativeReportComponent implements OnInit {
         this.chartTemperature
       );
       chart_temp.render();
-      this.chartDraw = true;
+      
     } else {
       ApexCharts.exec("apex-column-temp", "updateOptions", {
         series: [this.arrTemperatureFinal],
