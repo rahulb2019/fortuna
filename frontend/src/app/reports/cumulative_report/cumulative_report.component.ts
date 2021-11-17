@@ -55,25 +55,28 @@ export class CumulativeReportComponent implements OnInit {
   };
 
   /*----------------- Chart-11 ----------------*/
-  chartFlow: any = {}
-  chartLevel: any = {}
-  chartMeter: any = {}
-  chartChlorine: any = {}
-  chartTurbidity: any = {}
-  chartTDS: any = {}
-  chartPH: any = {}
-  chartPressureTransmeter: any = {}
-  chartDepth: any = {}
-  chartVibration: any = {}
-  chartTemperature: any = {}
-  arrChlorineFinal: any = {}
-  arrTurbidityFinal: any = {}
-  arrTDSFinal: any = {}
-  arrPHFinal: any = {}
-  arrPTFinal: any = {}
-  arrDepthFinal: any = {}
-  arrVibrationFinal: any = {}
-  arrTemperatureFinal: any = {}
+  chartFlow: any = {};
+  chartLevel: any = {};
+  chartMeter: any = {};
+  chartChlorine: any = {};
+  chartTurbidity: any = {};
+  chartTDS: any = {};
+  chartPH: any = {};
+  chartPressureTransmeter: any = {};
+  chartDepth: any = {};
+  chartVibration: any = {};
+  chartTemperature: any = {};
+  arrChlorineFinal: any = {};
+  arrTurbidityFinal: any = {};
+  arrTDSFinal: any = {};
+  arrPHFinal: any = {};
+  arrPTFinal: any = {};
+  arrDepthFinal: any = {};
+  arrVibrationFinal: any = {};
+  arrTemperatureFinal: any = {};
+  arrFlowFinal: any = {};
+  arrLevelFinal: any = {};
+  arrMeterFinal: any = [];
 
   constructor(
     public sanitizer: DomSanitizer,
@@ -301,36 +304,36 @@ export class CumulativeReportComponent implements OnInit {
     let xaxisCatArr: any = resultArr.length > 0 && resultArr.map((a) => {
       return moment(a.date, "DD/MM/YYYY").format("DD MMM") + " " + a.time;
     });
-    let arrFlowFinal = {
+    this.arrFlowFinal = {
       name: "Flow Rate",
       data: []
     };
-    let arrLevelFinal = {
+    this.arrLevelFinal = {
       name: "Level Sensor",
       data: []
     };
-    let arrMeterFinal = [], xCatArrayMeter = [];
+    let xCatArrayMeter = [];
 
     // :::: >>>> Calculating Graphs Data
     resultArr.length > 0 && resultArr.forEach((flowDt, k) => {
-      flowDt.flowData.length > 0 ? arrFlowFinal.data.push(parseInt(flowDt.flowData[0])) : arrFlowFinal.data.push(0);
-      flowDt.levelData.length > 0 ? arrLevelFinal.data.push(parseInt(flowDt.levelData[0])) : arrLevelFinal.data.push(0);
+      flowDt.flowData.length > 0 ? this.arrFlowFinal.data.push(parseInt(flowDt.flowData[0])) : this.arrFlowFinal.data.push(0);
+      flowDt.levelData.length > 0 ? this.arrLevelFinal.data.push(parseInt(flowDt.levelData[0])) : this.arrLevelFinal.data.push(0);
       if (flowDt.meterData.length > 0) xCatArrayMeter.push(moment(flowDt.date, "DD/MM/YYYY").format("DD MMM") + " " + flowDt.time);
       let obj = flowDt.meterData.length > 0 && flowDt.meterData[0];
       for (var key in obj) {
-        const found = arrMeterFinal.some(el => el.name === key);
-        if (!found && (key !== "Chlorine" && key !== "CL" && key !== "Turbidity" && key !== "TB" && key !== "TDS" && key !== "PH" && key !== "Pressure Transmeter" && key !== "PT" && key !== "Depth" && key !== "DS" && key !== "Vibration" && key !== "VB" && key !== "Temperature" && key !== "TEMP")) arrMeterFinal.push({ name: key, data: [] });
+        const found = this.arrMeterFinal.some(el => el.name === key);
+        if (!found && (key !== "Chlorine" && key !== "CL" && key !== "Turbidity" && key !== "TB" && key !== "TDS" && key !== "PH" && key !== "Pressure Transmeter" && key !== "PT" && key !== "Depth" && key !== "DS" && key !== "Vibration" && key !== "VB" && key !== "Temperature" && key !== "TEMP")) this.arrMeterFinal.push({ name: key, data: [] });
 
-        let index = arrMeterFinal.findIndex(p => p.name == key);
+        let index = this.arrMeterFinal.findIndex(p => p.name == key);
         if (key !== "Chlorine" && key !== "CL" && key !== "Turbidity" && key !== "TB" && key !== "TDS" && key !== "PH" && key !== "Pressure Transmeter" && key !== "PT" && key !== "Depth" && key !== "DS" && key !== "Vibration" && key !== "VB" && key !== "Temperature" && key !== "TEMP") {
-          arrMeterFinal[index].data.push(parseInt(obj[key]));
+          this.arrMeterFinal[index].data.push(parseInt(obj[key]));
         }
       }
     });
 
-    this.plotFlowChart(arrFlowFinal, xaxisCatArr);
-    this.plotLevelChart(arrLevelFinal, xaxisCatArr);
-    this.plotMeterChart(arrMeterFinal, xCatArrayMeter);
+    this.plotFlowChart(this.arrFlowFinal, xaxisCatArr);
+    this.plotLevelChart(this.arrLevelFinal, xaxisCatArr);
+    this.plotMeterChart(this.arrMeterFinal, xCatArrayMeter);
     this.plotChlorineChart(resultArr);
     this.plotTurbidityChart(resultArr);
     this.plotTDSChart(resultArr);
