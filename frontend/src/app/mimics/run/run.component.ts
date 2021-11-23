@@ -92,7 +92,10 @@ export class RunComponent implements OnInit, OnDestroy {
                 unit = "";
               }
             }
-            let html='<div class="meter_tooltip" id="el'+i+'"><span class="meter_tooltiptext">'+element.name+': <br/>'+value+' '+unit+'</span></div>';
+            let html='';
+            if(value)
+              html='<div class="meter_tooltip" id="el'+i+'"><span class="meter_tooltiptext">'+value+' '+unit+'</span></div>';
+            //let html='<div class="meter_tooltip" id="el'+i+'"><span class="meter_tooltiptext">'+element.name+': <br/>'+value+' '+unit+'</span></div>';
             $('#el'+i).html(html);
           }   
         });
@@ -252,7 +255,9 @@ export class RunComponent implements OnInit, OnDestroy {
             unit = "";
           }
         }
-        html+='<div class="meter_tooltip" id="el'+i+'"><span class="meter_tooltiptext">'+element.name+': <br/>'+value+' '+unit+'</span></div>';
+        if(value)
+          html+='<div class="meter_tooltip" id="el'+i+'"><span class="meter_tooltiptext">'+value+' '+unit+'</span></div>';
+        //html+='<div class="meter_tooltip" id="el'+i+'"><span class="meter_tooltiptext">'+element.name+': <br/>'+value+' '+unit+'</span></div>';
       }
       html+='<img data-off-src="'+element.image+'"  src="'+element.image+'" title="'+element.name+'" width="100%" height="100%" data-index="'+index+'">';
       html+='</div>'; 

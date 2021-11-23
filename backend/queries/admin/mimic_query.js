@@ -8,6 +8,7 @@ var siteData = mongoose.model("site_datas");
 var siteSummary = mongoose.model("site_summaries");
 var crypto = require("crypto");
 const ObjectId = require("mongoose").Types.ObjectId;
+const moment = require("moment");
 
 let obj = {}
 
@@ -571,6 +572,7 @@ obj.getAllCumulative = (data) => {
             };
             query = { $and: [query, dateQuery] };
         }
+        console.log("data.timeInterval",data.timeInterval);
         if (data.options && data.options.fromTime) {
             let timeQuery = {
                 time: {
@@ -580,7 +582,6 @@ obj.getAllCumulative = (data) => {
             };
             query = { $and: [query, timeQuery] };
         }
-
         aggregateQuery.push({ $match: query });
         if (data.options && data.options.sort) {
             let sortField = "$" + data.options.sort;
@@ -597,7 +598,36 @@ obj.getAllCumulative = (data) => {
             let skip = (Number(offSet) - 1) * data.options.limit;
             aggregateQuery.push({ $skip: skip }, { $limit: data.options.limit });
         }
+        console.log(aggregateQuery);
         siteData.aggregate(aggregateQuery).then(async result => {
+            let toShowInterval = false;
+            if(toShowInterval && data.timeInterval)
+            {
+                const dateParts1=data.options.fromDate.split('/');
+                const dateParts2=data.options.toDate.split('/');
+                let start = new Date(dateParts1[1]+"/"+dateParts1[0]+"/"+dateParts1[2]+" "+data.options.fromTime);
+                let end = new Date(dateParts2[1]+"/"+dateParts2[0]+"/"+dateParts2[2]+" "+data.options.toTime);
+                let loop = new Date(start);
+                let recordToShow = 0;
+                while (loop <= end) {
+                    recordToShow++;
+                    var newDateObj = new Date();
+                    newDateObj.setTime(loop.getTime() + (data.timeInterval * 60 * 1000));
+                    loop = new Date(newDateObj);
+                }
+                console.log('Total Record',result.length);
+                console.log('Tecord to Show',recordToShow);
+                const interval = Math.floor(result.length/recordToShow);
+                console.log('interval',interval);
+                let newData = [];
+                let i = 0;
+                result.map((res) =>{
+                  if(i==0 || i%interval==0)
+                    newData.push(res);
+                  i++;
+                });
+                result = newData;
+            }
             resolve(result);
         }).catch(err => {
             resolve({

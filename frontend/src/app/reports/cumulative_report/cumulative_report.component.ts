@@ -137,7 +137,7 @@ export class CumulativeReportComponent implements OnInit {
     } else {
       this.selectedTimeInterval = "";
     }
-    this.fetchCumulativeData(this.selectedSiteId);
+    //this.fetchCumulativeData(this.selectedSiteId);
     //$('#mytable').hide();
   }
 
