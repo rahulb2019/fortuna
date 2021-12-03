@@ -198,6 +198,8 @@ export class CumulativeReportComponent implements OnInit {
       if (res.code === 200) {
         this.dataArr = res.result;
         const currentEl = this;
+        currentEl.tagsArr = [];
+        currentEl.selectedTags = [];
         this.dataArr[0].pumpData.map(function (val, index) {
           val.map(function (innerVal) {
             Object.keys(innerVal).forEach(function eachKey(keyName) {
@@ -215,7 +217,7 @@ export class CumulativeReportComponent implements OnInit {
         currentEl.tagsArr.push({ 'id': currentEl.convertToSlug(`Flow Meter`), name: `Flow Meter` });
         currentEl.tagsArr.push({ 'id': currentEl.convertToSlug(`Level Sensor`), name: `Level Sensor` });
         currentEl.selectedTags = currentEl.tagsArr;
-        this.plotChart(this.dataArr);
+        currentEl.plotChart(currentEl.dataArr);
       }
       else {
         this.toastr.error(res.message);

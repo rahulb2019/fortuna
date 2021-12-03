@@ -600,8 +600,7 @@ obj.getAllCumulative = (data) => {
         }
         console.log(aggregateQuery);
         siteData.aggregate(aggregateQuery).then(async result => {
-            let toShowInterval = false;
-            if(toShowInterval && data.timeInterval)
+            if(data.timeInterval)
             {
                 const dateParts1=data.options.fromDate.split('/');
                 const dateParts2=data.options.toDate.split('/');
@@ -609,23 +608,20 @@ obj.getAllCumulative = (data) => {
                 let end = new Date(dateParts2[1]+"/"+dateParts2[0]+"/"+dateParts2[2]+" "+data.options.toTime);
                 let loop = new Date(start);
                 let recordToShow = 0;
-                while (loop <= end) {
+                let newData = [result[0]];
+                while (loop < end) {
                     recordToShow++;
                     var newDateObj = new Date();
                     newDateObj.setTime(loop.getTime() + (data.timeInterval * 60 * 1000));
                     loop = new Date(newDateObj);
+                    var temp = result.map((res) =>{
+                        const dateParts3=res.date.split('/');
+                        let d = dateParts3[1]+"/"+dateParts3[0]+"/"+dateParts3[2]+' '+res.time;
+                        return Math.abs(loop - new Date(d).getTime());
+                    });
+                    var idx = temp.indexOf(Math.min(...temp));
+                    newData.push(result[idx]);
                 }
-                console.log('Total Record',result.length);
-                console.log('Tecord to Show',recordToShow);
-                const interval = Math.floor(result.length/recordToShow);
-                console.log('interval',interval);
-                let newData = [];
-                let i = 0;
-                result.map((res) =>{
-                  if(i==0 || i%interval==0)
-                    newData.push(res);
-                  i++;
-                });
                 result = newData;
             }
             resolve(result);
