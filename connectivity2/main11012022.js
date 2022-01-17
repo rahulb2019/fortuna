@@ -45,7 +45,7 @@ modbus.tcp.server({ debug: null }, (connection) => {
             if (err) {
                 console.log(err);
             } else {
-                 if (result.length > 0) {
+                if (result.length > 0) {
                     const THREADS_AMOUNT = result.length;
                         (function () {
                             const promises = [];
@@ -65,7 +65,6 @@ modbus.tcp.server({ debug: null }, (connection) => {
                                     let externalResponseMeter = await internalFnc(data.site._id, meterData, connection, emptyMeterData, emptyBlockData, 0);
                                     let externalResponseBlock = await externalfnc(data.site._id, siteBlocks, connection, emptyMeterData, emptyBlockData, 1);
                                     let externalResponseMimic = await internalFnc(data.site._id, mimicsData, connection, emptyMeterData, emptyBlockData, 2);
-                                    return false;
                                 });
                                 forked.send({ idx, site: result[idx], connection: myFunc.toString() });
                                 // const worker = new Worker('./client.js', { workerData: { idx, site: result[idx] } });
@@ -104,7 +103,6 @@ modbus.tcp.server({ debug: null }, (connection) => {
                 if (i < resultDetails.length) {
                     var detailsArray = resultDetails[i];
                     let internalResponse = await internalFnc(siteId, detailsArray, connection, emptyMeterData, emptyBlockData, type,i);
-                    //console.log('internalResponse',internalResponse);
                     extArr.push(internalResponse)
                     forEachLoop(i + 1);
                 } else {
@@ -124,16 +122,15 @@ modbus.tcp.server({ debug: null }, (connection) => {
             let pumpDataResponse = [];
             async function forEachLoop(j) {
                 if (type == 0 && j < detailsArray.length) {
-                    //if (j == detailsArray.length - 1) {
-                    if (j == detailsArray.length) {
-                        //console.log('meterDataResponse', meterDataResponse)
-                        await historyMeterData(siteId, meterDataResponse, emptyBlockData);
-                        return resolve(true);
-                    }
                     if (typeof detailsArray[j].register_address !== 'undefined' && detailsArray[j].register_address) {
                         const response = await readHoldingRegisters(detailsArray[j], 1, detailsArray[j].slave_id, detailsArray[j].data_type.toLowerCase().replace(/\s/g, ''), type, siteId, j);
                         if (response)
                             meterDataResponse.push(response);
+                        if (j == detailsArray.length - 1) {
+                            //console.log('meterDataResponse', meterDataResponse)
+                            await historyMeterData(siteId, meterDataResponse, emptyBlockData);
+                            return resolve(true);
+                        }
                         forEachLoop(j + 1);
                     }
                     else
@@ -141,11 +138,6 @@ modbus.tcp.server({ debug: null }, (connection) => {
                 }
                 else if (type == 1 && j < detailsArray.details.length) {
                     if (typeof detailsArray.details[j].register_address !== 'undefined' && detailsArray.details[j].register_address) {
-                        //console.log("j == detailsArray.details.length - 1",detailsArray.details.length - 1);
-                        if (j == detailsArray.details.length) {
-                            // await historyPumpData(siteId, pumpDataResponse);
-                            return resolve(pumpDataResponse);
-                        }
                         let response ='';
                         if (detailsArray.details[j].register_type == '1') {
                             response = await readDiscreteInputs(detailsArray.details[j], 1, detailsArray.details[j].slave_id, type, siteId, j,detailsArray._id,i);
@@ -158,19 +150,16 @@ modbus.tcp.server({ debug: null }, (connection) => {
                             pumpDataResponse.push(response);
                         else
                             pumpDataResponse.push('-');
+                        if (j == detailsArray.details.length - 1) {
+                            // await historyPumpData(siteId, pumpDataResponse);
+                            return resolve(pumpDataResponse);
+                        }
                         forEachLoop(j + 1);
                     }
                     else
                         forEachLoop(j + 1);
                 }
                 else if (type == 2 && j < detailsArray.length) {
-                    //if (j == detailsArray.length - 1) {
-                    if (j == detailsArray.length) {
-                        console.log('levelDataResponse', levelDataResponse)
-                        await historyFlowData(siteId, flowDataResponse, emptyMeterData, emptyBlockData,);
-                        await historylevelData(siteId, levelDataResponse, emptyMeterData, emptyBlockData,);
-                        return resolve(true);
-                    }
                     if (typeof detailsArray[j].register_address !== 'undefined' && detailsArray[j].register_address) {
                         //console.log("mimic Register ", detailsArray[j].register_address);
                         let response ='';
@@ -186,6 +175,12 @@ modbus.tcp.server({ debug: null }, (connection) => {
                             else
                                 levelDataResponse.push(response)
                         }
+                        if (j == detailsArray.length - 1) {
+                            //console.log('flowDataResponse', flowDataResponse)
+                            await historyFlowData(siteId, flowDataResponse, emptyMeterData, emptyBlockData,);
+                            await historylevelData(siteId, levelDataResponse, emptyMeterData, emptyBlockData,);
+                            return resolve(true);
+                        }
                         forEachLoop(j + 1);
                     }
                     else
@@ -197,24 +192,24 @@ modbus.tcp.server({ debug: null }, (connection) => {
                     writeData1.writeUInt16BE(detailsArray.schedule_blocks[j].startHour, 0);
                     console.log(writeData1);
                     console.log(detailsArray.schedule_blocks[j].startHourSlaveId);
-                    connection.writeSingleRegister({ address: detailsArray.schedule_blocks[j].startHourRegister, values: writeData1, extra: { slaveId: detailsArray.schedule_blocks[j].startHourSlaveId, retry: 3000 } }, (err, info) => {
-                        // connection.writeMultipleRegisters({ address: detailsArray.schedule_blocks[j].startHourRegister, values: [writeData1], extra: { slaveId: detailsArray.schedule_blocks[j].startHourSlaveId, retry:3000 } }, (err, info) => {
+                    connection.writeSingleRegister({ address: detailsArray.schedule_blocks[j].startHourRegister, values: writeData1, extra: { slaveId: detailsArray.schedule_blocks[j].startHourSlaveId, retry: 500000 } }, (err, info) => {
+                        // connection.writeMultipleRegisters({ address: detailsArray.schedule_blocks[j].startHourRegister, values: [writeData1], extra: { slaveId: detailsArray.schedule_blocks[j].startHourSlaveId, retry:500000 } }, (err, info) => {
                         if (err) console.log(err);
                         if (info && info.response)
                             console.log("response write1", info.response);
                         let writeData2 = Buffer.alloc(4);
                         writeData2.writeUInt16BE(detailsArray.schedule_blocks[j].startMinute, 0)
-                        connection.writeSingleRegister({ address: detailsArray.schedule_blocks[j].startMinuteRegister, values: writeData2, extra: { slaveId: detailsArray.schedule_blocks[j].startMinuteSlaveId, retry: 3000 } }, (err, info) => {
+                        connection.writeSingleRegister({ address: detailsArray.schedule_blocks[j].startMinuteRegister, values: writeData2, extra: { slaveId: detailsArray.schedule_blocks[j].startMinuteSlaveId, retry: 500000 } }, (err, info) => {
                             if (err) console.log(err);
                             if (info && info.response) console.log("response write2", info.response);
                             let writeData3 = Buffer.alloc(4);
                             writeData3.writeUInt16BE(detailsArray.schedule_blocks[j].endHour, 0)
-                            connection.writeSingleRegister({ address: detailsArray.schedule_blocks[j].endHourRegister, values: writeData3, extra: { slaveId: detailsArray.schedule_blocks[j].endHourSlaveId, retry: 3000 } }, (err, info) => {
+                            connection.writeSingleRegister({ address: detailsArray.schedule_blocks[j].endHourRegister, values: writeData3, extra: { slaveId: detailsArray.schedule_blocks[j].endHourSlaveId, retry: 500000 } }, (err, info) => {
                                 if (err) console.log(err);
                                 if (info && info.response) console.log("response write3", info.response);
                                 let writeData4 = Buffer.alloc(4);
                                 writeData4.writeUInt16BE(detailsArray.schedule_blocks[j].endMinute, 0)
-                                connection.writeSingleRegister({ address: detailsArray.schedule_blocks[j].endMinuteRegister, values: writeData4, extra: { slaveId: detailsArray.schedule_blocks[j].endMinuteSlaveId, retry: 3000 } }, (err, info) => {
+                                connection.writeSingleRegister({ address: detailsArray.schedule_blocks[j].endMinuteRegister, values: writeData4, extra: { slaveId: detailsArray.schedule_blocks[j].endMinuteSlaveId, retry: 500000 } }, (err, info) => {
                                     if (err) console.log(err);
                                     if (info && info.response) console.log("response write4", info.response);
                                     forEachLoop(j + 1);
@@ -233,18 +228,15 @@ modbus.tcp.server({ debug: null }, (connection) => {
     function readHoldingRegisters(data, quantity, slaveId, dataType, blockType, siteId, index,blockId=null,j=0) {
         const keyName = data.name.toLowerCase().replace(/\s/g, "");
         return new Promise(function (resolve) {
-            connection.readHoldingRegisters({ address: data.register_address, quantity: quantity, extra: { unitId: slaveId, retry: 3000 } }, (err, info) => {
+            connection.readHoldingRegisters({ address: data.register_address, quantity: quantity, extra: { unitId: slaveId, retry: 500000 } }, (err, info) => {
                 if (err != null) {
-                    console.log("Data not receiving : ",siteId);
                     console.log(err);
+                    // resolve(null);
                     if (blockType == 1){
                         insertSummaryData(j, keyName, value, siteId);
                     }
                     resolve({ [data.name]: '-' });
                 } else if (info != null) {
-                    // let value = readInteger(info);
-                    // console.log("value-index ",value,index);
-                    // console.log('blockType ',blockType);
                     if (dataType != 'float') {
                         let value = readInteger(info);
                         if (data.division_factor) {
@@ -290,16 +282,15 @@ modbus.tcp.server({ debug: null }, (connection) => {
     async function readDiscreteInputs(data, quantity, slaveId, blockType, siteId, index,blockId=null) {
         return new Promise(function (resolve) {
             // setTimeout(function () {
-            connection.readDiscreteInputs({ address: data.register_address, quantity: quantity, extra: {unitId: slaveId, retry: 3000}}, function (err, info) {
+            connection.readDiscreteInputs({ address: data.register_address, quantity: quantity, extra: {unitId: slaveId, retry: 500000}}, function (err, info) {
                if (err != null) {
-                    console.log("Data mot receiving : ",siteId);
                     console.log(err);
-                    resolve(null);
-                    //resolve({ [data.name]: value });
+                    // resolve(null);
+                    resolve({ [data.name]: value });
                 } else if (info != null) {
                     let value = '';
                     value = info.response.data[0];
-                    console.log("Reading Input" + slaveId +"::"+ data.register_address + " : ", value);
+                    console.log("Reading " + slaveId +"::"+ data.register_address + " : ", value);
                     if (blockType == 1)
                         db.collection("site_blocks").updateOne({ "_id": ObjectId(blockId) }, { $set: { [`details.${index}.value`]: value, [`updated_at`]: new Date() } });
                     else if (blockType == 2)
@@ -371,8 +362,8 @@ modbus.tcp.server({ debug: null }, (connection) => {
                         {
                             console.log("Insert pump data history record In");
                             let data = { site_id: ObjectId(siteId),  date: date, time: time, is_deleted: false, pumpData: response, meterData: [], levelData: [], flowData: [] };
-                            //console.log('pumpData1',siteId,data.pumpData);
-                            //console.log('response2',siteId,response)
+                            console.log('pumpData1',siteId,data.pumpData);
+                            console.log('response2',siteId,response)
                             db.collection("site_datas").insertOne(data).then((obj) => {
                                 resolve(true);
                             })
