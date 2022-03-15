@@ -200,8 +200,16 @@
                                         DATA METER <br/>({{subheaderMt.key | uppercase}})
                                       </th>
                                     </ng-container>
-                                    <th width="5%" [attr.class]="convertToSlug('Flow Meter')">FLOW RATE</th>
-                                    <th width="5%" [attr.class]="convertToSlug('Level Sensor')">LEVEL RATE</th>
+                                    <th [attr.class]="convertToSlug('Flow Meter')"
+                                      *ngFor='let flowTh of dataArr[0].flowData; let flowInd = index;'>
+                                      FLOW RATE {{ flowInd + 1}}
+                                    </th>
+                                    <th [attr.class]="convertToSlug('Level Sensor')"
+                                      *ngFor='let levelTh of dataArr[0].levelData; let levelInd = index;'>
+                                      LEVEL RATE {{ levelInd + 1}}
+                                    </th>
+                                    <!-- <th width="5%" [attr.class]="convertToSlug('Flow Meter')">FLOW RATE</th>
+                                    <th width="5%" [attr.class]="convertToSlug('Level Sensor')">LEVEL RATE</th> -->
                                   </tr>
                                 </thead>
                                 <tbody *ngIf="dataArr && dataArr.length > 0">

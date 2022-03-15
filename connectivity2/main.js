@@ -24,14 +24,35 @@ db.on('error', function (err) {
 
 modbus.tcp.server({ debug: null }, (connection) => {
     console.log('Connected');
-    // console.log("server====>",connection.readDeviceIdentification);
-    
+    // setTimeout(function () {
+    //     console.log("I will run now");
+    //     let msg = Buffer.alloc(4);
+    //     msg.writeUInt16BE(0x05, 0);
+    //     connection.writeSingleRegister({address: 605, value: msg, extra: {unitId: 10}}, (err, info) => {
+    //         if (err != null) {
+    //             console.log(err);
+    //         } else if (info != null) {
+    //             console.log('write response');
+    //             console.log(info);
+    //         }
+    //         connection.readHoldingRegisters({ address: 605, quantity: 1, extra: { unitId: 10, retry: 3000 } }, (err, info) => {
+    //             if (err != null) {
+    //                  console.log(err);
+    //             } else if (info != null) {
+    //                 console.log('read response');
+    //                 console.log(info);
+    //             }
+    //         });
+    //     });
+    // }, 5000);
+    // return false;
     setTimeout(function () {
         read();
     }, 5000);
     function read() {
         let aggregateQuery = [];
-        let query = { "is_deleted": false };
+        let query = { "is_deleted": false,"is_blocked" : 0};
+        // let query = { "is_deleted": false };
         aggregateQuery.push({ $match: query });
         aggregateQuery.push({
             $lookup: {
@@ -45,6 +66,8 @@ modbus.tcp.server({ debug: null }, (connection) => {
             if (err) {
                 console.log(err);
             } else {
+                // console.log(result);
+                // return false;
                  if (result.length > 0) {
                     const THREADS_AMOUNT = result.length;
                         (function () {
@@ -52,6 +75,7 @@ modbus.tcp.server({ debug: null }, (connection) => {
                         for (let idx = 0; idx < THREADS_AMOUNT; idx += 1) {
                             promises.push(new Promise((resolve) => {
                                 console.log('SITE NAME : ',result[idx].name);
+                                // return false;
                                 var myFunc = connection.readHoldingRegisters;
                                 const forked = fork('client.js', [], { silent: true, detached :true });
                                 forked.on('message', async (data) => {
@@ -62,29 +86,13 @@ modbus.tcp.server({ debug: null }, (connection) => {
                                     meterData.map((item) =>  emptyMeterData.push('-'));
                                     let emptyBlockData = [];
                                     siteBlocks.map((item) =>  emptyBlockData.push([]));
+                                   
                                     let externalResponseMeter = await internalFnc(data.site._id, meterData, connection, emptyMeterData, emptyBlockData, 0);
                                     let externalResponseBlock = await externalfnc(data.site._id, siteBlocks, connection, emptyMeterData, emptyBlockData, 1);
                                     let externalResponseMimic = await internalFnc(data.site._id, mimicsData, connection, emptyMeterData, emptyBlockData, 2);
                                     return false;
                                 });
                                 forked.send({ idx, site: result[idx], connection: myFunc.toString() });
-                                // const worker = new Worker('./client.js', { workerData: { idx, site: result[idx] } });
-                                // worker.on('message', async (data) => {
-                                //     console.log(data.name);
-                                //     let mimicsData = data.mimic_data;
-                                //     let meterData = data.meter_data;
-                                //     let siteBlocks = data.site_blocks;
-                                //     let externalResponseMeter = await internalFnc(data._id, meterData, connection, 0);
-                                //     let externalResponseBlock = await externalfnc(data._id, siteBlocks, connection, 1);
-                                //     let externalResponseMimic = await internalFnc(data._id, mimicsData, connection, 2);
-                                // });
-                                // worker.on('error', (error) => {
-                                //     console.log(`Worker error `, error);
-                                // })
-                                // worker.on('exit', (code) => {
-                                //     if (code !== 0)
-                                //         console.log(`Worker stopped with exit code ${code}`);
-                                // })
                             }))
                         }
                         // Handle the resolution of all promises
@@ -101,6 +109,7 @@ modbus.tcp.server({ debug: null }, (connection) => {
         return new Promise(function (resolve, reject) {
             let extArr = [];
             async function forEachLoop(i) {
+                // console.log('resultDetails',resultDetails);
                 if (i < resultDetails.length) {
                     var detailsArray = resultDetails[i];
                     let internalResponse = await internalFnc(siteId, detailsArray, connection, emptyMeterData, emptyBlockData, type,i);
@@ -124,16 +133,14 @@ modbus.tcp.server({ debug: null }, (connection) => {
             let pumpDataResponse = [];
             async function forEachLoop(j) {
                 if (type == 0 && j < detailsArray.length) {
-                    //if (j == detailsArray.length - 1) {
-                    if (j == detailsArray.length) {
-                        //console.log('meterDataResponse', meterDataResponse)
-                        await historyMeterData(siteId, meterDataResponse, emptyBlockData);
-                        return resolve(true);
-                    }
                     if (typeof detailsArray[j].register_address !== 'undefined' && detailsArray[j].register_address) {
                         const response = await readHoldingRegisters(detailsArray[j], 1, detailsArray[j].slave_id, detailsArray[j].data_type.toLowerCase().replace(/\s/g, ''), type, siteId, j);
                         if (response)
                             meterDataResponse.push(response);
+                        if (j == detailsArray.length - 1) {
+                            await historyMeterData(siteId, meterDataResponse, emptyBlockData);
+                            return resolve(true);
+                        }
                         forEachLoop(j + 1);
                     }
                     else
@@ -141,11 +148,6 @@ modbus.tcp.server({ debug: null }, (connection) => {
                 }
                 else if (type == 1 && j < detailsArray.details.length) {
                     if (typeof detailsArray.details[j].register_address !== 'undefined' && detailsArray.details[j].register_address) {
-                        //console.log("j == detailsArray.details.length - 1",detailsArray.details.length - 1);
-                        if (j == detailsArray.details.length) {
-                            // await historyPumpData(siteId, pumpDataResponse);
-                            return resolve(pumpDataResponse);
-                        }
                         let response ='';
                         if (detailsArray.details[j].register_type == '1') {
                             response = await readDiscreteInputs(detailsArray.details[j], 1, detailsArray.details[j].slave_id, type, siteId, j,detailsArray._id,i);
@@ -153,24 +155,19 @@ modbus.tcp.server({ debug: null }, (connection) => {
                         else {
                             response = await readHoldingRegisters(detailsArray.details[j], 1, detailsArray.details[j].slave_id, detailsArray.details[j].data_type.toLowerCase().replace(/\s/g, ''), type, siteId, j,detailsArray._id,i);
                         }
-                        
                         if (response)
                             pumpDataResponse.push(response);
                         else
                             pumpDataResponse.push('-');
+                        if (j == detailsArray.details.length -1 ) {
+                            return resolve(pumpDataResponse);
+                        }      
                         forEachLoop(j + 1);
                     }
                     else
                         forEachLoop(j + 1);
                 }
                 else if (type == 2 && j < detailsArray.length) {
-                    //if (j == detailsArray.length - 1) {
-                    if (j == detailsArray.length) {
-                        console.log('levelDataResponse', levelDataResponse)
-                        await historyFlowData(siteId, flowDataResponse, emptyMeterData, emptyBlockData,);
-                        await historylevelData(siteId, levelDataResponse, emptyMeterData, emptyBlockData,);
-                        return resolve(true);
-                    }
                     if (typeof detailsArray[j].register_address !== 'undefined' && detailsArray[j].register_address) {
                         //console.log("mimic Register ", detailsArray[j].register_address);
                         let response ='';
@@ -185,6 +182,12 @@ modbus.tcp.server({ debug: null }, (connection) => {
                                 flowDataResponse.push(response)
                             else
                                 levelDataResponse.push(response)
+                        }
+                        if (j == detailsArray.length - 1) {
+                            console.log('levelDataResponse', levelDataResponse)
+                            await historyFlowData(siteId, flowDataResponse, emptyMeterData, emptyBlockData,);
+                            await historylevelData(siteId, levelDataResponse, emptyMeterData, emptyBlockData,);
+                            return resolve(true);
                         }
                         forEachLoop(j + 1);
                     }
@@ -292,7 +295,7 @@ modbus.tcp.server({ debug: null }, (connection) => {
             // setTimeout(function () {
             connection.readDiscreteInputs({ address: data.register_address, quantity: quantity, extra: {unitId: slaveId, retry: 3000}}, function (err, info) {
                if (err != null) {
-                    console.log("Data mot receiving : ",siteId);
+                    console.log("Data not receiving : ",siteId);
                     console.log(err);
                     resolve(null);
                     //resolve({ [data.name]: value });

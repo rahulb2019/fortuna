@@ -12,10 +12,15 @@
   "license": "ISC",
   "dependencies": {
     "child_process": "^1.0.2",
+    "g": "^2.0.1",
+    "jsmodbus": "^4.0.6",
     "lodash": "^4.17.21",
     "modbus-stream": "^0.46.0",
+    "modbus-tcp": "^0.4.13",
     "moment": "^2.29.1",
     "mongodb": "^2.2.33",
-    "mongoose": "^5.13.7"
+    "mongoose": "^5.13.7",
+    "pm2": "^5.1.2",
+    "simple-modbus": "^1.1.2"
   }
 }

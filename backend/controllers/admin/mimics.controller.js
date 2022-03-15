@@ -295,6 +295,7 @@ const saveMimicSchedule = async function (req, res) {
     try {
         let delData = await mimicQueries.deleteScheduleData(siteId);
         let respData = await mimicQueries.addMimicScheduleData(schedulesData, siteId);
+        console.log('response',respData);
         if (respData){
             res.status(200).json({ code: 200, message: "Data added successfully" });
         } else {
@@ -310,6 +311,40 @@ const getScheduleData = async function (req, res) {
     let token = "";
     try {
         const respData = await mimicQueries.getSiteSchedulesData(data);
+        if (respData.length == 0)
+            res.status(200).json({ code: 200, message: "No data saved yet", result: respData });
+        else {
+            let resp=[];
+            resp.push(respData)
+            res.status(200).json({ code: 200, message: "Record fetched successfully", result: resp });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to fetch data", result: error.sqlMessage })
+    }
+};
+
+const saveMimicControl = async function (req, res) { 
+    let controlsData = req.body ? req.body.controlsData : {};
+    let siteId = req.body ? req.body.site_id : {};
+    try {
+        let delData = await mimicQueries.deleteControlData(siteId);
+        let respData = await mimicQueries.addMimicControlData(controlsData, siteId);
+        console.log('response',respData);
+        if (respData){
+            res.status(200).json({ code: 200, message: "Data added successfully" });
+        } else {
+            res.status(400).json({ code: 301, message: "Unable to add data", result: respData });
+        }
+    } catch (error) {
+        res.status(404).json({ code: 404, message: "Unable to add data", result: error.sqlMessage })
+    }
+};
+
+const getControlData = async function (req, res) {
+    let data = req.body ? req.body : {};
+    let token = "";
+    try {
+        const respData = await mimicQueries.getSiteControlsData(data);
         if (respData.length == 0)
             res.status(200).json({ code: 200, message: "No data saved yet", result: respData });
         else {
@@ -423,6 +458,8 @@ exports.updateBlocksArch = updateBlocksArch;
 exports.saveMimicSettings = saveMimicSettings;
 exports.saveMimicSchedule = saveMimicSchedule;
 exports.getScheduleData = getScheduleData;
+exports.saveMimicControl = saveMimicControl;
+exports.getControlData = getControlData;
 exports.saveMetersData = saveMetersData;
 exports.addDataMeterBlock = addDataMeterBlock;
 exports.deleteImage = deleteImage;

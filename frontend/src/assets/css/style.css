@@ -1096,3 +1096,5 @@ agm-map {
 .cumulative-reports .header th {font-weight: bold; font-size: 13px;} /*cumulative-reports header column */
 .cumulative-reports .header-outer {font-weight: bold; font-size: 15px;}
 .form-control{font-size: 16px;} /* font-size of input box */
+.left-mimic-run,#droppable{background-color: #000 !important;} /* mimic background color */
+.control-button-link{font-size: 20px;color: red !important;margin-right: 25px;}

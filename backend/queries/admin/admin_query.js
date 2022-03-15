@@ -6,6 +6,7 @@ let obj = {}
 
 // Method to check login details of admin
 obj.checkLogin = (data) => {
+    console.log("data....", data);
     return new Promise((resolve, reject) => {
         Admin.findOne(
             {

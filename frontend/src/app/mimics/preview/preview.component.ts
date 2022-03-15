@@ -12,6 +12,7 @@ import { NgbModal, ModalDismissReasons }
 
 import { ActivatedRoute, Router } from "@angular/router";
 import { MimicService } from "../../services/mimic/mimic.service";
+import { environment } from '../../../environments/environment';
 import * as $ from 'jquery';
 import 'jquery-ui-dist/jquery-ui';
 
@@ -208,6 +209,7 @@ export class PreviewComponent implements OnInit {
       }
       html += '</div>';
     });
+    this.imgUrlReplace();
     setTimeout(() => {
       $('.drag').each(function () {
         $(this).attr('style', $(this).attr('stylea'));
@@ -225,7 +227,16 @@ export class PreviewComponent implements OnInit {
     //     }})
     //   ); 
     // })
-
+    
+  }
+  imgUrlReplace(){
+    setTimeout(() => {
+      $(document).find('img').each(function(){
+        const oldUrl=$(this).attr('src');
+        const newUrl=oldUrl.replace("localhost", environment.staticIP);
+        $(this).attr('src',newUrl);
+      })
+    }, 300);
   }
   openModal(content, i) {
     var index = this.pumpData.findIndex((el, index) => {

@@ -5,6 +5,7 @@ const SIC = require("./site_image_category.model");
 const SI = require("./site_image.model");
 const SB = require("./site_block.model");
 const SS = require("./site_schedule.model");
+const SC = require("./site_control.model");
 const SD = require("./site_data.model");
 const SSM = require("./site_summary.model");
 module.exports = {
@@ -15,6 +16,7 @@ module.exports = {
     SI: SI,
     SB: SB,
     SS: SS,
+    SC: SC,
     SD: SD,
     SSM: SSM
 }

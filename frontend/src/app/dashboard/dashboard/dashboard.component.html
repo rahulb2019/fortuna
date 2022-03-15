@@ -54,8 +54,10 @@
       <!---Google Map to be rendered-->
       <div>
         <agm-map [latitude]="lat" [longitude]="lng">
-          <agm-marker *ngFor="let mimic of mimicsArr; let i = index" [latitude]="mimic.lattitude" [longitude]="mimic.longitude">
-            <agm-info-window [disableAutoPan]="true">
+          <agm-marker *ngFor="let mimic of mimicsArr; let i = index" [latitude]="mimic.lattitude" [longitude]="mimic.longitude"
+          (mouseOver)="onMouseOver(infoWindow, $event)"
+          (mouseOut)="onMouseOut(infoWindow, $event)">
+            <agm-info-window [disableAutoPan]="false">
               <div class="mapDiv">
                 <label>Name : </label>
                 <a href="/admin/mimics/run/{{mimic._id}}">
@@ -76,6 +78,12 @@
             </agm-info-window>
           </agm-marker>
         </agm-map>
+        <!--onMouseOver(infoWindow,$event:MouseEvent){
+          infoWindow.open();
+        }
+        onMouseOut(infoWindow,$event:MouseEvent){
+          infoWindow.close();
+        }-->
       </div>
     </app-iq-card>
   </div>

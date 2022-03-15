@@ -4,6 +4,7 @@ var SIC = mongoose.model("site_image_categories");
 var siteImage = mongoose.model("site_images");
 var siteBlock = mongoose.model("site_blocks");
 var siteSchedule = mongoose.model("site_schedules");
+var siteControl = mongoose.model("site_controls");
 var siteData = mongoose.model("site_datas");
 var siteSummary = mongoose.model("site_summaries");
 var crypto = require("crypto");
@@ -465,6 +466,62 @@ obj.getSiteSchedulesData = (data) => {
         let query = { site_id: ObjectId(data.mimicId) };
         aggregateQuery.push({ $match: query });
         siteSchedule.aggregate(aggregateQuery).then(async result => {
+            resolve(result);
+        }).catch(err => {
+            resolve({
+                status: "Failure",
+                code: 301
+            });
+        });
+
+    })
+}
+
+obj.addMimicControlData = (data, siteId) => {
+    return new Promise(function (resolve, reject) {
+        let respArr = [];
+        function forEachLoop(i) {
+            if (i < data.length) {
+                let dataToSave = {
+                    control_blocks: data[i].control_blocks,
+                    site_id: siteId
+                }
+                if (dataToSave) {
+                    siteControl.create(dataToSave)
+                        .then(result => {
+                            respArr.push(result);
+                            forEachLoop(i + 1);
+                        })
+                }
+            } else {
+                return resolve(respArr);
+            }
+        }
+        forEachLoop(0);
+    });
+}
+
+obj.deleteControlData = (siteId) => {
+    return new Promise((resolve, reject) => {
+        let query = { site_id: ObjectId(siteId) };
+        siteControl.deleteMany(query).then(async result => {
+            resolve(result);
+        }).catch(err => {
+            resolve({
+                status: "Failure",
+                code: 301
+            });
+        });
+
+    })
+}
+
+obj.getSiteControlsData = (data) => {
+    return new Promise((resolve, reject) => {
+        let aggregateQuery = [];
+        let query = { site_id: ObjectId(data.mimicId) };
+        aggregateQuery.push({ $match: query });
+        siteControl.aggregate(aggregateQuery).then(async result => {
             resolve(result);
         }).catch(err => {
             resolve({

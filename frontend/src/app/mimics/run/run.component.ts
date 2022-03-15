@@ -304,4 +304,7 @@ export class RunComponent implements OnInit, OnDestroy {
   manageMeterData(mimicId) {    
     window.open("/admin/mimics/add_meter_data/"+mimicId, "_blank");
   }
+  manageMimicControl(mimicId) {    
+    window.open("/admin/mimics/control/"+mimicId, "_blank");
+  }
 }

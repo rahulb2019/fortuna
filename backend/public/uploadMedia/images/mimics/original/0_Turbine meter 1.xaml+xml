@@ -1,0 +1,53 @@
+<Viewbox Stretch="Uniform" Width="64" Height="64" ToolTip="Turbine meter 1" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:s="clr-namespace:System;assembly=mscorlib">
+  <Viewbox.Tag>
+    <s:Int64>910707563</s:Int64>
+  </Viewbox.Tag>
+  <Canvas Tag="#00000000,#FF008000,Original,0,None" LayoutTransform="Identity" Width="605" Height="999">
+    <Polygon Points="576,605 576,970 484,970 484,605 576,605" Fill="#FFB2B2B2" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="118,697 484,697 484,880 118,880 118,697" Fill="#FFB2B2B2" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="118,605 118,970 28,970 28,605 118,605" Fill="#FFB2B2B2" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="576,644 576,931 484,931 484,644 576,644" Fill="#FFCCCCCC" />
+    <Polygon Points="118,725 484,725 484,850 118,850 118,725" Fill="#FFCCCCCC" />
+    <Polygon Points="118,644 118,931 28,931 28,644 118,644" Fill="#FFCCCCCC" />
+    <Polygon Points="576,706 576,868 484,868 484,706 576,706" Fill="#FFE5E5E5" />
+    <Polygon Points="118,759 484,759 484,816 118,816 118,759" Fill="#FFE5E5E5" />
+    <Polygon Points="118,706 118,868 28,868 28,706 118,706" Fill="#FFE5E5E5" />
+    <Polygon Points="576,767 576,808 484,808 484,767 576,767" Fill="#FFFFFFFF" />
+    <Polygon Points="118,782 484,782 484,793 118,793 118,782" Fill="#FFFFFFFF" />
+    <Polygon Points="118,767 118,808 28,808 28,767 118,767" Fill="#FFFFFFFF" />
+    <Polygon Points="188,177 118,165 118,39 188,28 188,177" Fill="#FFE50000" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="416,28 484,39 484,165 416,177 416,28" Fill="#FFE50000" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="416,79 482,79 482,62 416,56 416,79" Fill="#FFE5E5E5" />
+    <Polygon Points="188,79 122,79 122,62 188,56 188,79" Fill="#FFE5E5E5" />
+    <Polygon Points="188,28 416,28 416,422 188,422 188,28" Fill="#FFFF0000" Stroke="#FF000000" StrokeThickness="3" />
+    <Ellipse Fill="#FFFF0000" Stroke="#FF000000" StrokeThickness="3" Width="364" Height="365" Canvas.Left="120" Canvas.Top="28" />
+    <Ellipse Fill="#FF4C4C4C" Stroke="#FF000000" StrokeThickness="3" Width="250" Height="253" Canvas.Left="177" Canvas.Top="84" />
+    <Polygon Points="337,703 336,705 334,707 331,709 327,710 322,712 316,713 310,714 303,714 295,714 289,713 283,712 277,710 273,709 270,707 268,705 267,703 267,422 337,422 337,703" Fill="#FF4C4C4C" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="326,392 341,389 356,386 370,381 384,375 397,367 409,359 421,350 432,340 442,329 451,317 459,305 466,292 472,278 477,263 481,249 484,233 454,233 452,245 448,257 444,269 439,280 433,291 427,301 419,311 411,320 402,328 393,335 383,342 372,348 361,353 350,358 338,361 326,363 326,392" Fill="#FFE50000" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="484,188 481,173 477,158 472,144 466,130 459,116 451,104 442,92 432,81 421,71 409,62 397,54 384,47 370,41 356,36 341,32 326,30 324,58 336,60 348,64 360,68 371,73 382,79 392,86 402,93 411,102 419,111 426,121 433,130 439,141 444,152 448,164 452,176 454,188 484,188" Fill="#FFE50000" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="278,30 263,32 248,36 234,41 220,47 207,54 195,62 183,71 173,81 162,92 153,104 145,116 138,130 132,144 127,158 123,173 120,188 150,188 153,176 156,164 160,152 165,141 171,130 177,121 185,111 193,102 202,93 211,86 222,79 232,73 243,68 254,64 266,60 278,58 278,30" Fill="#FFE50000" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="120,233 122,249 126,263 131,278 137,292 144,305 153,317 162,329 172,340 183,350 194,359 207,367 220,375 234,381 248,386 263,389 278,392 278,363 266,361 254,358 243,353 232,348 222,342 211,335 202,328 193,320 185,311 177,301 171,291 165,280 160,269 156,257 153,245 150,233 120,233" Fill="#FFE50000" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="218,173 384,173 384,248 218,248 218,173" Fill="#FF333333" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="228,182 376,182 376,239 228,239 228,182" Fill="#FFB2B2B2" Stroke="#FF000000" StrokeThickness="3" />
+    <Ellipse Fill="#FFB2B2B2" Stroke="#FF000000" StrokeThickness="3" Width="19" Height="19" Canvas.Left="292" Canvas.Top="367" />
+    <Ellipse Fill="#FFB2B2B2" Stroke="#FF000000" StrokeThickness="3" Width="17" Height="17" Canvas.Left="459" Canvas.Top="201" />
+    <Ellipse Fill="#FFB2B2B2" Stroke="#FF000000" StrokeThickness="3" Width="17" Height="17" Canvas.Left="292" Canvas.Top="33" />
+    <Ellipse Fill="#FFB2B2B2" Stroke="#FF000000" StrokeThickness="3" Width="19" Height="17" Canvas.Left="124" Canvas.Top="201" />
+    <Polygon Points="250,444 354,444 354,559 250,559 250,444" Fill="#FF999999" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="250,605 354,605 354,638 250,638 250,605" Fill="#FF999999" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="284,444 337,444 337,559 284,559 284,444" Fill="#FFCCCCCC" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="284,605 337,605 337,638 284,638 284,605" Fill="#FFCCCCCC" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="256,444 348,444 348,439 256,439 256,444" Fill="#FF666666" Stroke="#FF000000" StrokeThickness="3" />
+    <Polygon Points="250,576 354,576 354,593 250,593 250,576" Fill="#FFB2B2B2" />
+    <Polygon Points="250,650 354,650 354,667 250,667 250,650" Fill="#FFB2B2B2" />
+    <Polygon Points="262,576 343,576 343,593 262,593 262,576" Fill="#FFCCCCCC" />
+    <Polygon Points="262,650 343,650 343,667 262,667 262,650" Fill="#FFCCCCCC" />
+    <Polygon Points="278,576 326,576 326,593 278,593 278,576" Fill="#FFE5E5E5" />
+    <Polygon Points="278,650 326,650 326,667 278,667 278,650" Fill="#FFE5E5E5" />
+    <Polygon Points="295,650 307,650 307,667 295,667 295,650" Fill="#FFFFFFFF" />
+    <Polygon Points="295,576 307,576 307,593 295,593 295,576" Fill="#FFFFFFFF" />
+    <Polygon Points="211,861 205,782 399,782 393,861 211,861" Fill="#FFB2B2B2" Stroke="#FF000000" StrokeThickness="3" />
+    <Polyline Points="250,650 354,650 354,667 250,667 250,650" Stroke="#FF000000" StrokeThickness="3" />
+    <Polyline Points="250,576 354,576 354,593 250,593 250,576" Stroke="#FF000000" StrokeThickness="3" />
+  </Canvas>
+</Viewbox>

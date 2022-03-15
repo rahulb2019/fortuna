@@ -2,10 +2,12 @@
     <div class="col-md-8 left-mimic-run" style="border: 5px solid #cecece;">
         <div id="wrapper" class='mn-studio preview'>
             <div class="row site-details">
+                <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
                 <div  class="col-md-3 updated">Last Data Updated On <br/>{{mimicUpdateAt | date: 'MMMM d, y, h:mm:ss a' }}</div>
                 <div  class="col-md-6 site-name">{{mimicName}}</div>
                 <div  class="col-md-3">
                     <div class="dropdown text-primary settings">
+                        <a *ngIf="userType != 1" class="control-button-link text-primary" href="javascript:void(0)" (click)="manageMimicControl(mimic._id)">Control</a>
                         <span class="dropdown-toggle" id="dropdownMenuButton1" data-toggle="dropdown">
                             <i class="fa fa-cog"></i>
                         </span>
@@ -20,6 +22,8 @@
                            <a *ngIf="mimic && mimic.mimic_data && mimic.mimic_data.length > 0 && userType != 1" class="dropdown-item text-primary" href="javascript:void(0)" (click)="manageMeterData(mimic._id)"><i class="fa fa-pencil mr-2"></i>Manage Meter Data</a>
                         </div>
                     </div>
+                    
+                    
                 </div>
             </div>
             <div id="droppable"></div>

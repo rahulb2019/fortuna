@@ -184,6 +184,22 @@ export class MimicService {
     );
   }
 
+  saveMimicControl(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/saveMimicControl/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
+  getControlData(data): Observable<any> {
+    return this.http.post(
+      `${this.BASE_PATH + '/getControlData/'}`,
+      data,
+      this.httpOptions
+    );
+  }
+
   saveMetersData(data): Observable<any> {
     return this.http.post(
       `${this.BASE_PATH + '/saveMetersData/'}`,

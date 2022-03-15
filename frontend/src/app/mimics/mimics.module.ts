@@ -24,6 +24,7 @@ import { PreviewComponent } from './preview/preview.component';
 import { SettingsComponent } from './settings/settings.component';
 import { RunComponent } from './run/run.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { ControlComponent } from './control/control.component';
 import { AddMeterDataComponent } from './add_meter_data/add_meter_data.component';
 
 
@@ -42,6 +43,7 @@ export function playerFactory() {
     SettingsComponent,
     RunComponent,
     ScheduleComponent,
+    ControlComponent,
     AddMeterDataComponent
   ],
   imports: [
